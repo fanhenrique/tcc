@@ -33,17 +33,22 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-
-	file = open(args.file, 'r')
-	line = file.readline()
-
 	traces = []
-	# with open('data/data', 'r') as file:
-	for i in range(0, 50):
-		window, time, peer1, peer2, monitor1, monitor2 = file.readline().split(' ')
-		traces.append(Trace(window, time, peer1, peer2, monitor1, monitor2))
+	with open('data/data', 'r') as file:
+		
+		file.readline() #ignora cabeçalho 
+		
+		# for line in file:
+		for i in range(0, 100000):
+			
+			# window, time, peer1, peer2, monitor1, monitor2 = line.split(' ')			
+			window, time, peer1, peer2, monitor1, monitor2 = file.readline().split(' ')
+			
+			print(window, time, peer1, peer2, monitor1, monitor2)
+			
 
-	traces[23].printTrace()
+			# traces.append(Trace(window, time, peer1, peer2, monitor1, monitor2))
+			# traces[i].printTrace()
 
 if __name__ == '__main__':
 	main()
