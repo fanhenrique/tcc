@@ -43,7 +43,7 @@ def main():
 	nodes_peers = []
 	nodes_monitors = [] 
 
-	with open('data/data', 'r') as file:
+	with open(args.file, 'r') as file:
 		
 		file.readline() #ignora cabeçalho 
 		
