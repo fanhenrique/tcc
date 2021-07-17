@@ -1,5 +1,7 @@
 import matplotlib
 import networkx as nx
+import networkx
+from networkx.algorithms import bipartite
 import matplotlib.pyplot as plt
 
 import argparse
@@ -22,7 +24,7 @@ TIME_FORMAT = '%Y-%m-%d,%H:%M:%S'
 # 	def printTrace(self):
 # 		print(self.window, self.time, self.peer1, self.peer2, self.monitor1, self.monitor2)
 
-def readFile(file):
+def readFile(file, n):
 
 	# traces = []
 	peer_nodes = []
@@ -33,7 +35,7 @@ def readFile(file):
 		file.readline() #ignora cabeçalho 
 		
 		# for line in file:
-		for i in range(0, 1000000):
+		for i in range(0, n):
 			
 			# window, time, peer1, peer2, monitor1, monitor2 = line.split(' ')			
 			window, time, peer1, peer2, monitor1, monitor2 = file.readline().split(' ')
@@ -70,6 +72,21 @@ def show_graph(graph):
 def node_list(nodes):
 	return list(dict.fromkeys(nodes))
 
+def degree(graph, nodes):
+
+	all_degrees = nx.degree(graph)
+	
+	degrees = []
+
+	for d in all_degrees:
+		if d[0] in nodes:
+			degrees.append(d)
+
+	degrees.sort(key=lambda x: x[1], reverse=True)
+	
+	return degrees
+
+
 def degree_centrality(graph, nodes):
 	
 	all_centralities = nx.degree_centrality(graph)
@@ -79,6 +96,9 @@ def degree_centrality(graph, nodes):
 	for c in all_centralities:
 		if c in nodes:
 			centralities[c] = all_centralities[c]
+
+	centralities = list(centralities.items())
+	centralities.sort(key=lambda tup: tup[1], reverse=True)
 
 	return centralities
 
@@ -99,19 +119,40 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
 
-	peer_nodes, monitor_nodes = readFile(args.file)
+	peer_nodes, monitor_nodes = readFile(args.file, 200)
 
 	monitor_list = node_list(monitor_nodes)
 	peer_list = node_list(peer_nodes)
 	
 	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')
 
+	monitors_centralities = degree_centrality(graph, monitor_list)
+	print(monitors_centralities)
+
+	monitors_degrees = degree(graph, monitor_list)
+	print(monitors_degrees)
+
+
+	print('-------------------')
+	
+	print(graph.edges())
+
+	print('-------------------')
+
+
+	print(bipartite.degrees(graph, monitor_list))
+	# print(bipartite.density(graph, peer_list))
+
+	
+
+	for i in nx.edge_boundary(graph, 'p9'):
+		print(i)
+
+
+
+
+
 	show_graph(graph)
-
-	centralities_monitors = degree_centrality(graph, monitor_list)
-
-	print(centralities_monitors)	
-
 	
 if __name__ == '__main__':
 	main()
