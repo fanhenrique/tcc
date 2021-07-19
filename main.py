@@ -102,11 +102,32 @@ def degree_centrality(graph, nodes):
 
 	return centralities
 
+def eigenvector_centrality(graph, nodes):
+
+	all_eigenvectors = nx.eigenvector_centrality(graph)
+
+	eigenvectors = {}
+
+	for e in all_eigenvectors:
+		if e in nodes:
+			eigenvectors[e] = all_eigenvectors[e]
+
+	eigenvectors = list(eigenvectors.items())
+	eigenvectors.sort(key=lambda tup: tup[1], reverse=True)
+
+	return eigenvectors
+
+def adjacent_nodes(graph, node):
+	nodes = []
+	for i in nx.edge_boundary(graph, node):
+		nodes.append(i[1])
+	return nodes
+
 def main():
 
 	parser = argparse.ArgumentParser(description='Traces')
 
-	parser.add_argument('--file', '-f', help='Arquivo de entrada', type=str)
+	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -126,11 +147,15 @@ def main():
 	
 	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')
 
-	monitors_centralities = degree_centrality(graph, monitor_list)
-	print(monitors_centralities)
+	monitors_degrees_centralities = degree_centrality(graph, monitor_list)
+	print('grau de centralidade dos monitores\n\n', monitors_degrees_centralities)
 
 	monitors_degrees = degree(graph, monitor_list)
-	print(monitors_degrees)
+	print('grau dos monitores\n\n', monitors_degrees)
+
+	monitors_vector_contralities = eigenvector_centrality(graph, monitor_list)
+	print('vector centralities\n\n', monitors_vector_contralities)
+
 
 
 	print('-------------------')
@@ -140,15 +165,17 @@ def main():
 	print('-------------------')
 
 
-	print(bipartite.degrees(graph, monitor_list))
+	print(adjacent_nodes(graph, 'p9'))
+
+	# print(bipartite.degrees(graph, monitor_list))
 	# print(bipartite.density(graph, peer_list))
 
 	
 
-	for i in nx.edge_boundary(graph, 'p9'):
-		print(i)
+	
 
 
+	
 
 
 
