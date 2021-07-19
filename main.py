@@ -117,6 +117,21 @@ def eigenvector_centrality(graph, nodes):
 
 	return eigenvectors
 
+def betweenness_centrality(graph, nodes):
+	
+	all_betweenness = nx.betweenness_centrality(graph)
+
+	betweenness = {}
+
+	for b in all_betweenness:
+		if b in nodes:
+			betweenness[b] = all_betweenness[b]
+
+	betweenness = list(betweenness.items())
+	betweenness.sort(key=lambda tup: tup[1], reverse=True)
+
+	return betweenness
+
 def adjacent_nodes(graph, node):
 	nodes = []
 	for i in nx.edge_boundary(graph, node):
@@ -147,35 +162,25 @@ def main():
 	
 	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')
 
-	monitors_degrees_centralities = degree_centrality(graph, monitor_list)
-	print('grau de centralidade dos monitores\n\n', monitors_degrees_centralities)
+	monitors_degree_centrality = degree_centrality(graph, monitor_list)
+	print('degree_centrality\n', monitors_degree_centrality)
 
-	monitors_degrees = degree(graph, monitor_list)
-	print('grau dos monitores\n\n', monitors_degrees)
+	monitors_degree = degree(graph, monitor_list)
+	print('\ndegree\n', monitors_degree)
 
-	monitors_vector_contralities = eigenvector_centrality(graph, monitor_list)
-	print('vector centralities\n\n', monitors_vector_contralities)
+	monitors_eigenvector_centrality = eigenvector_centrality(graph, monitor_list)
+	print('\neigenvector_centrality\n', monitors_eigenvector_centrality)
 
 
+	monitors_betweenness_centrality = betweenness_centrality(graph, monitor_list)
+	print('\nbetweenness_centrality\n', monitors_betweenness_centrality)
 
 	print('-------------------')
 	
-	print(graph.edges())
-
-	print('-------------------')
-
-
 	print(adjacent_nodes(graph, 'p9'))
 
 	# print(bipartite.degrees(graph, monitor_list))
 	# print(bipartite.density(graph, peer_list))
-
-	
-
-	
-
-
-	
 
 
 
