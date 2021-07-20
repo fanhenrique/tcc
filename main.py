@@ -132,6 +132,19 @@ def betweenness_centrality(graph, nodes):
 
 	return betweenness
 
+def show_rating(rating, head=0, tail=0):
+
+	if head == 0 and tail == 0:
+		print(rating)
+	else:
+		for r in rating[0:head]:
+			print(r)
+		
+		print('.\n.\n.')
+
+		for r in rating[len(rating)-tail:len(rating)]:
+			print(r)
+
 def adjacent_nodes(graph, node):
 	nodes = []
 	for i in nx.edge_boundary(graph, node):
@@ -143,6 +156,9 @@ def main():
 	parser = argparse.ArgumentParser(description='Traces')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
+	help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
+	parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
+	parser.add_argument('--maxshow', '-s', help='max show', type=int)
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -155,36 +171,39 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
 
-	peer_nodes, monitor_nodes = readFile(args.file, 200)
+	peer_nodes, monitor_nodes = readFile(args.file, 100000)
 
 	monitor_list = node_list(monitor_nodes)
 	peer_list = node_list(peer_nodes)
 	
 	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')
 
-	monitors_degree_centrality = degree_centrality(graph, monitor_list)
-	print('degree_centrality\n', monitors_degree_centrality)
 
-	monitors_degree = degree(graph, monitor_list)
-	print('\ndegree\n', monitors_degree)
+	if args.algorithm == 0:
+		monitors_degree_centrality = degree_centrality(graph, monitor_list)
+		print('degree_centrality\n')
+		show_rating(monitors_degree_centrality, args.maxshow, args.maxshow)
 
-	monitors_eigenvector_centrality = eigenvector_centrality(graph, monitor_list)
-	print('\neigenvector_centrality\n', monitors_eigenvector_centrality)
+	elif args.algorithm == 1:
+		monitors_degree = degree(graph, monitor_list)
+		print('\ndegree\n')
+		show_rating(monitors_degree, args.maxshow, args.maxshow)
 
+	elif args.algorithm == 2:
+		monitors_eigenvector_centrality = eigenvector_centrality(graph, monitor_list)
+		print('\neigenvector_centrality\n')
+		show_rating(monitors_eigenvector_centrality, args.maxshow, args.maxshow)
 
-	monitors_betweenness_centrality = betweenness_centrality(graph, monitor_list)
-	print('\nbetweenness_centrality\n', monitors_betweenness_centrality)
+	elif args.algorithm == 3:
+		monitors_betweenness_centrality = betweenness_centrality(graph, monitor_list)
+		print('\nbetweenness_centrality\n')
+		show_rating(monitors_betweenness_centrality, args.maxshow, args.maxshow)
 
-	print('-------------------')
-	
-	print(adjacent_nodes(graph, 'p9'))
 
 	# print(bipartite.degrees(graph, monitor_list))
 	# print(bipartite.density(graph, peer_list))
 
-
-
-	show_graph(graph)
+	# show_graph(graph)
 	
 if __name__ == '__main__':
 	main()
