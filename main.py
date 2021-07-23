@@ -11,22 +11,9 @@ import logging
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d,%H:%M:%S'
 
-# class Trace(object):
-	
-# 	def __init__(self, window, time, peer1, peer2, monitor1, monitor2):
-# 		self.window = window
-# 		self.time = time
-# 		self.peer1 = peer1
-# 		self.peer2 = peer2
-# 		self.monitor1 = monitor1
-# 		self.monitor2 = monitor2
-
-# 	def printTrace(self):
-# 		print(self.window, self.time, self.peer1, self.peer2, self.monitor1, self.monitor2)
 
 def readFile(file, n):
 
-	# traces = []
 	peer_nodes = []
 	monitor_nodes = [] 
 
@@ -37,17 +24,12 @@ def readFile(file, n):
 		# for line in file:
 		for i in range(0, n):
 			
-			# window, time, peer1, peer2, monitor1, monitor2 = line.split(' ')			
-			window, time, peer1, peer2, monitor1, monitor2 = file.readline().split(' ')
+			# window, time, ip_port, peer_id, monitor_id, monitor = line.split(' ')			
+			window, time, ip_port, peer_id, monitor_id, monitor = file.readline().split(' ')
 			
-			peer_nodes.append('p'+peer1)
+			peer_nodes.append('p'+peer_id)
 			
-			monitor_nodes.append('m'+monitor1)
-			
-			# print(window, time, peer1, peer2, monitor1, monitor2)
-
-			# traces.append(Trace(window, time, peer1, peer2, monitor1, monitor2))
-			# traces[i].printTrace()
+			monitor_nodes.append('m'+monitor_id)
 
 	return peer_nodes, monitor_nodes
 
@@ -172,7 +154,7 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
 
-	peer_nodes, monitor_nodes = readFile(args.file, 100000)
+	peer_nodes, monitor_nodes = readFile(args.file, 10000)
 
 	monitor_list = node_list(monitor_nodes)
 	peer_list = node_list(peer_nodes)
