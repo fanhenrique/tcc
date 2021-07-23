@@ -44,12 +44,12 @@ def create_graph(nodes1, type_nodes1, color_nodes1, nodes2, type_nodes2, color_n
 
 	return graph
 
-def show_graph(graph):
+# def show_graph(graph):
 
-	colors = [u[1] for u in graph.nodes(data='color_nodes')]
-	nx.draw(graph, with_labels=True, node_color=colors)
+# 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
+# 	nx.draw(graph, with_labels=True, node_color=colors)
 
-	plt.show()
+# 	plt.show()
 
 def node_list(nodes):
 	return list(dict.fromkeys(nodes))
