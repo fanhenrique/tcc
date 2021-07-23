@@ -118,15 +118,15 @@ def show_rating(rating, size):
 
 	if size <= 0:
 		for r in rating:
-			print(r[0], r[1])
+			print('{} {:.2f}'.format(r[0], r[1]))
 	else:
 		for r in rating[0:size]:
-			print(r[0], r[1])
+			print('{} {:.2f}'.format(r[0], r[1]))
 		
 		print('.\n.\n.')
 
 		for r in rating[len(rating)-size:len(rating)]:
-			print(r[0], r[1])
+			print('{} {:.2f}'.format(r[0], r[1]))
 
 def adjacent_nodes(graph, node):
 	nodes = []
@@ -161,7 +161,6 @@ def main():
 	
 	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')
 
-
 	if args.algorithm == 0:
 		monitors_degree_centrality = degree_centrality(graph, monitor_list)
 		print('degree_centrality\n')
@@ -186,7 +185,7 @@ def main():
 	# print(bipartite.degrees(graph, monitor_list))
 	# print(bipartite.density(graph, peer_list))
 
-	show_graph(graph)
+	# show_graph(graph)
 	
 if __name__ == '__main__':
 	main()
