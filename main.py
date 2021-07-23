@@ -21,11 +21,11 @@ def readFile(file, n):
 		
 		file.readline() #ignora cabeçalho 
 		
-		# for line in file:
-		for i in range(0, n):
+		for line in file:
+		# for i in range(0, n):
 			
-			# window, time, ip_port, peer_id, monitor_id, monitor = line.split(' ')			
-			window, time, ip_port, peer_id, monitor_id, monitor = file.readline().split(' ')
+			window, time, ip_port, peer_id, monitor_id, monitor = line.split(' ')			
+			# window, time, ip_port, peer_id, monitor_id, monitor = file.readline().split(' ')
 			
 			peer_nodes.append('p'+peer_id)
 			
