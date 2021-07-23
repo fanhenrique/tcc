@@ -118,15 +118,15 @@ def show_rating(rating, size):
 
 	if size <= 0:
 		for r in rating:
-			print('{} {:.2f}'.format(r[0], r[1]))
+			print('{} {:.4f}'.format(r[0], r[1]))
 	else:
 		for r in rating[0:size]:
-			print('{} {:.2f}'.format(r[0], r[1]))
+			print('{} {:.4f}'.format(r[0], r[1]))
 		
 		print('.\n.\n.')
 
 		for r in rating[len(rating)-size:len(rating)]:
-			print('{} {:.2f}'.format(r[0], r[1]))
+			print('{} {:.4f}'.format(r[0], r[1]))
 
 def adjacent_nodes(graph, node):
 	nodes = []
