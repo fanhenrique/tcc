@@ -4,6 +4,9 @@ import networkx
 from networkx.algorithms import bipartite
 import matplotlib.pyplot as plt
 
+from collections import Counter
+
+
 import argparse
 import logging
 
@@ -21,15 +24,22 @@ def readFile(file, n):
 		
 		file.readline() #ignora cabeçalho 
 		
-		for line in file:
-		# for i in range(0, n):
+		if n == 0:
+			for line in file:
+
+				window, time, ip_port, peer_id, monitor_id, monitor = line.split(' ')			
+				
+				peer_nodes.append('p'+peer_id)
+				
+				monitor_nodes.append('m'+monitor_id)
+		else:
+			for i in range(0, n):
 			
-			window, time, ip_port, peer_id, monitor_id, monitor = line.split(' ')			
-			# window, time, ip_port, peer_id, monitor_id, monitor = file.readline().split(' ')
-			
-			peer_nodes.append('p'+peer_id)
-			
-			monitor_nodes.append('m'+monitor_id)
+				window, time, ip_port, peer_id, monitor_id, monitor = file.readline().split(' ')
+				
+				peer_nodes.append('p'+peer_id)
+				
+				monitor_nodes.append('m'+monitor_id)
 
 	return peer_nodes, monitor_nodes
 
@@ -40,16 +50,44 @@ def create_graph(nodes1, type_nodes1, color_nodes1, nodes2, type_nodes2, color_n
 	graph.add_nodes_from(nodes1, type_nodes=type_nodes1, color_nodes=color_nodes1)
 	graph.add_nodes_from(nodes2, type_nodes=type_nodes2, color_nodes=color_nodes2)
 
-	graph.add_edges_from(list(zip(nodes1, nodes2)))
+	edges = list(zip(nodes1, nodes2))
+	# print(edges)
+	
+	weight = dict(Counter(edges))
+	# print(weight)
+
+	weighted_edges = []
+
+	for e in edges:
+		weighted_edges.append((e[0], e[1], weight[(e[0], e[1])]))
+
+	# print(weighted_edges)
+
+	graph.add_weighted_edges_from(weighted_edges)
 
 	return graph
 
-# def show_graph(graph):
+def create_graph2(nodes1, type_nodes1, color_nodes1, nodes2, type_nodes2, color_nodes2):
 
-# 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
-# 	nx.draw(graph, with_labels=True, node_color=colors)
+	graph = nx.Graph()
 
-# 	plt.show()
+	graph.add_nodes_from(nodes1, type_nodes=type_nodes1, color_nodes=color_nodes1)
+	graph.add_nodes_from(nodes2, type_nodes=type_nodes2, color_nodes=color_nodes2)
+
+	edges = list(zip(nodes1, nodes2))
+	# print(edges)
+
+	graph.add_edges_from(edges)
+
+	return graph
+
+
+def show_graph(graph):
+
+	colors = [u[1] for u in graph.nodes(data='color_nodes')]
+	nx.draw(graph, with_labels=True, node_color=colors)
+	
+	plt.show()
 
 def node_list(nodes):
 	return list(dict.fromkeys(nodes))
@@ -134,6 +172,29 @@ def adjacent_nodes(graph, node):
 		nodes.append(i[1])
 	return nodes
 
+
+def algorithm(algorithm, sizeshow,graph, monitor_list):
+
+	if algorithm == 0:
+		monitors_degree_centrality = degree_centrality(graph, monitor_list)
+		print('degree_centrality\n')
+		show_rating(monitors_degree_centrality, sizeshow)
+
+	elif algorithm == 1:
+		monitors_degree = degree(graph, monitor_list)
+		print('\ndegree\n')
+		show_rating(monitors_degree, sizeshow)
+
+	elif algorithm == 2:
+		monitors_eigenvector_centrality = eigenvector_centrality(graph, monitor_list)
+		print('\neigenvector_centrality\n')
+		show_rating(monitors_eigenvector_centrality, sizeshow)
+
+	elif algorithm == 3:
+		monitors_betweenness_centrality = betweenness_centrality(graph, monitor_list)
+		print('\nbetweenness_centrality\n')
+		show_rating(monitors_betweenness_centrality, sizeshow)
+
 def main():
 
 	parser = argparse.ArgumentParser(description='Traces')
@@ -141,7 +202,10 @@ def main():
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
 	help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
 	parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
-	parser.add_argument('--sizeshow', '-s', help='size show', default=0, type=int)
+	parser.add_argument('--sizeshow', '-s', help='quantidade de monitores no arquivo de saida', default=0, type=int)
+	
+	# REMOVER DEPOIS
+	parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -154,38 +218,26 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
 
-	peer_nodes, monitor_nodes = readFile(args.file, 10000)
+
+
+	peer_nodes, monitor_nodes = readFile(args.file, args.numberlines)
+
+
 
 	monitor_list = node_list(monitor_nodes)
 	peer_list = node_list(peer_nodes)
 	
-	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')
-
-	if args.algorithm == 0:
-		monitors_degree_centrality = degree_centrality(graph, monitor_list)
-		print('degree_centrality\n')
-		show_rating(monitors_degree_centrality, args.sizeshow)
-
-	elif args.algorithm == 1:
-		monitors_degree = degree(graph, monitor_list)
-		print('\ndegree\n')
-		show_rating(monitors_degree, args.sizeshow)
-
-	elif args.algorithm == 2:
-		monitors_eigenvector_centrality = eigenvector_centrality(graph, monitor_list)
-		print('\neigenvector_centrality\n')
-		show_rating(monitors_eigenvector_centrality, args.sizeshow)
-
-	elif args.algorithm == 3:
-		monitors_betweenness_centrality = betweenness_centrality(graph, monitor_list)
-		print('\nbetweenness_centrality\n')
-		show_rating(monitors_betweenness_centrality, args.sizeshow)
 
 
-	# print(bipartite.degrees(graph, monitor_list))
-	# print(bipartite.density(graph, peer_list))
 
-	# show_graph(graph)
+	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')	
+
+	algorithm(args.algorithm, args.sizeshow, graph, monitor_list)
+
+	show_graph(graph)
+
 	
+
+
 if __name__ == '__main__':
 	main()
