@@ -23,7 +23,8 @@ def readFile(file, n):
 	with open(file, 'r') as file:
 		
 		file.readline() #ignora cabeçalho 
-		
+			
+		## IF ELSE temporario pra rodar grafo menor
 		if n == 0:
 			for line in file:
 
@@ -67,6 +68,7 @@ def create_graph(nodes1, type_nodes1, color_nodes1, nodes2, type_nodes2, color_n
 
 	return graph
 
+### Cria grafo sem pesso nas arestas
 def create_graph2(nodes1, type_nodes1, color_nodes1, nodes2, type_nodes2, color_nodes2):
 
 	graph = nx.Graph()
@@ -208,7 +210,7 @@ def main():
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
 	help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
 	parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
-	parser.add_argument('--sizeshow', '-s', help='quantidade de monitores no arquivo de saida', default=0, type=int)
+	parser.add_argument('--sizeshow', '-s', help='head e tail monitores no arquivo de saida', default=0, type=int)
 	
 	# REMOVER DEPOIS
 	parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
