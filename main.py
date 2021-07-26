@@ -82,18 +82,18 @@ def create_graph2(nodes1, type_nodes1, color_nodes1, nodes2, type_nodes2, color_
 	return graph
 
 
-# def show_graph(graph):
+def show_graph(graph):
 
-# 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
-# 	# nx.draw(graph, with_labels=True, node_color=colors)
+	colors = [u[1] for u in graph.nodes(data='color_nodes')]
+	# nx.draw(graph, with_labels=True, node_color=colors)
 	
-# 	pos = nx.spring_layout(graph)
-# 	weights = nx.get_edge_attributes(graph, "weight")
+	pos = nx.spring_layout(graph)
+	weights = nx.get_edge_attributes(graph, "weight")
 
-# 	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
-# 	nx.draw_networkx_edge_labels(graph, pos, edge_labels=weights)
+	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
+	nx.draw_networkx_edge_labels(graph, pos, edge_labels=weights)
 
-# 	plt.show()
+	plt.show()
 
 def node_list(nodes):
 	return list(dict.fromkeys(nodes))
@@ -240,7 +240,7 @@ def main():
 
 	algorithm(args.algorithm, args.sizeshow, graph, monitor_list)
 
-	# show_graph(graph)
+	show_graph(graph)
 
 	
 
