@@ -6,14 +6,17 @@ import matplotlib.pyplot as plt
 
 from collections import Counter
 
-
 import argparse
 import logging
-
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d,%H:%M:%S'
 
+hash_count_tracker = 1
+hash_table_tracker = {}
+
+hash_count_monitor = 1
+hash_table_monitor = {}
 
 def readFile(file, n):
 
@@ -54,10 +57,8 @@ def create_graph(nodes):
 
 	graph = nx.Graph()
 
-
 	for n in nodes:
 		graph.add_nodes_from(n[0], type_nodes=n[1], color_nodes=n[2])
-		
 
 	edges = list(zip(nodes[0][0], nodes[1][0]))
 	# print(edges)
@@ -89,6 +90,34 @@ def show_graph(graph):
 
 	plt.show()
 
+def my_hash_tracker(tracker_str):
+
+	global hash_table_tracker
+	global hash_count_tracker
+
+	my_hash_tracker_value = hash_table_tracker.get(tracker_str)
+
+	if my_hash_tracker_value is None:
+		my_hash_tracker_value = hash_count_tracker
+		hash_table_tracker[tracker_str] = my_hash_tracker_value
+		hash_count_tracker += 1
+
+	return my_hash_tracker_value
+
+
+def my_hash_monitor(monitor_str):
+
+	global hash_table_monitor
+	global hash_count_monitor
+
+	my_hash_monitor_value = hash_table_monitor.get(monitor_str)
+
+	if my_hash_monitor_value is None:
+		my_hash_monitor_value = hash_count_monitor
+		hash_table_monitor[monitor_str] = my_hash_monitor_value
+		hash_count_monitor += 1
+
+	return my_hash_monitor_value
 
 def main():
 
@@ -112,12 +141,27 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
+	global hash_table_tracker
+	global hash_count_tracker
+
+	global hash_table_monitor
+	global hash_count_monitor
 
 	windows, trakers, monitors =  readFile(args.file, args.numberlines)
 
+	traker_nodes = []
+	monitor_nodes = []
+	
+	for t in trakers:
+		traker_nodes.append('t' + str(my_hash_tracker(t)))
+
+	for m in monitors:
+		monitor_nodes.append('m' + str(my_hash_monitor(m)))
+
+
 	nodes = []
-	nodes.append((trakers, 'traker', 'red'))
-	nodes.append((monitors, 'monitor', 'blue'))
+	nodes.append((traker_nodes, 'traker', 'red'))
+	nodes.append((monitor_nodes, 'monitor', 'blue'))
 
 	graph = create_graph(nodes)
 
