@@ -44,14 +44,14 @@ def readFile(file, n):
 
 	return peer_nodes, monitor_nodes
 
-def create_graph(nodes1, type_nodes1, color_nodes1, nodes2, type_nodes2, color_nodes2):
+def create_graph(nodes):
 
 	graph = nx.Graph()
 
-	graph.add_nodes_from(nodes1, type_nodes=type_nodes1, color_nodes=color_nodes1)
-	graph.add_nodes_from(nodes2, type_nodes=type_nodes2, color_nodes=color_nodes2)
+	for n in nodes:
+		graph.add_nodes_from(n[0], type_nodes=n[1], color_nodes=n[2])
 
-	edges = list(zip(nodes1, nodes2))
+	edges = list(zip(nodes[0][0], nodes[1][0]))
 	# print(edges)
 	
 	weight = dict(Counter(edges))
@@ -226,19 +226,16 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
 
-
-
 	peer_nodes, monitor_nodes = readFile(args.file, args.numberlines)
-
-
 
 	monitor_list = node_list(monitor_nodes)
 	peer_list = node_list(peer_nodes)
 	
+	nodes = []
+	nodes.append((peer_nodes, 'peer', 'red'))
+	nodes.append((monitor_nodes, 'monitor', 'blue'))
 
-
-
-	graph = create_graph(peer_nodes, 'peer', 'red',  monitor_nodes, 'monitor', 'blue')	
+	graph = create_graph(nodes)	
 
 	algorithm(args.algorithm, args.sizeshow, graph, monitor_list)
 
