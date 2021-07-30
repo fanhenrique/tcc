@@ -1,8 +1,8 @@
-import matplotlib
 import networkx as nx
-import networkx
-from networkx.algorithms import bipartite
+import math
 import matplotlib.pyplot as plt
+from stellargraph import StellarGraph
+
 
 from collections import Counter
 
@@ -20,7 +20,7 @@ hash_table_monitor = {}
 
 def readFile(file, n):
 
-	windows = []
+	epoch = []
 	trakers = []
 	monitors = []
 
@@ -33,45 +33,52 @@ def readFile(file, n):
 
 				line_split = line.split()			
 				
-				windows.append(float(line_split[0]))
+				epoch.append(float(line_split[0]))
 
 				trakers.append(line_split[1].split("'")[1])
 
 				monitors.append(line_split[16].split("'")[1])	
-				
+		
+		## REMOVER ELSE DEPOIS		
 		else:
 			for i in range(0, n):
 
 				line_split = file.readline().split()			
 					
-				windows.append(float(line_split[0]))
+				epoch.append(float(line_split[0]))
 
 				trakers.append(line_split[1].split("'")[1])
 
 				monitors.append(line_split[16].split("'")[1])
 
 	
-	return windows, trakers, monitors
+	return epoch, trakers, monitors
 
-def create_graph(nodes):
+def create_graph(nodes_list):
 
 	graph = nx.Graph()
 
-	for n in nodes:
-		graph.add_nodes_from(n[0], type_nodes=n[1], color_nodes=n[2])
+	# Vertices
+	for nodes in nodes_list:
+		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
 
-	edges = list(zip(nodes[0][0], nodes[1][0]))
-	# print(edges)
+	# Tipo de vertices 	
+	dict_nodes = {}	
+	for nodes in nodes_list:
+		for n in nodes[0]:
+			dict_nodes[n] = nodes[1]
+	nx.set_node_attributes(graph, dict_nodes, 'label')	
+
+	# Arestas
+	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
 	
+	# Peso das arestas
 	weight = dict(Counter(edges))
-	# print(weight)
-
+	
+	# Arestas com peso
 	weighted_edges = []
-
 	for e in edges:
 		weighted_edges.append((e[0], e[1], weight[(e[0], e[1])]))
-
-	# print(weighted_edges)
 
 	graph.add_weighted_edges_from(weighted_edges)
 
@@ -119,6 +126,23 @@ def my_hash_monitor(monitor_str):
 
 	return my_hash_monitor_value
 
+
+def cal_windows(epoch):
+	
+	time_min = []
+	windows = []
+
+	for e in epoch:
+		time_min.append(((e - epoch[0]) / 60))
+
+	for t in time_min:
+		windows.append(math.trunc(t / 15))
+
+	# for i in range(0, len(windows)):	
+	# 	print(windows[i], format(time_min[i], '.2f'))
+
+	return time_min, windows
+
 def main():
 
 	parser = argparse.ArgumentParser(description='Traces')
@@ -147,30 +171,33 @@ def main():
 	global hash_table_monitor
 	global hash_count_monitor
 
-	windows, trakers, monitors =  readFile(args.file, args.numberlines)
+	epoch, trakers, monitors =  readFile(args.file, args.numberlines)
 
-	traker_nodes = []
-	monitor_nodes = []
+
+	time_min, windows = cal_windows(epoch) 	
+
 	
+	## Label pra os vertices
+	traker_nodes_labels = []
 	for t in trakers:
-		traker_nodes.append('t' + str(my_hash_tracker(t)))
-
+		traker_nodes_labels.append('t' + str(my_hash_tracker(t)))
+	monitor_nodes_labels = []
 	for m in monitors:
-		monitor_nodes.append('m' + str(my_hash_monitor(m)))
+		monitor_nodes_labels.append('m' + str(my_hash_monitor(m)))
 
 
-	nodes = []
-	nodes.append((traker_nodes, 'traker', 'red'))
-	nodes.append((monitor_nodes, 'monitor', 'blue'))
+	# Label, tipo, cor dos vertices	
+	nodes_list = []
+	nodes_list.append((traker_nodes_labels, 'traker', 'red'))
+	nodes_list.append((monitor_nodes_labels, 'monitor', 'blue'))
 
-	graph = create_graph(nodes)
 
+	graph = create_graph(nodes_list)
 
-	# monitor_list = node_list(monitor_nodes)
-	# peer_list = node_list(peer_nodes)
-	
+	graph_stellar = StellarGraph.from_networkx(graph)
 
-	# algorithm(args.algorithm, args.sizeshow, graph, monitor_list)
+	print(graph_stellar.info())
+
 
 	show_graph(graph)
 
