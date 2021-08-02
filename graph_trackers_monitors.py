@@ -2,7 +2,6 @@ import networkx as nx
 import math
 import matplotlib.pyplot as plt
 import stellargraph as sg
-from stellargraph.layer import GCN_LSTM
 
 from collections import Counter
 
