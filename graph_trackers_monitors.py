@@ -1,8 +1,8 @@
 import networkx as nx
 import math
 import matplotlib.pyplot as plt
-from stellargraph import StellarGraph
-
+import stellargraph as sg
+from stellargraph.layer import GCN_LSTM
 
 from collections import Counter
 
@@ -39,7 +39,7 @@ def readFile(file, n):
 
 				monitors.append(line_split[16].split("'")[1])	
 		
-		## REMOVER ELSE DEPOIS		
+		## REMOVER ELSE DEPOIS(apenas pra rodar com um arquivo menor)
 		else:
 			for i in range(0, n):
 
@@ -148,11 +148,11 @@ def main():
 	parser = argparse.ArgumentParser(description='Traces')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
-	help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
-	parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
+	# help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
+	# parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
 	parser.add_argument('--sizeshow', '-s', help='head e tail monitores no arquivo de saida', default=0, type=int)
 	
-	# REMOVER DEPOIS
+	# REMOVER DEPOIS (apenas pra rodar com um arquivo menor)
 	parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
@@ -171,13 +171,13 @@ def main():
 	global hash_table_monitor
 	global hash_count_monitor
 
-	epoch, trakers, monitors =  readFile(args.file, args.numberlines)
+	epochs, trakers, monitors =  readFile(args.file, args.numberlines)
 
 
-	time_min, windows = cal_windows(epoch) 	
+	time_min, windows = cal_windows(epochs) 	
 
 	
-	## Label pra os vertices
+	# Label pra os vertices
 	traker_nodes_labels = []
 	for t in trakers:
 		traker_nodes_labels.append('t' + str(my_hash_tracker(t)))
@@ -194,10 +194,9 @@ def main():
 
 	graph = create_graph(nodes_list)
 
-	graph_stellar = StellarGraph.from_networkx(graph)
+	graph_stellar = sg.StellarGraph.from_networkx(graph)
 
 	print(graph_stellar.info())
-
 
 	show_graph(graph)
 
