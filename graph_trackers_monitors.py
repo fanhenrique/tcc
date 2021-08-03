@@ -169,27 +169,27 @@ def cal_windows(epoch):
 
 	return time_min, windows
 
-def main():
+def stellargraph(data):
 
-	parser = argparse.ArgumentParser(description='Traces')
+	# parser = argparse.ArgumentParser(description='Traces')
 
-	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
-	# help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
-	# parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
-	parser.add_argument('--sizeshow', '-s', help='head e tail monitores no arquivo de saida', default=0, type=int)
+	# parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
+	# # help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
+	# # parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
+	# parser.add_argument('--sizeshow', '-s', help='head e tail monitores no arquivo de saida', default=0, type=int)
 	
-	# REMOVER DEPOIS (apenas pra rodar com um arquivo menor)
-	parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
+	# # REMOVER DEPOIS (apenas pra rodar com um arquivo menor)
+	# parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
 
-	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
-	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
+	# help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
+	# parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
 
-	args = parser.parse_args()
+	# args = parser.parse_args()
 
-	if args.log == logging.DEBUG:
-		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
-	else:
-		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
+	# if args.log == logging.DEBUG:
+	# 	logging.basicConfig(format='%(asctime)s.%(msecs)03d %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
+	# else:
+	# 	logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
 	global hash_table_tracker
 	global hash_count_tracker
@@ -197,21 +197,16 @@ def main():
 	global hash_table_monitor
 	global hash_count_monitor
 
-	epochs, trakers, monitors =  readFile(args.file, args.numberlines)
+	# epochs, trakers, monitors =  readFile(args.file, args.numberlines)
 
-
-	print(len(epochs), len(trakers), len(monitors))
-
-
-	time_min, windows = cal_windows(epochs) 	
-
+	time_min, windows = cal_windows(data[0])
 	
 	# Label pra os vertices
 	traker_nodes_labels = []
-	for t in trakers:
+	for t in data[1]:
 		traker_nodes_labels.append('t' + str(my_hash_tracker(t)))
 	monitor_nodes_labels = []
-	for m in monitors:
+	for m in data[2]:
 		monitor_nodes_labels.append('m' + str(my_hash_monitor(m)))
 
 
@@ -225,9 +220,11 @@ def main():
 
 	graph_stellar = sg.StellarGraph.from_networkx(graph)
 
-	print(graph_stellar.info())
+	# print(graph_stellar.info())
 
-	show_graph(graph)
+	# show_graph(graph)
+
+	return graph_stellar
 
 
 if __name__ == '__main__':
