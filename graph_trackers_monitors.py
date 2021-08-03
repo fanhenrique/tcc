@@ -28,7 +28,6 @@ def readFile(file, n):
 		file.readline() #ignora cabeçalho 
 
 		if n == 0:
-			
 			for line in file:
 
 				line_split = line.split()			
@@ -36,18 +35,18 @@ def readFile(file, n):
 				try:
 					epoch.append(float(line_split[0]))
 				except:
-					print('epoch')
+					print(line)
 					continue
 				try:
 					trakers.append(line_split[1].split("'")[1])
 				except:
-					print('trakers')
+					print(line)
 					epoch.pop()
 					continue
 				try:
 					monitors.append(line_split[16].split("'")[1])	
 				except:
-					print('monitors')
+					print(line)
 					epoch.pop()
 					trakers.pop()
 					continue
@@ -61,18 +60,18 @@ def readFile(file, n):
 				try:	
 					epoch.append(float(line_split[0]))
 				except:
-					print('epoch')
+					print(line_split)
 					continue
 				try:
 					trakers.append(line_split[1].split("'")[1])
 				except:
-					print('trakers')
+					print(line_split)
 					epoch.pop()
 					continue
 				try:
 					monitors.append(line_split[16].split("'")[1])
 				except:
-					print('monitors')
+					print(line_split)
 					epoch.pop()
 					trakers.pop()
 					# print(i, line_split)
