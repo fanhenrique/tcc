@@ -173,6 +173,9 @@ def main():
 	epochs, trakers, monitors =  readFile(args.file, args.numberlines)
 
 
+	print(len(epochs), len(trakers), len(monitors))
+
+
 	time_min, windows = cal_windows(epochs) 	
 
 	
