@@ -35,15 +35,21 @@ def readFile(file, n):
 				
 				try:
 					epoch.append(float(line_split[0]))
-
+				except:
+					continue
+				try:
 					trakers.append(line_split[1].split("'")[1])
-
+				except:
+					epoch.pop()
+					continue
+				try:
 					monitors.append(line_split[16].split("'")[1])	
 				except:
-					print(line)
+					epoch.pop()
+					trakers.pop()
 					continue
 		
-		## REMOVER ELSE DEPOIS(apenas pra rodar com um arquivo menor)
+		## REMOVER ELSE DEPOIS (apenas pra rodar com um arquivo menor)
 		else:
 			for i in range(0, n):
 
@@ -51,12 +57,19 @@ def readFile(file, n):
 				
 				try:	
 					epoch.append(float(line_split[0]))
-
+				except:
+					continue
+				try:
 					trakers.append(line_split[1].split("'")[1])
-
+				except:
+					epoch.pop()
+					continue
+				try:
 					monitors.append(line_split[16].split("'")[1])
 				except:
-					print(i, line_split)
+					epoch.pop()
+					trakers.pop()
+					# print(i, line_split)
 					continue
 
 	
