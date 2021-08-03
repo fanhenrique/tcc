@@ -36,15 +36,18 @@ def readFile(file, n):
 				try:
 					epoch.append(float(line_split[0]))
 				except:
+					print('epoch')
 					continue
 				try:
 					trakers.append(line_split[1].split("'")[1])
 				except:
+					print('trakers')
 					epoch.pop()
 					continue
 				try:
 					monitors.append(line_split[16].split("'")[1])	
 				except:
+					print('monitors')
 					epoch.pop()
 					trakers.pop()
 					continue
