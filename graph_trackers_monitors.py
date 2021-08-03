@@ -41,6 +41,7 @@ def readFile(file, n):
 					monitors.append(line_split[16].split("'")[1])	
 				except:
 					print(line_split)
+					print(line_split[16])
 		
 		## REMOVER ELSE DEPOIS(apenas pra rodar com um arquivo menor)
 		else:
@@ -177,6 +178,7 @@ def main():
 	epochs, trakers, monitors =  readFile(args.file, args.numberlines)
 
 
+	print(len(epochs), len(trakers), len(monitors))
 	print(epochs[len(epochs)-1], trakers[len(trakers)-1], monitors[len(monitors)-1])
 
 
