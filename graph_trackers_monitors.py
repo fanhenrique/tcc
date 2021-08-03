@@ -41,7 +41,7 @@ def readFile(file, n):
 					monitors.append(line_split[16].split("'")[1])	
 				except:
 					print(line_split)
-					print(line_split[16])
+					print(line)
 		
 		## REMOVER ELSE DEPOIS(apenas pra rodar com um arquivo menor)
 		else:
