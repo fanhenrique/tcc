@@ -28,10 +28,11 @@ def readFile(file, n):
 		file.readline() #ignora cabeçalho 
 
 		if n == 0:
+			
 			for line in file:
 
 				line_split = line.split()			
-				
+				print(line_split)
 				epoch.append(float(line_split[0]))
 
 				trakers.append(line_split[1].split("'")[1])
