@@ -10,6 +10,7 @@ import logging
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d,%H:%M:%S'
+WINDOWS_LEN = 15
 
 hash_count_tracker = 1
 hash_table_tracker = {}
@@ -18,22 +19,14 @@ hash_count_monitor = 1
 hash_table_monitor = {}
 
 def readFile(file, n):
-
-	epoch = []
-	trakers = []
-	monitors = []
-
+	epochs, trakers, monitors = [], [], []
 	with open(file, 'r') as file:
-
 		file.readline() #ignora cabeçalho 
-
 		if n == 0:
 			for line in file:
-
 				line_split = line.split()			
-				
 				try:
-					epoch.append(float(line_split[0]))
+					epochs.append(float(line_split[0]))
 				except:
 					print(line)
 					continue
@@ -41,24 +34,21 @@ def readFile(file, n):
 					trakers.append(line_split[1].split("'")[1])
 				except:
 					print(line)
-					epoch.pop()
+					epochs.pop()
 					continue
 				try:
 					monitors.append(line_split[16].split("'")[1])	
 				except:
 					print(line)
-					epoch.pop()
+					epochs.pop()
 					trakers.pop()
 					continue
-		
 		## REMOVER ELSE DEPOIS (apenas pra rodar com um arquivo menor)
 		else:
 			for i in range(0, n):
-
-				line_split = file.readline().split()			
-				
+				line_split = file.readline().split()							
 				try:	
-					epoch.append(float(line_split[0]))
+					epochs.append(float(line_split[0]))
 				except:
 					print(line_split)
 					continue
@@ -66,19 +56,17 @@ def readFile(file, n):
 					trakers.append(line_split[1].split("'")[1])
 				except:
 					print(line_split)
-					epoch.pop()
+					epochs.pop()
 					continue
 				try:
 					monitors.append(line_split[16].split("'")[1])
 				except:
 					print(line_split)
-					epoch.pop()
+					epochs.pop()
 					trakers.pop()
 					# print(i, line_split)
-					continue
-
-	
-	return epoch, trakers, monitors
+					continue	
+	return epochs, trakers, monitors
 
 def create_graph(nodes_list):
 
@@ -162,34 +150,46 @@ def cal_windows(epoch):
 		time_min.append(((e - epoch[0]) / 60))
 
 	for t in time_min:
-		windows.append(math.trunc(t / 15))
+		windows.append(math.trunc(t / WINDOWS_LEN))
 
 	# for i in range(0, len(windows)):	
 	# 	print(windows[i], format(time_min[i], '.2f'))
 
 	return time_min, windows
 
-def stellargraph(data):
+def cal_windows_index_range(windows):
 
-	# parser = argparse.ArgumentParser(description='Traces')
+	windows_index_range = []
+	break0 = 0
+	for i in range(len(windows)-1):
+		if windows[i] != windows[i+1]:
+			break1 = i
+			windows_index_range.append((break0, break1))
+			break0 = break1+1
 
-	# parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
-	# # help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
-	# # parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
+	return windows_index_range
+
+def main():
+
+	parser = argparse.ArgumentParser(description='Traces')
+
+	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
+	# help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
+	# parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
 	# parser.add_argument('--sizeshow', '-s', help='head e tail monitores no arquivo de saida', default=0, type=int)
 	
-	# # REMOVER DEPOIS (apenas pra rodar com um arquivo menor)
-	# parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
+	# REMOVER DEPOIS (apenas pra rodar com um arquivo menor)
+	parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
 
-	# help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
-	# parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
+	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
+	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
 
-	# args = parser.parse_args()
+	args = parser.parse_args()
 
-	# if args.log == logging.DEBUG:
-	# 	logging.basicConfig(format='%(asctime)s.%(msecs)03d %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
-	# else:
-	# 	logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
+	if args.log == logging.DEBUG:
+		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
+	else:
+		logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
 	global hash_table_tracker
 	global hash_count_tracker
@@ -197,35 +197,46 @@ def stellargraph(data):
 	global hash_table_monitor
 	global hash_count_monitor
 
-	# epochs, trakers, monitors =  readFile(args.file, args.numberlines)
+	epochs, trakers, monitors =  readFile(args.file, args.numberlines)
 
-	time_min, windows = cal_windows(data[0])
-	
+	time_min, windows = cal_windows(epochs)
+
+	windows_index_range = cal_windows_index_range(windows)
+
 	# Label pra os vertices
-	traker_nodes_labels = []
-	for t in data[1]:
-		traker_nodes_labels.append('t' + str(my_hash_tracker(t)))
-	monitor_nodes_labels = []
-	for m in data[2]:
-		monitor_nodes_labels.append('m' + str(my_hash_monitor(m)))
+	traker_labels = []
+	for t in trakers:
+		traker_labels.append('t' + str(my_hash_tracker(t)))
+	monitor_labels = []
+	for m in monitors:
+		monitor_labels.append('m' + str(my_hash_monitor(m)))
 
 
-	# Label, tipo, cor dos vertices	
-	nodes_list = []
-	nodes_list.append((traker_nodes_labels, 'traker', 'red'))
-	nodes_list.append((monitor_nodes_labels, 'monitor', 'blue'))
+	graphs = []
 
+	for wir in windows_index_range:
+		# Label, tipo, cor dos vertices	
+		traker_nodes = traker_labels[wir[0]:wir[1]]
+		monitor_nodes = monitor_labels[wir[0]:wir[1]]
+	
+		nodes_list = []
+		nodes_list.append((traker_nodes, 'traker', 'red'))
+		nodes_list.append((monitor_nodes, 'monitor', 'blue'))
 
-	graph = create_graph(nodes_list)
+		graph = create_graph(nodes_list)
 
-	graph_stellar = sg.StellarGraph.from_networkx(graph)
+		graph_stellar = sg.StellarGraph.from_networkx(graph)
 
-	# print(graph_stellar.info())
+		print(graph_stellar.info())
 
-	# show_graph(graph)
+		graphs.append(graph_stellar)
 
-	return graph_stellar
+		# show_graph(graph)
 
+	print('grafos:', len(graphs))
+
+# linha com problema 
+# 531964 ['1546539658.000000', "['udp://exodus.desync.com:6969/ann#planetlab1.pop-pa.rnp.br',", "'UTC_time',", "'UTC_epoch',", "'infohash',", "'tracker',", "'interval_sec',", "'minInterval_sec',", "'downloads',", "'leechers',", "'seeders',", "'size_of_peerlist',", "'monitor_name',", "'peerlist\\n']"]
 
 if __name__ == '__main__':
 	main()
