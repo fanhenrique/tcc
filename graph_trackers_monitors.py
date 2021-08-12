@@ -231,7 +231,7 @@ def main():
 
 		graphs.append(graph_stellar)
 
-		# show_graph(graph)
+		show_graph(graph)
 
 	print('grafos:', len(graphs))
 
@@ -240,3 +240,13 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
+
+
+# PALAVRAS CHAVES:
+# predict 
+# distributed systems 
+# fails 
+# monitoring
+# P2P
+# Bittorrent
