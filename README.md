@@ -9,11 +9,11 @@ Requirenents:
 `sklearn`
 `numpy`
 
-git clone https://github.com/fanhenrique/tccTraces.git
+```git clone https://github.com/fanhenrique/tccTraces.git```
 
-cd tccTraces/T-GCN/T-GCN-TensorFlow_v2/
+```cd tccTraces/T-GCN/T-GCN-TensorFlow_v2/```
 
-python3 main.py
+```python3 main.py```
 
 
 
