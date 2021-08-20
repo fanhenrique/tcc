@@ -10,15 +10,15 @@ import pandas as pd
 import pickle as pkl
 
 def load_sz_data(dataset):
-    sz_adj = pd.read_csv(r'data/sz_adj.csv',header=None)
+    sz_adj = pd.read_csv(r'../data/sz_adj.csv',header=None)
     adj = np.mat(sz_adj)
-    sz_tf = pd.read_csv(r'data/sz_speed.csv')
+    sz_tf = pd.read_csv(r'../data/sz_speed.csv')
     return sz_tf, adj
 
 def load_los_data(dataset):
-    los_adj = pd.read_csv(r'data/los_adj.csv',header=None)
+    los_adj = pd.read_csv(r'../data/los_adj.csv',header=None)
     adj = np.mat(los_adj)
-    los_tf = pd.read_csv(r'data/los_speed.csv')
+    los_tf = pd.read_csv(r'../data/los_speed.csv')
     return los_tf, adj
 
 
