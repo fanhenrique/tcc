@@ -1,5 +1,2 @@
 out/
 __pycache__/
-input_data.pyc
-tgcn.pycutils.pyc
-visualization.pyc
