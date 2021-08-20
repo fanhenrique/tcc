@@ -2,12 +2,12 @@
 
 Requirenents:
 
-'tensorflow 2.6' 
-'pandas'
-'scipy'
-'matplotlib'
-'sklearn'
-'numpy'
+`tensorflow 2.6`
+`pandas`
+`scipy`
+`matplotlib`
+`sklearn`
+`numpy`
 
 git clone https://github.com/fanhenrique/tccTraces.git
 
