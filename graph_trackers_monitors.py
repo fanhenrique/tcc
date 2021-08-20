@@ -24,7 +24,7 @@ hash_table_tracker = {}
 hash_count_monitor = 1
 hash_table_monitor = {}
 
-def readFile(file, n):
+def readFile(file):
 	epochs, trakers, monitors = [], [], []
 	with open(file, 'r') as file:
 		file.readline() #ignora cabeçalho 
@@ -186,7 +186,8 @@ def main():
 	# parser.add_argument('--sizeshow', '-s', help='head e tail monitores no arquivo de saida', default=0, type=int)
 	
 	# REMOVER DEPOIS (apenas pra rodar com um arquivo menor)
-	parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
+	# parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
+	
 	parser.add_argument('--numberwindows', '-w', help='number windows', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
@@ -208,7 +209,7 @@ def main():
 	init()
 
 	logging.info('reading file ...')
-	epochs, trakers, monitors =  readFile(args.file, args.numberlines)
+	epochs, trakers, monitors =  readFile(args.file)
 
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = cal_windows(epochs, args.numberwindows)
