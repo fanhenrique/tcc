@@ -1,13 +1,6 @@
 ## Run T-GCN (TensorFlow 2):
 
-Requirenents:
-
-`tensorflow 2.6`
-`pandas`
-`scipy`
-`matplotlib`
-`sklearn`
-`numpy`
+Requirenents: `tensorflow 2.6` `pandas` `scipy` `matplotlib` `sklearn` `numpy`
 
 ```git clone https://github.com/fanhenrique/tccTraces.git```
 
