@@ -1,4 +1,4 @@
-## Run T-GCN (tensorflow 2):
+## Run T-GCN (TensorFlow 2):
 
 Requirenents:
 
