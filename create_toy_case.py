@@ -195,6 +195,8 @@ def main():
 
 	# print(peer_labels)
 
+	print(windows_index_range)
+
 	logging.info('save file ...')
 	with open('toy_case.txt', 'w') as file:
 		
