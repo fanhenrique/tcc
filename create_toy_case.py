@@ -89,16 +89,16 @@ def main():
 	traker_labels = []
 	for t in trakers:
 		# traker_labels.append(TRACKER+'_'+str(my_hash_tracker(t)))
-		traker_labels.append(my_hash_tracker(t))
+		traker_labels.append(utils.my_hash_tracker(t))
 	monitor_labels = []
 	for m in monitors:
 		# monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
-		monitor_labels.append(my_hash_monitor(m))
+		monitor_labels.append(utils.my_hash_monitor(m))
 	peer_labels = []
 	for l in peer_lists:
 		for p in l:
 			# peer_labels.append(PEER+'_'+str(my_hash_peer(p)))
-			peer_labels.append(my_hash_peer(p))
+			peer_labels.append(utils.my_hash_peer(p))
 
 	# print(windows_index_range)
 
