@@ -123,8 +123,8 @@ def main():
 				file.write(str(traker_nodes[j]) + '\n')
 				file.write(str(monitor_nodes[j]) + '\n')
 				for peer in peer_list_nodes:
-					file.write(str(peer)+ '\n')
-				# file.write('\n')
+					file.write(str(peer)+ ' ')
+				file.write('\n')
 			i+=1
 
 	logging.info('file created toy_case.txt')
