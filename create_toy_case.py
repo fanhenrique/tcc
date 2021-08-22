@@ -198,6 +198,7 @@ def main():
 	logging.info('save file ...')
 	with open('toy_case.txt', 'w') as file:
 		
+		print(file)
 		for wir in windows_index_range:
 		
 			traker_nodes = traker_labels[wir[0]:wir[1]]
