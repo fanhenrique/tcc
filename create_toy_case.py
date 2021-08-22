@@ -216,10 +216,10 @@ def main():
 			
 			for i in range(num_edges):
 				
-				file.write(traker_nodes[i] + ' ')
-				file.write(monitor_nodes[i] + ' ')
+				file.write(str(traker_nodes[i]) + ' ')
+				file.write(str(monitor_nodes[i]) + ' ')
 				for peer in peer_list_nodes:
-					file.write(peer+ ' ')
+					file.write(str(peer)+ ' ')
 				file.write('\n')
 
 
