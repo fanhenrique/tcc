@@ -193,14 +193,19 @@ def main():
 		for p in l:
 			peer_labels.append(PEER+'_'+str(my_hash_peer(p)))
 
-	print(peer_labels)
+	# print(peer_labels)
 
-	# for wir in windows_index_range:
+
+	with open('toy_case.txt', 'w') as file:
+		for wir in windows_index_range:
 		
-	# 	traker_nodes = traker_labels[wir[0]:wir[1]]
-	# 	monitor_nodes = monitor_labels[wir[0]:wir[1]]
-	# 	peer_list_nodes = peer_labels = [wir[0]:wir[1]]
+			traker_nodes = traker_labels[wir[0]:wir[1]]
+			monitor_nodes = monitor_labels[wir[0]:wir[1]]
+			peer_list_nodes = peer_labels = [wir[0]:wir[1]]
 
+			for i in range(len(traker_nodes)):
+				file.write(traker_nodes[i], monitor_nodes[i], peer_list_nodes[i])
+		
 	# 	for i in range(args.numberedges):
 
 
