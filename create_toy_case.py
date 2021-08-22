@@ -186,18 +186,19 @@ def main():
 	# Label pra os vertices
 	traker_labels = []
 	for t in trakers:
-		traker_labels.append(TRACKER+'_'+str(my_hash_tracker(t)))
+		# traker_labels.append(TRACKER+'_'+str(my_hash_tracker(t)))
+		traker_labels.append(my_hash_tracker(t))
 	monitor_labels = []
 	for m in monitors:
-		monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
+		# monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
+		monitor_labels.append(my_hash_monitor(m))
 	peer_labels = []
 	for l in peer_lists:
 		for p in l:
-			peer_labels.append(PEER+'_'+str(my_hash_peer(p)))
+			# peer_labels.append(PEER+'_'+str(my_hash_peer(p)))
+			peer_labels.append(my_hash_peer(p))
 
-	# print(peer_labels)
-
-	print(windows_index_range)
+	# print(windows_index_range)
 
 	logging.info('save file ...')
 	with open('toy_case.txt', 'w') as file:
@@ -208,7 +209,9 @@ def main():
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
 			peer_list_nodes = peer_labels[wir[0]:wir[1]]
 
-			for i in range(len(traker_nodes)):
+			if args.numberedges == 0: num_edges = len(traker_nodes) else num_edges = args.numberedges
+			
+			for i in range(num_edges):
 				
 				file.write(traker_nodes[i] + ' ')
 				file.write(monitor_nodes[i] + ' ')
