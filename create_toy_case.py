@@ -213,7 +213,9 @@ def main():
 
 			for i in range(len(traker_nodes)):
 				print('aquit')
-				file.write(traker_nodes[i], monitor_nodes[i], peer_list_nodes[i])
+				file.write(traker_nodes[i])
+				file.write(monitor_nodes[i])
+				file.write(peer_list_nodes[i])
 		
 
 	logging.info('file created toy_case.txt')
