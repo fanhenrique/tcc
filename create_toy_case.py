@@ -106,6 +106,7 @@ def main():
 	with open('toy_case.txt', 'w') as file:
 		
 		for i, wir in windows_index_range:
+			prit(i, wir)
 		
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
