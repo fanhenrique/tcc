@@ -13,7 +13,7 @@ import logging
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
-WINDOWS_LEN = 15
+
 
 TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'

@@ -1,5 +1,7 @@
 import math
 
+WINDOWS_LEN = 15
+
 hash_count_tracker = 1
 hash_table_tracker = {}
 
