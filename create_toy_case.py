@@ -122,7 +122,7 @@ def main():
 				file.write(str(i)+ '\n')
 				file.write(str(traker_nodes[j]) + '\n')
 				file.write(str(monitor_nodes[j]) + '\n')
-				for peer in peer_list_nodes:
+				for peer in peer_list_nodes[i]:
 					file.write(str(peer)+ ' ')
 				file.write('\n')
 			i+=1
