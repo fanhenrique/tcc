@@ -104,9 +104,9 @@ def main():
 
 	logging.info('save file ...')
 	with open('toy_case.txt', 'w') as file:
-		
-		for i, wir in windows_index_range:
-			print(i, wir)
+		i = 0
+		for wir in windows_index_range:
+			# print(i, wir)
 		
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
@@ -125,7 +125,7 @@ def main():
 				for peer in peer_list_nodes:
 					file.write(str(peer)+ ' ')
 				file.write('\n')
-
+			i+=1
 
 	logging.info('file created toy_case.txt')
 
