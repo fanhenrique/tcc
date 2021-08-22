@@ -227,11 +227,12 @@ def main():
 	graphs_stellar = []
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
-		# Label, tipo, cor dos vertices	
+		
 		traker_nodes = traker_labels[wir[0]:wir[1]]
 		monitor_nodes = monitor_labels[wir[0]:wir[1]]
 	
 		nodes_list = []
+		# Label, tipo, cor dos vertices	
 		nodes_list.append((traker_nodes, TRACKER, 'red'))
 		nodes_list.append((monitor_nodes, MONITOR, 'blue'))
 

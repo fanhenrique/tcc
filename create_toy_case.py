@@ -3,9 +3,24 @@ import logging
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
+WINDOWS_LEN = 15
+
+TRACKER = 'TRACKER'
+MONITOR = 'MONITOR'
+PEER = 'PEER'
+
+hash_count_tracker = 1
+hash_table_tracker = {}
+
+hash_count_monitor = 1
+hash_table_monitor = {}
+
+hash_count_peer = 1
+hash_table_peer = {}
+
 
 def readFile(file):
-	epochs, trakers, monitors = [], [], []
+	epochs, trakers, monitors, peer_lists = [], [], [], []
 	with open(file, 'r') as file:
 		file.readline() #ignora cabeçalho 
 		for line in file:
@@ -40,13 +55,14 @@ def readFile(file):
 					except IndexError:
 						break
 					i+=2
+				peer_lists.append(peer_list)
 			except:
 				print(line)
 				epochs.pop()
 				trakers.pop()
 				monitors.pop()	
 
-	return epochs, trakers, monitors, peer_list
+	return epochs, trakers, monitors, peer_lists
 
 
 def cal_windows(epoch, number_windows):
@@ -86,11 +102,57 @@ def cal_windows(epoch, number_windows):
 
 
 
+def my_hash_tracker(tracker_str):
+
+	global hash_table_tracker
+	global hash_count_tracker
+
+	my_hash_tracker_value = hash_table_tracker.get(tracker_str)
+
+	if my_hash_tracker_value is None:
+		my_hash_tracker_value = hash_count_tracker
+		hash_table_tracker[tracker_str] = my_hash_tracker_value
+		hash_count_tracker += 1
+
+	return my_hash_tracker_value
+
+
+def my_hash_monitor(monitor_str):
+
+	global hash_table_monitor
+	global hash_count_monitor
+
+	my_hash_monitor_value = hash_table_monitor.get(monitor_str)
+
+	if my_hash_monitor_value is None:
+		my_hash_monitor_value = hash_count_monitor
+		hash_table_monitor[monitor_str] = my_hash_monitor_value
+		hash_count_monitor += 1
+
+	return my_hash_monitor_value
+
+def my_hash_peer(peer_str):
+
+	global hash_table_peer
+	global hash_count_peer
+
+	my_hash_peer_value = hash_table_peer.get(peer_str)
+
+	if my_hash_peer_value is None:
+		my_hash_peer_value = hash_count_peer
+		hash_table_peer[peer_str] = my_hash_peer_value
+		hash_count_peer += 1
+
+	return my_hash_peer_value
+
+
 def main():
 
 	parser = argparse.ArgumentParser(description='Create toy case')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
+	parser.add_argument('--numberwindows', '-w', help='number windows', default=0, type=int) 
+	parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -102,14 +164,44 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
+	global hash_table_tracker
+	global hash_count_tracker
+
+	global hash_table_monitor
+	global hash_count_monitor
+
+	global hash_table_peer
+	global hash_count_peer
+
 
 	logging.info('reading file ...')
-	epochs, trakers, monitors =  readFile(args.file)
+	epochs, trakers, monitors, peer_lists =  readFile(args.file)
 
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = cal_windows(epochs, args.numberwindows)
 
-	
+
+	# Label pra os vertices
+	traker_labels = []
+	for t in trakers:
+		traker_labels.append(TRACKER+'_'+str(my_hash_tracker(t)))
+	monitor_labels = []
+	for m in monitors:
+		monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
+	peer_labels = []
+	for l in peer_lists:
+		for p in l:
+			peer_labels.append(PEER+'_'+my_hash_peer(p))
+
+	print(peer_labels)
+
+	# for wir in windows_index_range:
+		
+	# 	traker_nodes = traker_labels[wir[0]:wir[1]]
+	# 	monitor_nodes = monitor_labels[wir[0]:wir[1]]
+	# 	peer_list_nodes = peer_labels = [wir[0]:wir[1]]
+
+	# 	for i in range(args.numberedges):
 
 
 
