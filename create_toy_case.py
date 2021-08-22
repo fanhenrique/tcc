@@ -201,7 +201,7 @@ def main():
 		
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
-			peer_list_nodes = peer_labels = [wir[0]:wir[1]]
+			peer_list_nodes = peer_labels[wir[0]:wir[1]]
 
 			for i in range(len(traker_nodes)):
 				file.write(traker_nodes[i], monitor_nodes[i], peer_list_nodes[i])
