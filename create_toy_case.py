@@ -89,7 +89,7 @@ def main():
 	traker_labels = []
 	for t in trakers:
 		# traker_labels.append(TRACKER+'_'+str(my_hash_tracker(t)))
-		traker_labels.append(utils.my_hash_tracker(t))
+		traker_labels.append(str(utils.my_hash_tracker(t)))
 	monitor_labels = []
 	for m in monitors:
 		# monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
