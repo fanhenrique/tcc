@@ -93,14 +93,14 @@ def main():
 	monitor_labels = []
 	for m in monitors:
 		# monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
-		monitor_labels.append(utils.my_hash_monitor(m))
+		monitor_labels.append(str(utils.my_hash_monitor(m)))
 	peer_labels = []
 	for l in peer_lists:
 		for p in l:
 			# peer_labels.append(PEER+'_'+str(my_hash_peer(p)))
-			peer_labels.append(utils.my_hash_peer(p))
+			peer_labels.append(str(utils.my_hash_peer(p)))
 
-	# print(windows_index_range)
+	print(windows_index_range)
 
 	logging.info('save file ...')
 	with open('toy_case.txt', 'w') as file:
