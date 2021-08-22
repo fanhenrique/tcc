@@ -191,7 +191,7 @@ def main():
 	peer_labels = []
 	for l in peer_lists:
 		for p in l:
-			peer_labels.append(PEER+'_'+my_hash_peer(p))
+			peer_labels.append(PEER+'_'+str(my_hash_peer(p)))
 
 	print(peer_labels)
 
