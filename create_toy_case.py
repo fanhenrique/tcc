@@ -117,7 +117,8 @@ def main():
 				num_edges = args.numberedges
 			
 			for j in range(num_edges):
-				
+
+				file.write(str(i))
 				file.write(str(traker_nodes[j]) + ' ')
 				file.write(str(monitor_nodes[j]) + ' ')
 				for peer in peer_list_nodes:
