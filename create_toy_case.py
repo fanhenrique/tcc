@@ -209,7 +209,7 @@ def main():
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
 			peer_list_nodes = peer_labels[wir[0]:wir[1]]
 
-			if args.numberedges == 0: num_edges = len(traker_nodes) else num_edges = args.numberedges
+			if args.numberedges == 0: num_edges = len(traker_nodes) else: num_edges = args.numberedges
 			
 			for i in range(num_edges):
 				
