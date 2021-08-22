@@ -112,6 +112,8 @@ def main():
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
 			peer_list_nodes = peer_labels[wir[0]:wir[1]]
 
+			print(peer_list_nodes.shape())
+
 			if args.numberedges == 0:
 				num_edges = len(traker_nodes)
 			else:
@@ -122,8 +124,8 @@ def main():
 				file.write(str(i)+ '\n')
 				file.write(str(traker_nodes[j]) + '\n')
 				file.write(str(monitor_nodes[j]) + '\n')
-				for peer in peer_list_nodes[i]:
-					file.write(str(peer)+ ' ')
+				# for peer in peer_list_nodes:
+					# file.write(str(peer)+ ' ')
 				file.write('\n')
 			i+=1
 
