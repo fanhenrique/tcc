@@ -94,11 +94,13 @@ def main():
 	for m in monitors:
 		# monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
 		monitor_labels.append(str(utils.my_hash_monitor(m)))
-	peer_labels = []
+	peer_lists_labels = []
 	for l in peer_lists:
+		peer_list_labels = []
 		for p in l:
-			# peer_labels.append(PEER+'_'+str(my_hash_peer(p)))
-			peer_labels.append(str(utils.my_hash_peer(p)))
+			# peer_list_labels.append(PEER+'_'+str(my_hash_peer(p)))
+			peer_list_labels.append(str(utils.my_hash_peer(p)))
+		peer_lists_labels.append(peer_list_labels)
 
 	print(windows_index_range)
 
@@ -110,7 +112,7 @@ def main():
 		
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
-			peer_list_nodes = peer_labels[wir[0]:wir[1]]
+			peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
 
 			print(len(peer_list_nodes))
 			print(len(peer_list_nodes[0]))
