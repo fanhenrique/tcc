@@ -105,7 +105,7 @@ def main():
 	logging.info('save file ...')
 	with open('toy_case.txt', 'w') as file:
 		
-		for wir in windows_index_range:
+		for i, wir in windows_index_range:
 		
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
@@ -116,10 +116,10 @@ def main():
 			else:
 				num_edges = args.numberedges
 			
-			for i in range(num_edges):
+			for j in range(num_edges):
 				
-				file.write(str(traker_nodes[i]) + ' ')
-				file.write(str(monitor_nodes[i]) + ' ')
+				file.write(str(traker_nodes[j]) + ' ')
+				file.write(str(monitor_nodes[j]) + ' ')
 				for peer in peer_list_nodes:
 					file.write(str(peer)+ ' ')
 				file.write('\n')
