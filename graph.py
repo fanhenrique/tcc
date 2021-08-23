@@ -55,12 +55,12 @@ def create_graph(nodes_list):
 	graph = nx.Graph()
 
 	# vertices
-	for nodes in nodes_list[-1]:
+	for nodes in nodes_list:
 		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
 
 	# label dos vertices 	
 	dict_nodes = {}	
-	for nodes in nodes_list[-1]:
+	for nodes in nodes_list:
 		for n in nodes[0]:
 			dict_nodes[n] = nodes[1]
 	nx.set_node_attributes(graph, dict_nodes, 'label')	
@@ -79,6 +79,38 @@ def create_graph(nodes_list):
 	graph.add_weighted_edges_from(weighted_edges)
 
 	return graph
+
+def create_graph_peer_weights(nodes_list, peer_lists):
+
+	graph = nx.Graph()
+
+	# vertices
+	for nodes in nodes_list:
+		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
+
+	# label dos vertices 	
+	dict_nodes = {}	
+	for nodes in nodes_list:
+		for n in nodes[0]:
+			dict_nodes[n] = nodes[1]
+	nx.set_node_attributes(graph, dict_nodes, 'label')	
+
+	# cria as restas
+	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
+	
+	# conta os pesos das arestas
+	weight = dict(Counter(edges))
+	
+	# arestas com peso
+	weighted_edges = []
+	for e in edges:
+		weighted_edges.append((e[0], e[1], weight[(e[0], e[1])]))
+
+	graph.add_weighted_edges_from(weighted_edges)
+
+	return graph
+
+
 
 def show_graph(graph):
 
@@ -166,6 +198,23 @@ def main():
 		peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
 	
 
+		print(traker_nodes[0])
+		print(monitor_nodes[0])
+		print(peer_list_nodes[0])	
+
+
+		print(traker_nodes[1])
+		print(monitor_nodes[1])
+		print(peer_list_nodes[1])	
+
+
+
+		print(traker_nodes[2])
+		print(monitor_nodes[2])
+		print(peer_list_nodes[2])	
+
+		exit()
+
 		if args.numberedges == 0:
 			num_edges = len(traker_nodes)
 		else:
@@ -176,9 +225,10 @@ def main():
 		# Label, tipo, cor dos vertices	
 		nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
 		nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
-		nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
+		# nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
 
-		graph = create_graph(nodes_list)
+		# graph = create_graph(nodes_list)
+		graph = create_graph_peer_weights(nodes_list, peer_lists_nodes)
 
 		# graph_stellar = sg.StellarGraph.from_networkx(graph)
 		# print(graph_stellar.info())
