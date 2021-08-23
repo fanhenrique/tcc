@@ -55,12 +55,12 @@ def create_graph(nodes_list):
 	graph = nx.Graph()
 
 	# vertices
-	for nodes in nodes_list:
+	for nodes in nodes_list[-1]:
 		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
 
 	# label dos vertices 	
 	dict_nodes = {}	
-	for nodes in nodes_list:
+	for nodes in nodes_list[-1]:
 		for n in nodes[0]:
 			dict_nodes[n] = nodes[1]
 	nx.set_node_attributes(graph, dict_nodes, 'label')	
@@ -176,7 +176,7 @@ def main():
 		# Label, tipo, cor dos vertices	
 		nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
 		nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
-		nodes_list.append((monitor_list_nodes[0:num_edges], PEER, 'green'))
+		nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'green'))
 
 		graph = create_graph(nodes_list)
 
