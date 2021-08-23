@@ -176,7 +176,7 @@ def main():
 		# Label, tipo, cor dos vertices	
 		nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
 		nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
-		nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'green'))
+		nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
 
 		graph = create_graph(nodes_list)
 
