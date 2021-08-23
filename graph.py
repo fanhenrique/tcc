@@ -108,6 +108,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 
 	for i in range(len(nodes_list[0])):
+		print((nodes_list[0][i], nodes_list[1][i], len(peer_lists[i])))	
 		weighted_edges.append((nodes_list[0][i], nodes_list[1][i], len(peer_lists[i])))
 
 	graph.add_weighted_edges_from(weighted_edges)
