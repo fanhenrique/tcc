@@ -86,3 +86,49 @@ def cal_windows(epoch, number_windows):
 			break0 = break1+1
 
 	return time_min, windows, windows_index_range
+
+
+def read_file(file):
+	epochs, trakers, monitors, peer_lists = [], [], [], []
+	with open(file, 'r') as file:
+		file.readline() #ignora cabeçalho 
+		for line in file:
+
+			line_split = line.split()
+			
+			try:
+				epochs.append(float(line_split[0]))
+			except:
+				print(line)
+				continue
+			try:
+				trakers.append(line_split[1].split("'")[1])
+			except:
+				print(line)
+				epochs.pop()
+				continue
+			try:
+				monitors.append(line_split[16].split("'")[1])	
+			except:
+				print(line)
+				epochs.pop()
+				trakers.pop()
+				continue
+			try:
+				peer_list = []
+				peer_list.append(line_split[18].split('{')[1].split(':')[0])
+				i = 20
+				while True:
+					try:
+						peer_list.append(line_split[i].split("'")[1].split(':')[0])
+					except IndexError:
+						break
+					i+=2
+				peer_lists.append(peer_list)
+			except:
+				print(line)
+				epochs.pop()
+				trakers.pop()
+				monitors.pop()	
+
+	return epochs, trakers, monitors, peer_lists

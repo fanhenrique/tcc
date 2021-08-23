@@ -13,52 +13,6 @@ TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
 
-
-def readFile(file):
-	epochs, trakers, monitors, peer_lists = [], [], [], []
-	with open(file, 'r') as file:
-		file.readline() #ignora cabeçalho 
-		for line in file:
-
-			line_split = line.split()
-			
-			try:
-				epochs.append(float(line_split[0]))
-			except:
-				print(line)
-				continue
-			try:
-				trakers.append(line_split[1].split("'")[1])
-			except:
-				print(line)
-				epochs.pop()
-				continue
-			try:
-				monitors.append(line_split[16].split("'")[1])	
-			except:
-				print(line)
-				epochs.pop()
-				trakers.pop()
-				continue
-			try:
-				peer_list = []
-				peer_list.append(line_split[18].split('{')[1].split(':')[0])
-				i = 20
-				while True:
-					try:
-						peer_list.append(line_split[i].split("'")[1].split(':')[0])
-					except IndexError:
-						break
-					i+=2
-				peer_lists.append(peer_list)
-			except:
-				print(line)
-				epochs.pop()
-				trakers.pop()
-				monitors.pop()	
-
-	return epochs, trakers, monitors, peer_lists
-
 def main():
 
 	parser = argparse.ArgumentParser(description='Create toy case')
@@ -79,7 +33,7 @@ def main():
 
 
 	logging.info('reading file ...')
-	epochs, trakers, monitors, peer_lists =  readFile(args.file)
+	epochs, trakers, monitors, peer_lists =  utils.read_file(args.file)
 
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
@@ -88,18 +42,18 @@ def main():
 	# Label pra os vertices
 	traker_labels = []
 	for t in trakers:
-		# traker_labels.append(TRACKER+'_'+str(my_hash_tracker(t)))
-		traker_labels.append(str(utils.my_hash_tracker(t)))
+		traker_labels.append('T'+str(my_hash_tracker(t)))
+		# traker_labels.append(str(utils.my_hash_tracker(t)))
 	monitor_labels = []
 	for m in monitors:
-		# monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
-		monitor_labels.append(str(utils.my_hash_monitor(m)))
+		monitor_labels.append('M'+str(my_hash_monitor(m)))
+		# monitor_labels.append(str(utils.my_hash_monitor(m)))
 	peer_lists_labels = []
 	for l in peer_lists:
 		peer_list_labels = []
 		for p in l:
-			# peer_list_labels.append(PEER+'_'+str(my_hash_peer(p)))
-			peer_list_labels.append(str(utils.my_hash_peer(p)))
+			peer_list_labels.append('P'+str(my_hash_peer(p)))
+			# peer_list_labels.append(str(utils.my_hash_peer(p)))
 		peer_lists_labels.append(peer_list_labels)
 
 	print(windows_index_range)
@@ -109,7 +63,7 @@ def main():
 		i = 0
 		for wir in windows_index_range:
 			print(wir)
-			
+
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
 			peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
