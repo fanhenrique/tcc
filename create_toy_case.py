@@ -42,17 +42,17 @@ def main():
 	# Label pra os vertices
 	traker_labels = []
 	for t in trakers:
-		traker_labels.append('T'+str(my_hash_tracker(t)))
+		traker_labels.append('T'+str(utils.my_hash_tracker(t)))
 		# traker_labels.append(str(utils.my_hash_tracker(t)))
 	monitor_labels = []
 	for m in monitors:
-		monitor_labels.append('M'+str(my_hash_monitor(m)))
+		monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
 		# monitor_labels.append(str(utils.my_hash_monitor(m)))
 	peer_lists_labels = []
 	for l in peer_lists:
 		peer_list_labels = []
 		for p in l:
-			peer_list_labels.append('P'+str(my_hash_peer(p)))
+			peer_list_labels.append('P'+str(utils.my_hash_peer(p)))
 			# peer_list_labels.append(str(utils.my_hash_peer(p)))
 		peer_lists_labels.append(peer_list_labels)
 
