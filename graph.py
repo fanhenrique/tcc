@@ -100,7 +100,8 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	
 	# conta os pesos das arestas
 	weight = dict(Counter(edges))
-	
+	print(weight)
+	exit()
 	# arestas com peso
 	weighted_edges = []
 	for e in edges:
@@ -197,28 +198,6 @@ def main():
 		monitor_nodes = monitor_labels[wir[0]:wir[1]]
 		peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
 	
-		print(len(traker_nodes))
-		print(len(monitor_nodes))
-		print(len(peer_list_nodes))
-
-
-		print(traker_nodes[0])
-		print(monitor_nodes[0])
-		print(peer_list_nodes[0])	
-
-
-		print(traker_nodes[1])
-		print(monitor_nodes[1])
-		print(peer_list_nodes[1])	
-
-
-
-		print(traker_nodes[2])
-		print(monitor_nodes[2])
-		print(peer_list_nodes[2])	
-
-		exit()
-
 		if args.numberedges == 0:
 			num_edges = len(traker_nodes)
 		else:
