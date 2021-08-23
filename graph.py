@@ -18,6 +18,10 @@ import logging
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
+TRACKER = 'TRACKER'
+MONITOR = 'MONITOR'
+PEER = 'PEER'
+
 
 # def readFile(file):
 # 	epochs, trakers, monitors = [], [], []
@@ -112,14 +116,9 @@ def main():
 	parser = argparse.ArgumentParser(description='Traces')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
-	# help_msg='Escolha o algoritmo 0 - degree_centrality 1 - degree 2 - eigenvector_centrality 3 - betweenness_centrality'
-	# parser.add_argument('--algorithm', '-a', choices=[0,1,2,3], help=help_msg, required=True, type=int)
-	# parser.add_argument('--sizeshow', '-s', help='head e tail monitores no arquivo de saida', default=0, type=int)
-	
-	# REMOVER DEPOIS (apenas pra rodar com um arquivo menor)
-	# parser.add_argument('--numberlines', '-n', help='number lines', default=0, type=int) 
 	
 	parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int) 
+	parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
