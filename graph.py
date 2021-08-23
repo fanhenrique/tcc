@@ -211,7 +211,7 @@ def main():
 		# nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
 
 		# graph = create_graph(nodes_list)
-		graph = create_graph_peer_weights(nodes_list, peer_lists_nodes)
+		graph = create_graph_peer_weights(nodes_list, peer_list_nodes)
 
 		# graph_stellar = sg.StellarGraph.from_networkx(graph)
 		# print(graph_stellar.info())
