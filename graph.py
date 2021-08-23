@@ -197,6 +197,10 @@ def main():
 		monitor_nodes = monitor_labels[wir[0]:wir[1]]
 		peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
 	
+		print(len(traker_nodes))
+		print(len(monitor_nodes))
+		print(len(peer_list_nodes))
+
 
 		print(traker_nodes[0])
 		print(monitor_nodes[0])
