@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 
 import utils
 
+
+
 from collections import Counter
 
 import argparse
@@ -17,31 +19,32 @@ DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
 
-def readFile(file):
-	epochs, trakers, monitors = [], [], []
-	with open(file, 'r') as file:
-		file.readline() #ignora cabeçalho 
-		for line in file:
-			line_split = line.split()			
-			try:
-				epochs.append(float(line_split[0]))
-			except:
-				print(line)
-				continue
-			try:
-				trakers.append(line_split[1].split("'")[1])
-			except:
-				print(line)
-				epochs.pop()
-				continue
-			try:
-				monitors.append(line_split[16].split("'")[1])	
-			except:
-				print(line)
-				epochs.pop()
-				trakers.pop()
-				continue
-	return epochs, trakers, monitors
+# def readFile(file):
+# 	epochs, trakers, monitors = [], [], []
+# 	with open(file, 'r') as file:
+# 		file.readline() #ignora cabeçalho 
+# 		for line in file:
+# 			line_split = line.split()			
+# 			try:
+# 				epochs.append(float(line_split[0]))
+# 			except:
+# 				print(line)
+# 				continue
+# 			try:
+# 				trakers.append(line_split[1].split("'")[1])
+# 			except:
+# 				print(line)
+# 				epochs.pop()
+# 				continue
+# 			try:
+# 				monitors.append(line_split[16].split("'")[1])	
+# 			except:
+# 				print(line)
+# 				epochs.pop()
+# 				trakers.pop()
+# 				continue
+# 	return epochs, trakers, monitors
+
 
 def create_graph(nodes_list):
 
@@ -131,7 +134,7 @@ def main():
 	init()
 
 	logging.info('reading file ...')
-	epochs, trakers, monitors =  readFile(args.file)
+	epochs, trakers, monitors, peer_lists =  utils.read_file(args.file)
 
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
@@ -140,18 +143,28 @@ def main():
 	# Label pra os vertices
 	traker_labels = []
 	for t in trakers:
-		traker_labels.append(TRACKER+'_'+str(utils.my_hash_tracker(t)))
+		traker_labels.append('T'+str(utils.my_hash_tracker(t)))
+		# traker_labels.append(str(utils.my_hash_tracker(t)))
 	monitor_labels = []
 	for m in monitors:
-		monitor_labels.append(MONITOR+'_'+str(utils.my_hash_monitor(m)))
+		monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
+		# monitor_labels.append(str(utils.my_hash_monitor(m)))
+	peer_lists_labels = []
+	for l in peer_lists:
+		peer_list_labels = []
+		for p in l:
+			peer_list_labels.append('P'+str(utils.my_hash_peer(p)))
+			# peer_list_labels.append(str(utils.my_hash_peer(p)))
+		peer_lists_labels.append(peer_list_labels)
 
 	graphs = []
-	graphs_stellar = []
+	# graphs_stellar = []
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 		
 		traker_nodes = traker_labels[wir[0]:wir[1]]
 		monitor_nodes = monitor_labels[wir[0]:wir[1]]
+		peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
 	
 		nodes_list = []
 		# Label, tipo, cor dos vertices	

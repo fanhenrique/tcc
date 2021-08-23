@@ -56,20 +56,22 @@ def main():
 			# peer_list_labels.append(str(utils.my_hash_peer(p)))
 		peer_lists_labels.append(peer_list_labels)
 
-	print(windows_index_range)
+
+
+	# print(windows_index_range)
 
 	logging.info('save file ...')
 	with open('toy_case.txt', 'w') as file:
 		i = 0
 		for wir in windows_index_range:
-			print(wir)
+			# print(wir)
 
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
 			peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
 
-			print(len(peer_list_nodes))
-			print(len(peer_list_nodes[0]))
+			# print(len(peer_list_nodes))
+			# print(len(peer_list_nodes[0]))
 
 			if args.numberedges == 0:
 				num_edges = len(traker_nodes)
