@@ -1,3 +1,4 @@
 out/
 __pycache__/
 traces_prediction.ipynb
+toy_case.txt

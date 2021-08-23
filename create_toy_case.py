@@ -108,8 +108,8 @@ def main():
 	with open('toy_case.txt', 'w') as file:
 		i = 0
 		for wir in windows_index_range:
-			# print(i, wir)
-		
+			print(wir)
+			
 			traker_nodes = traker_labels[wir[0]:wir[1]]
 			monitor_nodes = monitor_labels[wir[0]:wir[1]]
 			peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]

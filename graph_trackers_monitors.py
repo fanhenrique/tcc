@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 # import stellargraph as sg
 
+import utils
+
 from collections import Counter
 
 import argparse
@@ -14,15 +16,6 @@ import logging
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
-
-TRACKER = 'TRACKER'
-MONITOR = 'MONITOR'
-
-hash_count_tracker = 1
-hash_table_tracker = {}
-
-hash_count_monitor = 1
-hash_table_monitor = {}
 
 def readFile(file):
 	epochs, trakers, monitors = [], [], []
@@ -93,9 +86,6 @@ def show_graph(graph):
 
 	plt.show()
 
-
-
-
 def save_graph(graph, g):
 	# print(graph.nodes.data())
 	with open('out/graph_'+str(g)+'.txt', 'w') as file:
@@ -137,12 +127,6 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
-	
-	global hash_table_tracker
-	global hash_count_tracker
-
-	global hash_table_monitor
-	global hash_count_monitor
 
 	init()
 
@@ -150,16 +134,16 @@ def main():
 	epochs, trakers, monitors =  readFile(args.file)
 
 	logging.info('calculating windows ...')
-	time_min, windows, windows_index_range = cal_windows(epochs, args.numberwindows)
+	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
 
 
 	# Label pra os vertices
 	traker_labels = []
 	for t in trakers:
-		traker_labels.append(TRACKER+'_'+str(my_hash_tracker(t)))
+		traker_labels.append(TRACKER+'_'+str(utils.my_hash_tracker(t)))
 	monitor_labels = []
 	for m in monitors:
-		monitor_labels.append(MONITOR+'_'+str(my_hash_monitor(m)))
+		monitor_labels.append(MONITOR+'_'+str(utils.my_hash_monitor(m)))
 
 	graphs = []
 	graphs_stellar = []
