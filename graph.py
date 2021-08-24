@@ -114,7 +114,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 	weighted_edges = []
 	for e in edges:
-		weighted_edges.append((e[0], e[1], weights2[(e[0], e[1])]))
+		weighted_edges.append((e[0], e[1], weights[(e[0], e[1])]))
 
 	graph.add_weighted_edges_from(weighted_edges)
 
