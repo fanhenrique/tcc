@@ -99,19 +99,18 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
 	print(edges)
 
-
-	weight = dict(Counter(edges))
-	print(weight)
-
-
 	# conta pesos das arestas
 	weights = []
 	for peer in peer_lists:
 		weights.append(len(peer))
 	print(weights)
 
-	weighted_edges = dict(zip(edges, weights))
-	print(weighted_edges)
+	weights = dict(zip(edges, weights))
+
+	weighted_edges = []
+	for e in edges:
+		weighted_edges.append((e[0], e[1], weights[(e[0], e[1])]))
+
 
 	graph.add_weighted_edges_from(weighted_edges)
 
