@@ -215,10 +215,6 @@ def main():
 		else:
 			num_edges = args.numberedges
 
-		print(traker_nodes, len(traker_nodes))
-		print(monitor_nodes, len(monitor_nodes))
-		print(peer_list_nodes, len(peer_list_nodes))
-
 		nodes_list = []
 		# Label, tipo, cor dos vertices	
 		nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
@@ -228,6 +224,12 @@ def main():
 
 		# graph = create_graph(nodes_list)
 		graph = create_graph_peer_weights(nodes_list, peer_list_nodes[0:num_edges])
+
+
+		print(traker_nodes[0:num_edges], len(traker_nodes[0:num_edges]))
+		print(monitor_nodes[0:num_edges], len(monitor_nodes[0:num_edges]))
+		print(peer_list_nodes[0:num_edges], len(peer_list_nodes[0:num_edges]))
+
 
 		# graph_stellar = sg.StellarGraph.from_networkx(graph)
 		# print(graph_stellar.info())
