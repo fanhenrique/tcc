@@ -62,9 +62,14 @@ def cal_windows(epoch, number_windows):
 	w_previous = 0
 	counter_windows = 0
 
-	for e in epoch:		
-		if counter_windows < number_windows:
 
+	if number_windows != 0:
+		
+		for e in epoch:		
+			
+			if counter_windows >= number_windows:
+				break
+			
 			tm = (e - epoch[0]) / 60	
 			w = math.trunc(tm / WINDOWS_LEN)
 
@@ -74,8 +79,18 @@ def cal_windows(epoch, number_windows):
 			time_min.append(tm)
 			windows.append(w)
 			w_previous = w
-		else:
-			break
+	else:	
+		for e in epoch:		
+			tm = (e - epoch[0]) / 60	
+			w = math.trunc(tm / WINDOWS_LEN)
+
+			if w_previous != w:
+				counter_windows+=1	
+		
+			time_min.append(tm)
+			windows.append(w)
+			w_previous = w
+				
 	
 	windows_index_range = []
 	break0 = 0
