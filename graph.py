@@ -134,6 +134,7 @@ def show_graph(graph, g):
 	nx.draw_networkx_edge_labels(graph, pos, edge_labels=weights)
 
 	plt.savefig('fig/graph'+str(g)+'.png')
+	plt.clf()
 
 def save_graph(graph, g):
 	# print(graph.nodes.data())
