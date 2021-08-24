@@ -107,7 +107,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	# print(weight)
 
 	weights = dict(zip(edges, weight))
-	print(weights, len(weights))
+	# print(weights, len(weights))
 
 	# weigths2 = dict(functools.reduce(operator.add, weights))
 	# print(weights2)
@@ -215,12 +215,16 @@ def main():
 		else:
 			num_edges = args.numberedges
 
+		print(traker_nodes, len(traker_nodes))
+		print(monitor_nodes, len(monitor_nodes))
+		print(peer_list_nodes, len(peer_list_nodes))
 
 		nodes_list = []
 		# Label, tipo, cor dos vertices	
 		nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
 		nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
 		# nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
+
 
 		# graph = create_graph(nodes_list)
 		graph = create_graph_peer_weights(nodes_list, peer_list_nodes[0:num_edges])

@@ -99,18 +99,18 @@ def read_file(file):
 			try:
 				epochs.append(float(line_split[0]))
 			except:
-				print(line)
+				# print(line)
 				continue
 			try:
 				trakers.append(line_split[1].split("'")[1])
 			except:
-				print(line)
+				# print(line)
 				epochs.pop()
 				continue
 			try:
 				monitors.append(line_split[16].split("'")[1])	
 			except:
-				print(line)
+				# print(line)
 				epochs.pop()
 				trakers.pop()
 				continue
@@ -126,7 +126,7 @@ def read_file(file):
 					i+=2
 				peer_lists.append(peer_list)
 			except:
-				print(line)
+				# print(line)
 				epochs.pop()
 				trakers.pop()
 				monitors.pop()	
