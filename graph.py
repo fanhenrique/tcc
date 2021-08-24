@@ -1,20 +1,18 @@
 import math
 import os
 import shutil
-import networkx as nx
 import matplotlib.pyplot as plt
 
+import networkx as nx
 # import stellargraph as sg
-
-import utils
-
-import functools
-import operator
 
 from collections import Counter
 
 import argparse
 import logging
+
+#my imports
+import utils
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -22,34 +20,6 @@ TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
-
-
-# def readFile(file):
-# 	epochs, trakers, monitors = [], [], []
-# 	with open(file, 'r') as file:
-# 		file.readline() #ignora cabeçalho 
-# 		for line in file:
-# 			line_split = line.split()			
-# 			try:
-# 				epochs.append(float(line_split[0]))
-# 			except:
-# 				print(line)
-# 				continue
-# 			try:
-# 				trakers.append(line_split[1].split("'")[1])
-# 			except:
-# 				print(line)
-# 				epochs.pop()
-# 				continue
-# 			try:
-# 				monitors.append(line_split[16].split("'")[1])	
-# 			except:
-# 				print(line)
-# 				epochs.pop()
-# 				trakers.pop()
-# 				continue
-# 	return epochs, trakers, monitors
-
 
 def create_graph(nodes_list):
 
@@ -98,19 +68,19 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 	# cria as restas
 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
-	# print(edges)
+	print(edges)
+
+	w = dict(Counter(edges))
+	print(w)
 
 	# conta pesos das arestas
 	weight = []
 	for peer in peer_lists:
 		weight.append(len(peer))
-	# print(weight)
+	
 
 	weights = dict(zip(edges, weight))
-	# print(weights, len(weights))
-
-	# weigths2 = dict(functools.reduce(operator.add, weights))
-	# print(weights2)
+	
 
 	weighted_edges = []
 	for e in edges:
@@ -122,7 +92,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 
 
-def show_graph(graph, g):
+def save_graph_fig(graph, g):
 
 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
 	# nx.draw(graph, with_labels=True, node_color=colors)
@@ -136,14 +106,13 @@ def show_graph(graph, g):
 	plt.savefig('fig/graph'+str(g)+'.png')
 	plt.clf()
 
-def save_graph(graph, g):
+def save_graph_txt(graph, g):
 	# print(graph.nodes.data())
 	with open('out/graph'+str(g)+'.txt', 'w') as file:
 		for edge in graph.edges.data():
 			file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
 
 def init():
-
 	try:
 		shutil.rmtree('./out')
 		shutil.rmtree('./fig')
@@ -184,6 +153,7 @@ def main():
 	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
 
 
+	logging.info('renaming entities ...')
 	# Label pra os vertices
 	traker_labels = []
 	for t in trakers:
@@ -237,9 +207,9 @@ def main():
 
 		graphs.append(graph)
 
-		save_graph(graph, len(graphs))
+		save_graph_txt(graph, len(graphs))
 
-		show_graph(graph, len(graphs))
+		save_graph_fig(graph, len(graphs))
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out/')
 

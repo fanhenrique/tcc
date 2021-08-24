@@ -132,3 +132,31 @@ def read_file(file):
 				monitors.pop()	
 
 	return epochs, trakers, monitors, peer_lists
+
+
+
+# def readFile(file):
+# 	epochs, trakers, monitors = [], [], []
+# 	with open(file, 'r') as file:
+# 		file.readline() #ignora cabeçalho 
+# 		for line in file:
+# 			line_split = line.split()			
+# 			try:
+# 				epochs.append(float(line_split[0]))
+# 			except:
+# 				print(line)
+# 				continue
+# 			try:
+# 				trakers.append(line_split[1].split("'")[1])
+# 			except:
+# 				print(line)
+# 				epochs.pop()
+# 				continue
+# 			try:
+# 				monitors.append(line_split[16].split("'")[1])	
+# 			except:
+# 				print(line)
+# 				epochs.pop()
+# 				trakers.pop()
+# 				continue
+# 	return epochs, trakers, monitors
