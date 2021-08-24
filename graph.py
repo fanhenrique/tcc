@@ -64,19 +64,12 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	for nodes in nodes_list:
 		for n in nodes[0]:
 			dict_nodes[n] = nodes[1]
-	nx.set_node_attributes(graph, dict_nodes, 'label')	
-
-
-
+	nx.set_node_attributes(graph, dict_nodes, 'label')
 
 	# cria as restas
 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
 	# print(edges, len(edges))
 
-	# print('-----------------')
-	# w = dict(Counter(edges))
-	# print(w, len(w))
-	# print('-----------------')
 
 	# conta pesos das arestas
 	weights = []
@@ -88,17 +81,10 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	ew = zip(edges, weights)
 
 	c = Counter()
-
 	for k, v in ew:
 		c[k] += v
 
-	# print(c, len(c))
-
-	# print('++++++++++++')
-	# for i in range(len(edges)):
-	# 	print(edges[i], weights[i])
-	# print('++++++++++++')
-
+	
 	# dict_weights = dict(zip(edges, weights))
 	# print(dict_weights, len(dict_weights))		
 
