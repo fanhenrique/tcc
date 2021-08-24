@@ -110,7 +110,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 		weights.append(len(peer))
 	print(weights)
 
-
+	dict(zip(edges, weights))
 
 	# graph.add_weighted_edges_from(dict(zip(edges, weights)))
 
