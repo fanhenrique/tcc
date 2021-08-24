@@ -122,7 +122,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 
 
-def show_graph(graph):
+def show_graph(graph, g):
 
 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
 	# nx.draw(graph, with_labels=True, node_color=colors)
@@ -133,11 +133,11 @@ def show_graph(graph):
 	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
 	nx.draw_networkx_edge_labels(graph, pos, edge_labels=weights)
 
-	plt.show()
+	plt.savefig('fig/graph'+str(g)+.'png')
 
 def save_graph(graph, g):
 	# print(graph.nodes.data())
-	with open('out/graph_'+str(g)+'.txt', 'w') as file:
+	with open('out/graph'+str(g)+'.txt', 'w') as file:
 		for edge in graph.edges.data():
 			file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
 
@@ -145,10 +145,12 @@ def init():
 
 	try:
 		shutil.rmtree('./out')
+		shutil.rmtree('./fig')
 	except FileNotFoundError:
 		pass
 	try:
 		os.mkdir('./out')
+		os.mkdir('./fig')
 	except FileExistsError:
 		pass
 
@@ -230,7 +232,7 @@ def main():
 
 		save_graph(graph, len(graphs))
 
-		show_graph(graph)
+		show_graph(graph, len(graphs))
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out/')
 
