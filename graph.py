@@ -98,16 +98,16 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 	# cria as restas
 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
-	print(edges)
+	# print(edges)
 
 	# conta pesos das arestas
 	weight = []
 	for peer in peer_lists:
 		weight.append(len(peer))
-	print(weight)
+	# print(weight)
 
 	weights = dict(zip(edges, weight))
-	print(weights)
+	print(weights, len(weights))
 
 	# weigths2 = dict(functools.reduce(operator.add, weights))
 	# print(weights2)
