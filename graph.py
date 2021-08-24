@@ -196,9 +196,9 @@ def main():
 		graph = create_graph_peer_weights(nodes_list, peer_list_nodes[0:num_edges])
 
 
-		print(traker_nodes[0:num_edges], len(traker_nodes[0:num_edges]))
-		print(monitor_nodes[0:num_edges], len(monitor_nodes[0:num_edges]))
-		print(peer_list_nodes[0:num_edges], len(peer_list_nodes[0:num_edges]))
+		# print(traker_nodes[0:num_edges], len(traker_nodes[0:num_edges]))
+		# print(monitor_nodes[0:num_edges], len(monitor_nodes[0:num_edges]))
+		# print(peer_list_nodes[0:num_edges], len(peer_list_nodes[0:num_edges]))
 
 
 		# graph_stellar = sg.StellarGraph.from_networkx(graph)
