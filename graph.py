@@ -66,6 +66,9 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 			dict_nodes[n] = nodes[1]
 	nx.set_node_attributes(graph, dict_nodes, 'label')	
 
+
+
+
 	# cria as restas
 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
 	print(edges, len(edges))
@@ -81,6 +84,10 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 		weight.append(len(peer))
 	print(weight, len(weight))
 
+	print('++++++++++++')
+	for i in range(len(edges)):
+		print(edges[i], weight[i])
+	print('++++++++++++')
 
 	weights = dict(zip(edges, weight))
 	print(weights, len(weight))		
