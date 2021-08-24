@@ -71,7 +71,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 	# cria as restas
 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
-	print(edges, len(edges))
+	# print(edges, len(edges))
 
 	# print('-----------------')
 	# w = dict(Counter(edges))
@@ -82,7 +82,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	weights = []
 	for peer in peer_lists:
 		weights.append(len(peer))
-	print(weights, len(weights))
+	# print(weights, len(weights))
 
 
 	ew = zip(edges, weights)
@@ -92,7 +92,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	for k, v in ew:
 		c[k] += v
 
-	print(c, len(c))
+	# print(c, len(c))
 
 	# print('++++++++++++')
 	# for i in range(len(edges)):
