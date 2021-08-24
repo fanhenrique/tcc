@@ -71,7 +71,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	print(edges, len(edges))
 
 	print('-----------------')
-	w = dict(zip(edges, weight))
+	w = dict(Counter(edges))
 	print(w, len(w))
 	print('-----------------')
 
