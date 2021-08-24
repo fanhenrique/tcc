@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 
 import utils
 
-
+import functools
+import operator
 
 from collections import Counter
 
@@ -107,10 +108,13 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 	weights = dict(zip(edges, weights))
 
+
+	dict(functools.reduce(operator.add, weights))
+
+
 	weighted_edges = []
 	for e in edges:
 		weighted_edges.append((e[0], e[1], weights[(e[0], e[1])]))
-
 
 	graph.add_weighted_edges_from(weighted_edges)
 
