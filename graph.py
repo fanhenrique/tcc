@@ -151,7 +151,7 @@ def main():
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
 	
-	parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int) 
+	parser.add_argument('--numberwindows', '-w', help='number windows', default=0, type=int) 
 	parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
