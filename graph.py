@@ -92,7 +92,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	for k, v in ew:
 		c[k] += v
 
-	print(c)
+	print(c, len(c))
 
 	exit()
 
