@@ -21,6 +21,19 @@ TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
 
+def init():
+	try:
+		shutil.rmtree('./out')
+		shutil.rmtree('./fig')
+	except FileNotFoundError:
+		pass
+	try:
+		os.mkdir('./out')
+		os.mkdir('./fig')
+	except FileExistsError:
+		pass
+
+
 def create_graph(nodes_list):
 
 	graph = nx.Graph()
@@ -83,10 +96,7 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	c = Counter()
 	for k, v in ew:
 		c[k] += v
-
 	
-	# dict_weights = dict(zip(edges, weights))
-	# print(dict_weights, len(dict_weights))		
 
 	weighted_edges = []
 	for e in edges:
@@ -95,40 +105,6 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 	graph.add_weighted_edges_from(weighted_edges)
 
 	return graph
-
-
-
-def save_graph_fig(graph, g):
-
-	colors = [u[1] for u in graph.nodes(data='color_nodes')]
-	# nx.draw(graph, with_labels=True, node_color=colors)
-	
-	pos = nx.spring_layout(graph)
-	weights = nx.get_edge_attributes(graph, "weight")
-
-	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
-	nx.draw_networkx_edge_labels(graph, pos, edge_labels=weights)
-
-	plt.savefig('fig/graph'+str(g)+'.png')
-	plt.clf()
-
-def save_graph_txt(graph, g):
-	# print(graph.nodes.data())
-	with open('out/graph'+str(g)+'.txt', 'w') as file:
-		for edge in graph.edges.data():
-			file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
-
-def init():
-	try:
-		shutil.rmtree('./out')
-		shutil.rmtree('./fig')
-	except FileNotFoundError:
-		pass
-	try:
-		os.mkdir('./out')
-		os.mkdir('./fig')
-	except FileExistsError:
-		pass
 
 
 def main():
@@ -189,7 +165,7 @@ def main():
 		if args.numberedges <= 0 or args.numberedges >= len(traker_nodes):
 			num_edges = len(traker_nodes)
 		else:
-			num_edges = args.numberedges
+			num_edges = args.numberedges	
 
 		nodes_list = []
 		# Label, tipo, cor dos vertices	
@@ -197,14 +173,8 @@ def main():
 		nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
 		# nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
 
-
 		# graph = create_graph(nodes_list)
 		graph = create_graph_peer_weights(nodes_list, peer_list_nodes[0:num_edges])
-
-
-		# print(traker_nodes[0:num_edges], len(traker_nodes[0:num_edges]))
-		# print(monitor_nodes[0:num_edges], len(monitor_nodes[0:num_edges]))
-		# print(peer_list_nodes[0:num_edges], len(peer_list_nodes[0:num_edges]))
 
 
 		# graph_stellar = sg.StellarGraph.from_networkx(graph)

@@ -56,17 +56,15 @@ def my_hash_peer(peer_str):
 
 def cal_windows(epoch, number_windows):
 	
-	time_min = []
-	windows = []
+	time_min, windows = [], []
 
 	w_previous = 0
 	counter_windows = 0
 
-
 	if number_windows != 0:
 		
 		for e in epoch:		
-			
+
 			if counter_windows >= number_windows:
 				break
 			
@@ -91,17 +89,26 @@ def cal_windows(epoch, number_windows):
 			windows.append(w)
 			w_previous = w
 				
+	windows_index_range = windows_range(windows) 
 	
+	return time_min, windows, windows_index_range
+
+def windows_range(windows):
+
 	windows_index_range = []
 	break0 = 0
-	for i in range(len(windows)-1):
-		if windows[i] != windows[i+1]:
+	for i in range(0, len(windows)):
+		if i+1 == len(windows):
 			break1 = i
 			windows_index_range.append((break0, break1))
 			break0 = break1+1
+		else:
+			if windows[i] != windows[i+1]:
+				break1 = i
+				windows_index_range.append((break0, break1))
+				break0 = break1+1
 
-	return time_min, windows, windows_index_range
-
+	return windows_index_range
 
 def read_file(file):
 	epochs, trakers, monitors, peer_lists = [], [], [], []
@@ -147,6 +154,36 @@ def read_file(file):
 				monitors.pop()	
 
 	return epochs, trakers, monitors, peer_lists
+
+
+def draw_graph(graph):
+
+	colors = [u[1] for u in graph.nodes(data='color_nodes')]
+	# nx.draw(graph, with_labels=True, node_color=colors)
+	
+	pos = nx.spring_layout(graph)
+	weights = nx.get_edge_attributes(graph, "weight")
+
+	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
+	nx.draw_networkx_edge_labels(graph, pos, edge_labels=weights)
+
+def show_graph(graph):
+
+	draw_graph(graph)
+	plt.show()
+
+def save_graph_fig(graph, g):
+
+	draw_graph(graph)
+		
+	plt.savefig('fig/graph'+str(g)+'.png')
+	plt.clf()
+
+def save_graph_txt(graph, g):
+	# print(graph.nodes.data())
+	with open('out/graph'+str(g)+'.txt', 'w') as file:
+		for edge in graph.edges.data():
+			file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
 
 
 

@@ -1,25 +1,103 @@
-import math
+from itertools import zip_longest
 
-import utils
+import math
+import matplotlib.pyplot as plt
+
+import networkx as nx
+# import stellargraph as sg
+
+from collections import Counter
 
 import argparse
 import logging
 
+#my imports
+import utils
+
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
-WINDOWS_LEN = 15
 
 TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
+
+def read_file(file):
+
+	windows, monitors, trackers, peer_lists = [], [], [], []
+
+	with open(file, 'r') as file:
+		
+		for line in file:
+			l = line.split()
+
+			windows.append(l[0])
+			monitors.append(l[1])
+			trackers.append(l[2])
+			pl = []
+			for x in l[3:]:
+				pl.append(x)
+			peer_lists.append(pl)
+
+	return windows, monitors, trackers, peer_lists
+
+def create_graph_peer_weights(monitors, trackers, peer_lists):
+
+	graph = nx.Graph()
+
+	# vertices
+	
+	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
+	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
+	for nodes in peer_lists[0]:
+		graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
+
+		
+	# USADO NO STELLARGRAPH
+	# label dos vertices 	
+	# dict_nodes = {}	
+	# for nodes in nodes_list[0:-1]:
+	# 	for n in nodes[0]:
+	# 		dict_nodes[n] = nodes[1]
+	# nx.set_node_attributes(graph, dict_nodes, 'label')
+
+
+	# cria as restas
+	edges_mt = list(zip(monitors[0], trackers[0]))
+	# print(edges_mt, len(edges_mt))
+
+	edges_tp = []	
+	for i in range(len(peer_lists[0])):
+		for peer in peer_lists[0][i]:
+			edges_tp.append((trackers[0][i], peer))
+	# print(edges_tp)
+	
+	# conta pesos das arestas
+	weights_mt = []
+	for peer_list in peer_lists[0]:
+		weights_mt.append(len(peer_list))
+	# print(weights_mt, len(weights_mt))
+
+	c = Counter()
+	for k, v in zip(edges_mt, weights_mt):
+		c[k] += v
+
+	weighted_edges = []
+	for e in edges_mt:
+		weighted_edges.append((e[0], e[1], c[(e[0], e[1])]))
+
+	graph.add_weighted_edges_from(weighted_edges)
+
+	graph.add_edges_from(edges_tp)
+
+	return graph
 
 def main():
 
 	parser = argparse.ArgumentParser(description='Create toy case')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
-	parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int) 
-	parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
+	# parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int) 
+	# parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -33,63 +111,19 @@ def main():
 
 
 	logging.info('reading file ...')
-	epochs, trakers, monitors, peer_lists =  utils.read_file(args.file)
+	windows, monitors, trackers, peer_lists = read_file(args.file)
 
-	logging.info('calculating windows ...')
-	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
+	windows_index_range = utils.windows_range(windows)
 
+	for wir in windows_index_range:
 
-	# Label pra os vertices
-	traker_labels = []
-	for t in trakers:
-		traker_labels.append('T'+str(utils.my_hash_tracker(t)))
-		# traker_labels.append(str(utils.my_hash_tracker(t)))
-	monitor_labels = []
-	for m in monitors:
-		monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
-		# monitor_labels.append(str(utils.my_hash_monitor(m)))
-	peer_lists_labels = []
-	for l in peer_lists:
-		peer_list_labels = []
-		for p in l:
-			peer_list_labels.append('P'+str(utils.my_hash_peer(p)))
-			# peer_list_labels.append(str(utils.my_hash_peer(p)))
-		peer_lists_labels.append(peer_list_labels)
+		m = (monitors[wir[0]:wir[1]], MONITOR, 'blue')
+		t = (trackers[wir[0]:wir[1]], TRACKER, 'red')		
+		pl = (peer_lists[wir[0]:wir[1]], PEER, 'green')
 
+		graph = create_graph_peer_weights(m, t, pl)
 
-
-	# print(windows_index_range)
-
-	logging.info('save file ...')
-	with open('toy_case.txt', 'w') as file:
-		i = 0
-		for wir in windows_index_range:
-			# print(wir)
-
-			traker_nodes = traker_labels[wir[0]:wir[1]]
-			monitor_nodes = monitor_labels[wir[0]:wir[1]]
-			peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
-
-			# print(len(peer_list_nodes))
-			# print(len(peer_list_nodes[0]))
-
-			if args.numberedges == 0:
-				num_edges = len(traker_nodes)
-			else:
-				num_edges = args.numberedges
-			
-			for j in range(num_edges):
-
-				file.write(str(i)+ '\n')
-				file.write(str(traker_nodes[j]) + '\n')
-				file.write(str(monitor_nodes[j]) + '\n')
-				for peer in peer_list_nodes[j]:
-					file.write(str(peer)+ ' ')
-				file.write('\n')
-			i+=1
-
-	logging.info('file created toy_case.txt')
-
+		show_graph(graph)
 
 
 if __name__ == '__main__':

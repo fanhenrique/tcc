@@ -1,4 +1,5 @@
 out/
+fig/
 __pycache__/
 traces_prediction.ipynb
-toy_case.txt
+example_model.txt
