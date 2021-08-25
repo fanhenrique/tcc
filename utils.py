@@ -1,5 +1,9 @@
 import math
 
+import matplotlib.pyplot as plt
+
+import networkx as nx
+
 WINDOWS_LEN = 15
 
 hash_count_tracker = 1
@@ -170,6 +174,7 @@ def draw_graph(graph):
 def show_graph(graph):
 
 	draw_graph(graph)
+	
 	plt.show()
 
 def save_graph_fig(graph, g):

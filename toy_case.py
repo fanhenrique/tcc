@@ -1,5 +1,3 @@
-from itertools import zip_longest
-
 import math
 import matplotlib.pyplot as plt
 
@@ -45,7 +43,6 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 	graph = nx.Graph()
 
 	# vertices
-	
 	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
 	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
 	for nodes in peer_lists[0]:
@@ -61,22 +58,28 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 	# nx.set_node_attributes(graph, dict_nodes, 'label')
 
 
-	# cria as restas
-	edges_mt = list(zip(monitors[0], trackers[0]))
-	# print(edges_mt, len(edges_mt))
-
+	# arestas trackers peers
 	edges_tp = []	
 	for i in range(len(peer_lists[0])):
 		for peer in peer_lists[0][i]:
 			edges_tp.append((trackers[0][i], peer))
 	# print(edges_tp)
 	
-	# conta pesos das arestas
+	graph.add_edges_from(edges_tp)
+
+
+
+
+	# arestas monitors trackers
+	edges_mt = list(zip(monitors[0], trackers[0]))
+	# print(edges_mt, len(edges_mt))
+
+	# conta pesos das arestas monitors trackers
 	weights_mt = []
 	for peer_list in peer_lists[0]:
 		weights_mt.append(len(peer_list))
 	# print(weights_mt, len(weights_mt))
-
+	
 	c = Counter()
 	for k, v in zip(edges_mt, weights_mt):
 		c[k] += v
@@ -87,7 +90,7 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 
 	graph.add_weighted_edges_from(weighted_edges)
 
-	graph.add_edges_from(edges_tp)
+	
 
 	return graph
 
@@ -123,7 +126,7 @@ def main():
 
 		graph = create_graph_peer_weights(m, t, pl)
 
-		show_graph(graph)
+		utils.show_graph(graph)
 
 
 if __name__ == '__main__':
