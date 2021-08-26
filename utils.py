@@ -71,7 +71,7 @@ def cal_windows(epochs, number_windows):
 		
 	for e in epochs:		
 		
-		tm = (e - epochs[0]) / 60	
+		tm = (e - epochs[0]) / 60.0	
 		w = math.trunc(tm / WINDOWS_LEN)
 
 		if w_previous != w:
@@ -79,6 +79,7 @@ def cal_windows(epochs, number_windows):
 	
 		time_min.append(tm)
 		windows.append(w)
+		
 		w_previous = w
 
 		if counter_windows >= number_windows:
