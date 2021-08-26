@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 
-WINDOWS_LEN = 15
+WINDOWS_LEN = 15.0
 
 hash_count_tracker = 1
 hash_table_tracker = {}
@@ -76,14 +76,14 @@ def cal_windows(epochs, number_windows):
 
 		if w_previous != w:
 			counter_windows+=1	
+
+		if counter_windows >= number_windows:
+			break
 	
 		time_min.append(tm)
 		windows.append(w)
 		
 		w_previous = w
-
-		if counter_windows >= number_windows:
-			break
 	
 				
 
