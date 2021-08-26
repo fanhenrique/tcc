@@ -83,6 +83,8 @@ def cal_windows(epoch, number_windows):
 		windows.append(w)
 		w_previous = w
 				
+
+	print(windows)	
 	print(number_windows)
 
 	windows_index_range = windows_range(windows) 
