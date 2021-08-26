@@ -86,7 +86,7 @@ def cal_windows(epochs, number_windows):
 	
 				
 
-	print(windows, len(windows))	
+	print(list(zip(time_min, windows)))	
 	print(number_windows)
 
 	windows_index_range = windows_range(windows) 
