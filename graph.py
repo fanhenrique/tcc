@@ -21,6 +21,7 @@ TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
 
+global SHOWPEERS
 
 def create_graph(nodes_list):
 
