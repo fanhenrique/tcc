@@ -159,8 +159,10 @@ def main():
 	parser = argparse.ArgumentParser(description='Traces')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
+	parser.add_argument('--showpeers', '-p', help='show peers', action='store_true')
 	
-	parser.add_argument('--numberwindows', '-w', help='number windows', default=0, type=int) 
+
+	parser.add_argument('--numberwindows', '-w', help='number windows', default=0, type=int)
 	# parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
@@ -172,6 +174,9 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
+
+	global SHOWPEERS
+	SHOWPEERS = args.showpeers
 
 	utils.init()
 
