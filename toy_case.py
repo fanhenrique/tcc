@@ -17,7 +17,7 @@ TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
 
-SHOWPEERS
+global SHOWPEERS
 
 def read_file(file):
 
