@@ -60,20 +60,21 @@ def my_hash_peer(peer_str):
 
 	return my_hash_peer_value
 
-def cal_windows(epoch, number_windows):
+def cal_windows(epochs, number_windows):
 	
 	time_min, windows = [], []
 
 	w_previous = 0
 	counter_windows = 0
 
+	print(len(epochs))
 		
-	for e in epoch:		
+	for e in epochs:		
 
 		if counter_windows >= number_windows:
 			break
 		
-		tm = (e - epoch[0]) / 60	
+		tm = (e - epochs[0]) / 60	
 		w = math.trunc(tm / WINDOWS_LEN)
 
 		if w_previous != w:
@@ -84,7 +85,7 @@ def cal_windows(epoch, number_windows):
 		w_previous = w
 				
 
-	print(windows)	
+	print(windows, len(windows))	
 	print(number_windows)
 
 	windows_index_range = windows_range(windows) 
