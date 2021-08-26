@@ -71,7 +71,7 @@ def cal_windows(epoch, number_windows):
 		
 		for e in epoch:		
 
-			if counter_windows >= number_windows:
+			if counter_windows > number_windows:
 				break
 			
 			tm = (e - epoch[0]) / 60	
