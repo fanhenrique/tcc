@@ -64,24 +64,26 @@ def cal_windows(epochs, number_windows):
 	
 	time_min, windows = [], []
 
-	w_previous = 0
-	counter_windows = 0
+	w_previous = 0 #remover depois q remover o -w
+	counter_windows = 0 #remover depois q remover o -w
 	
 	for e in epochs:		
 		
 		tm = (e - epochs[0]) / 60.0	
 		w = math.trunc(tm / WINDOWS_LEN)
 
+		#remover depois q remover o -w
 		if w_previous != w:
 			counter_windows+=1	
 
+		#remover depois q remover o -w	
 		if counter_windows >= number_windows:
 			break
 	
 		time_min.append(tm)
 		windows.append(w)
 		
-		w_previous = w
+		w_previous = w #remover depois q remover o -w
 
 	windows_index_range = windows_range(windows) 
 	

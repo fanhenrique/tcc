@@ -186,8 +186,6 @@ def main():
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
 
-	print(windows_index_range)
-
 	logging.info('renaming entities ...')
 	# Label pra os vertices
 	tracker_labels = []
