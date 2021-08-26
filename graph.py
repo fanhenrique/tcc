@@ -175,7 +175,7 @@ def main():
 	utils.init()
 
 	logging.info('reading file ...')
-	epochs, trakers, monitors, peer_lists =  utils.read_file(args.file)
+	epochs, trackers, monitors, peer_lists =  utils.read_file(args.file)
 
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
@@ -183,9 +183,9 @@ def main():
 
 	logging.info('renaming entities ...')
 	# Label pra os vertices
-	traker_labels = []
-	for t in trakers:
-		traker_labels.append('T'+str(utils.my_hash_tracker(t)))
+	tracker_labels = []
+	for t in trackers:
+		tracker_labels.append('T'+str(utils.my_hash_tracker(t)))
 		# traker_labels.append(str(utils.my_hash_tracker(t)))
 	monitor_labels = []
 	for m in monitors:
@@ -193,20 +193,20 @@ def main():
 		# monitor_labels.append(str(utils.my_hash_monitor(m)))
 	peer_lists_labels = []
 	for l in peer_lists:
-		peer_list_labels = []
+		pl_labels = []
 		for p in l:
-			peer_list_labels.append('P'+str(utils.my_hash_peer(p)))
-			# peer_list_labels.append(str(utils.my_hash_peer(p)))
-		peer_lists_labels.append(peer_list_labels)
+			pl_labels.append('P'+str(utils.my_hash_peer(p)))
+			# pl_labels.append(str(utils.my_hash_peer(p)))
+		peer_lists_labels.append(pl_labels)
 
 	graphs = []
 	# graphs_stellar = []
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 		
-		m = (monitors[wir[0]:wir[1]], MONITOR, 'blue')
-		t = (trackers[wir[0]:wir[1]], TRACKER, 'red')		
-		pl = (peer_lists[wir[0]:wir[1]], PEER, 'green')
+		m = (monitor_labels[wir[0]:wir[1]], MONITOR, 'blue')
+		t = (tracker_labels[wir[0]:wir[1]], TRACKER, 'red')		
+		pl = (peer_lists_labels[wir[0]:wir[1]], PEER, 'green')
 
 		graph = create_graph_peer_weights(m, t, pl)
 
@@ -218,7 +218,7 @@ def main():
 
 		utils.save_graph_fig(graph, len(graphs))
 
-		
+
 		# traker_nodes = traker_labels[wir[0]:wir[1]]
 		# monitor_nodes = monitor_labels[wir[0]:wir[1]]
 		# peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
