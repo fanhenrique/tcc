@@ -1,8 +1,10 @@
 import math
-
+import os
+import shutil
 import matplotlib.pyplot as plt
 
 import networkx as nx
+
 
 WINDOWS_LEN = 15
 
@@ -108,9 +110,9 @@ def windows_range(windows):
 			break0 = break1+1
 		else:
 			if windows[i] != windows[i+1]:
-				break1 = i
+				break1 = i+1
 				windows_index_range.append((break0, break1))
-				break0 = break1+1
+				break0 = break1
 
 	return windows_index_range
 
@@ -188,7 +190,22 @@ def save_graph_txt(graph, g):
 	# print(graph.nodes.data())
 	with open('out/graph'+str(g)+'.txt', 'w') as file:
 		for edge in graph.edges.data():
-			file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
+			if edge[2]:
+				file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
+			else:
+				file.write(edge[0] + ' ' + edge[1] + '\n')
+
+def init():
+	try:
+		shutil.rmtree('./out')
+		shutil.rmtree('./fig')
+	except FileNotFoundError:
+		pass
+	try:
+		os.mkdir('./out')
+		os.mkdir('./fig')
+	except FileExistsError:
+		pass
 
 
 

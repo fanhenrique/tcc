@@ -21,18 +21,6 @@ TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
 
-def init():
-	try:
-		shutil.rmtree('./out')
-		shutil.rmtree('./fig')
-	except FileNotFoundError:
-		pass
-	try:
-		os.mkdir('./out')
-		os.mkdir('./fig')
-	except FileExistsError:
-		pass
-
 
 def create_graph(nodes_list):
 
@@ -126,7 +114,7 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-	init()
+	utils.init()
 
 	logging.info('reading file ...')
 	epochs, trakers, monitors, peer_lists =  utils.read_file(args.file)

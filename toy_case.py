@@ -1,6 +1,3 @@
-import math
-import matplotlib.pyplot as plt
-
 import networkx as nx
 # import stellargraph as sg
 
@@ -11,6 +8,7 @@ import logging
 
 #my imports
 import utils
+
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -42,11 +40,14 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 
 	graph = nx.Graph()
 
+
+	print(monitors[0])
+
 	# vertices
 	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
 	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
-	for nodes in peer_lists[0]:
-		graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
+	# for nodes in peer_lists[0]:
+	# 	graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
 
 		
 	# USADO NO STELLARGRAPH
@@ -59,13 +60,13 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 
 
 	# arestas trackers peers
-	edges_tp = []	
-	for i in range(len(peer_lists[0])):
-		for peer in peer_lists[0][i]:
-			edges_tp.append((trackers[0][i], peer))
-	# print(edges_tp)
+	# edges_tp = []	
+	# for i in range(len(peer_lists[0])):
+	# 	for peer in peer_lists[0][i]:
+	# 		edges_tp.append((trackers[0][i], peer))
+	# # print(edges_tp)
 	
-	graph.add_edges_from(edges_tp)
+	# graph.add_edges_from(edges_tp)
 
 
 
@@ -90,7 +91,6 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 
 	graph.add_weighted_edges_from(weighted_edges)
 
-	
 
 	return graph
 
@@ -112,12 +112,20 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
+	utils.init()
 
 	logging.info('reading file ...')
 	windows, monitors, trackers, peer_lists = read_file(args.file)
 
+	print(monitors)
+
+	logging.info('range windows ...')
 	windows_index_range = utils.windows_range(windows)
 
+	print(windows_index_range)
+
+	graphs = []
+	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 
 		m = (monitors[wir[0]:wir[1]], MONITOR, 'blue')
@@ -126,7 +134,16 @@ def main():
 
 		graph = create_graph_peer_weights(m, t, pl)
 
+		graphs.append(graph)
+
+		utils.save_graph_txt(graph, len(graphs))
+
 		utils.show_graph(graph)
+
+		utils.save_graph_fig(graph, len(graphs))	
+	
+	logging.info(str(len(graphs)) + ' graphs in directory: out/')
+	logging.info(str(len(graphs)) + ' images graphs in directory fig/')
 
 
 if __name__ == '__main__':
