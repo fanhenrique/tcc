@@ -66,9 +66,7 @@ def cal_windows(epochs, number_windows):
 
 	w_previous = 0
 	counter_windows = 0
-
-	print(len(epochs))
-		
+	
 	for e in epochs:		
 		
 		tm = (e - epochs[0]) / 60.0	
@@ -84,11 +82,6 @@ def cal_windows(epochs, number_windows):
 		windows.append(w)
 		
 		w_previous = w
-	
-				
-
-	print(list(zip(time_min, windows)))	
-	print(number_windows)
 
 	windows_index_range = windows_range(windows) 
 	

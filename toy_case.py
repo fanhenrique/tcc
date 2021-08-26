@@ -17,7 +17,7 @@ TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
 
-global SHOWPEERS
+SHOWPEERS
 
 def read_file(file):
 
@@ -123,8 +123,6 @@ def main():
 
 	logging.info('range windows ...')
 	windows_index_range = utils.windows_range(windows)
-
-	print(windows_index_range)
 
 	graphs = []
 	logging.info('creating graphs ...')
