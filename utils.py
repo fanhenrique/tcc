@@ -105,9 +105,9 @@ def windows_range(windows):
 	break0 = 0
 	for i in range(0, len(windows)):
 		if i+1 == len(windows):
-			break1 = i
+			break1 = i+1
 			windows_index_range.append((break0, break1))
-			break0 = break1+1
+			break0 = break1
 		else:
 			if windows[i] != windows[i+1]:
 				break1 = i+1

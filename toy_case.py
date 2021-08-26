@@ -17,6 +17,8 @@ TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
 
+global SHOWPEERS
+
 def read_file(file):
 
 	windows, monitors, trackers, peer_lists = [], [], [], []
@@ -40,14 +42,13 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 
 	graph = nx.Graph()
 
-
-	print(monitors[0])
-
 	# vertices
 	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
 	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
-	# for nodes in peer_lists[0]:
-	# 	graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
+	
+	if SHOWPEERS: 
+		for nodes in peer_lists[0]:
+			graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
 
 		
 	# USADO NO STELLARGRAPH
@@ -60,14 +61,14 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 
 
 	# arestas trackers peers
-	# edges_tp = []	
-	# for i in range(len(peer_lists[0])):
-	# 	for peer in peer_lists[0][i]:
-	# 		edges_tp.append((trackers[0][i], peer))
-	# # print(edges_tp)
-	
-	# graph.add_edges_from(edges_tp)
-
+	if SHOWPEERS:
+		edges_tp = []	
+		for i in range(len(peer_lists[0])):
+			for peer in peer_lists[0][i]:
+				edges_tp.append((trackers[0][i], peer))
+		# print(edges_tp)
+		
+		graph.add_edges_from(edges_tp)
 
 
 
@@ -99,9 +100,8 @@ def main():
 	parser = argparse.ArgumentParser(description='Create toy case')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
-	# parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int) 
-	# parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
-
+	parser.add_argument('--showpeers', '-p', help='show peers', action='store_true')
+	
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
 
@@ -112,12 +112,14 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
+	global SHOWPEERS
+	SHOWPEERS = args.showpeers	
+
 	utils.init()
 
 	logging.info('reading file ...')
 	windows, monitors, trackers, peer_lists = read_file(args.file)
 
-	print(monitors)
 
 	logging.info('range windows ...')
 	windows_index_range = utils.windows_range(windows)

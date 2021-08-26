@@ -52,7 +52,7 @@ def create_graph(nodes_list):
 
 	return graph
 
-def create_graph_peer_weights(nodes_list, peer_lists):
+def create_graph_peer_weights2(nodes_list, peer_lists):
 
 	graph = nx.Graph()
 
@@ -94,6 +94,64 @@ def create_graph_peer_weights(nodes_list, peer_lists):
 
 	return graph
 
+def create_graph_peer_weights(monitors, trackers, peer_lists):
+
+	graph = nx.Graph()
+
+	# vertices
+	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
+	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
+	
+	if SHOWPEERS: 
+		for nodes in peer_lists[0]:
+			graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
+
+		
+	# USADO NO STELLARGRAPH
+	# label dos vertices 	
+	# dict_nodes = {}	
+	# for nodes in nodes_list[0:-1]:
+	# 	for n in nodes[0]:
+	# 		dict_nodes[n] = nodes[1]
+	# nx.set_node_attributes(graph, dict_nodes, 'label')
+
+
+	# arestas trackers peers
+	if SHOWPEERS:
+		edges_tp = []	
+		for i in range(len(peer_lists[0])):
+			for peer in peer_lists[0][i]:
+				edges_tp.append((trackers[0][i], peer))
+		# print(edges_tp)
+		
+		graph.add_edges_from(edges_tp)
+
+
+
+	# arestas monitors trackers
+	edges_mt = list(zip(monitors[0], trackers[0]))
+	# print(edges_mt, len(edges_mt))
+
+	# conta pesos das arestas monitors trackers
+	weights_mt = []
+	for peer_list in peer_lists[0]:
+		weights_mt.append(len(peer_list))
+	# print(weights_mt, len(weights_mt))
+	
+	c = Counter()
+	for k, v in zip(edges_mt, weights_mt):
+		c[k] += v
+
+	weighted_edges = []
+	for e in edges_mt:
+		weighted_edges.append((e[0], e[1], c[(e[0], e[1])]))
+
+	graph.add_weighted_edges_from(weighted_edges)
+
+
+	return graph
+
+
 
 def main():
 
@@ -102,7 +160,7 @@ def main():
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
 	
 	parser.add_argument('--numberwindows', '-w', help='number windows', default=0, type=int) 
-	parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
+	# parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -146,36 +204,52 @@ def main():
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 		
-		traker_nodes = traker_labels[wir[0]:wir[1]]
-		monitor_nodes = monitor_labels[wir[0]:wir[1]]
-		peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
-	
-		if args.numberedges <= 0 or args.numberedges >= len(traker_nodes):
-			num_edges = len(traker_nodes)
-		else:
-			num_edges = args.numberedges	
+		m = (monitors[wir[0]:wir[1]], MONITOR, 'blue')
+		t = (trackers[wir[0]:wir[1]], TRACKER, 'red')		
+		pl = (peer_lists[wir[0]:wir[1]], PEER, 'green')
 
-		nodes_list = []
-		# Label, tipo, cor dos vertices	
-		nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
-		nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
-		# nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
-
-		# graph = create_graph(nodes_list)
-		graph = create_graph_peer_weights(nodes_list, peer_list_nodes[0:num_edges])
-
-
-		# graph_stellar = sg.StellarGraph.from_networkx(graph)
-		# print(graph_stellar.info())
-		# graphs_stellar.append(graph_stellar)
+		graph = create_graph_peer_weights(m, t, pl)
 
 		graphs.append(graph)
 
-		save_graph_txt(graph, len(graphs))
+		utils.save_graph_txt(graph, len(graphs))
 
-		save_graph_fig(graph, len(graphs))
+		# utils.show_graph(graph)
+
+		utils.save_graph_fig(graph, len(graphs))
+
+		
+		# traker_nodes = traker_labels[wir[0]:wir[1]]
+		# monitor_nodes = monitor_labels[wir[0]:wir[1]]
+		# peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
+	
+		# if args.numberedges <= 0 or args.numberedges >= len(traker_nodes):
+		# 	num_edges = len(traker_nodes)
+		# else:
+		# 	num_edges = args.numberedges	
+
+		# nodes_list = []
+		# # Label, tipo, cor dos vertices	
+		# nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
+		# nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
+		# # nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
+
+		# # graph = create_graph(nodes_list)
+		# graph = create_graph_peer_weights(nodes_list, peer_list_nodes[0:num_edges])
+
+
+		# # graph_stellar = sg.StellarGraph.from_networkx(graph)
+		# # print(graph_stellar.info())
+		# # graphs_stellar.append(graph_stellar)
+
+		# graphs.append(graph)
+
+		# save_graph_txt(graph, len(graphs))
+
+		# save_graph_fig(graph, len(graphs))
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out/')
+	logging.info(str(len(graphs)) + ' images graphs in directory fig/')
 
 # linha com problema 
 # 531964 ['1546539658.000000', "['udp://exodus.desync.com:6969/ann#planetlab1.pop-pa.rnp.br',", "'UTC_time',", "'UTC_epoch',", "'infohash',", "'tracker',", "'interval_sec',", "'minInterval_sec',", "'downloads',", "'leechers',", "'seeders',", "'size_of_peerlist',", "'monitor_name',", "'peerlist\\n']"]
