@@ -45,6 +45,7 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 	# vertices
 	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
 	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
+	graph.add_node('G', color_nodes='yellow')
 	
 	if SHOWPEERS: 
 		for nodes in peer_lists[0]:
@@ -65,10 +66,10 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 		edges_tp = []	
 		for i in range(len(peer_lists[0])):
 			for peer in peer_lists[0][i]:
-				edges_tp.append((trackers[0][i], peer))
+				edges_tp.append((trackers[0][i], peer, 1))
 		# print(edges_tp)
-		
-		graph.add_edges_from(edges_tp)
+
+		graph.add_weighted_edges_from(edges_tp)
 
 
 
@@ -82,15 +83,22 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 		weights_mt.append(len(peer_list))
 	# print(weights_mt, len(weights_mt))
 	
-	c = Counter()
+	c_mt = Counter()
 	for k, v in zip(edges_mt, weights_mt):
-		c[k] += v
+		c_mt[k] += v
 
 	weighted_edges = []
 	for e in edges_mt:
-		weighted_edges.append((e[0], e[1], c[(e[0], e[1])]))
+		weighted_edges.append((e[0], e[1], c_mt[(e[0], e[1])]))
 
 	graph.add_weighted_edges_from(weighted_edges)
+
+
+	edges_gm = []
+
+	for i in range(len(monitors[0])):
+				
+
 
 
 	return graph
