@@ -12,7 +12,7 @@ Requirenents: `tensorflow 2.6` `pandas` `scipy` `matplotlib` `sklearn` `numpy`
 
 
 
-Run main.py or toy_case.py
+## Run main.py or toy_case.py
 
  Requirements :
 
