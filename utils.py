@@ -200,6 +200,15 @@ def init():
 
 
 
+# LABEL USADO NO STELLARGRAPH
+	# label dos vertices 	
+	# dict_nodes = {}	
+	# for nodes in nodes_list[0:-1]:
+	# 	for n in nodes[0]:
+	# 		dict_nodes[n] = nodes[1]
+	# nx.set_node_attributes(graph, dict_nodes, 'label')
+
+
 # def readFile(file):
 # 	epochs, trakers, monitors = [], [], []
 # 	with open(file, 'r') as file:
