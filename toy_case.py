@@ -1,5 +1,4 @@
 import networkx as nx
-# import stellargraph as sg
 
 from collections import Counter
 
@@ -16,8 +15,13 @@ TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
+MASTERSERVER = 'MASTER SERVER'
 
-global SHOWPEERS
+COLOR_TRACKER = 'red'
+COLOR_MONITOR = 'blue'
+COLOR_PEER = 'green'
+COLOR_MASTERSERVER = 'yellow'
+
 
 def read_file(file):
 
@@ -38,66 +42,87 @@ def read_file(file):
 
 	return windows, monitors, trackers, peer_lists
 
-def create_graph_peer_weights(monitors, trackers, peer_lists):
+def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 
 	graph = nx.Graph()
 
 	# vertices
-	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
-	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
-	graph.add_node('G', color_nodes='yellow')
-	
-	if SHOWPEERS: 
-		for nodes in peer_lists[0]:
-			graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
 
-		
-	# USADO NO STELLARGRAPH
-	# label dos vertices 	
-	# dict_nodes = {}	
-	# for nodes in nodes_list[0:-1]:
-	# 	for n in nodes[0]:
-	# 		dict_nodes[n] = nodes[1]
-	# nx.set_node_attributes(graph, dict_nodes, 'label')
+	graph.add_node(master, color_nodes=COLOR_MASTERSERVER)
+	graph.add_nodes_from(monitors, color_nodes=COLOR_MONITOR)
+	graph.add_nodes_from(trackers, color_nodes=COLOR_TRACKER)
+	for peer_list in peer_lists:
+		graph.add_nodes_from(peer_list, color_nodes=COLOR_PEER)
+
 
 
 	# arestas trackers peers
-	if SHOWPEERS:
-		edges_tp = []	
-		for i in range(len(peer_lists[0])):
-			for peer in peer_lists[0][i]:
-				edges_tp.append((trackers[0][i], peer, 1))
-		# print(edges_tp)
+	edges_tp_weighted = []	
+	for i in range(len(trackers)):
+		for peer in peer_lists[i]:
+			edges_tp_weighted.append((trackers[i], peer, 1))
 
-		graph.add_weighted_edges_from(edges_tp)
+	print(edges_tp_weighted, len(edges_tp_weighted))
+
+	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+	
+	print(edges_tp_weighted, len(edges_tp_weighted))
+	graph.add_weighted_edges_from(edges_tp_weighted)
 
 
+	print('----------------------------------')
+
+	# pessos vindos dos trackers
+	weights_t = Counter() 
+	for k, _, w in edges_tp_weighted:
+		weights_t[k] += w
+
+	print(weights_t, len(weights_t))
 
 	# arestas monitors trackers
-	edges_mt = list(zip(monitors[0], trackers[0]))
-	# print(edges_mt, len(edges_mt))
+	edges_mt = list(zip(monitors, trackers))
 
-	# conta pesos das arestas monitors trackers
-	weights_mt = []
-	for peer_list in peer_lists[0]:
-		weights_mt.append(len(peer_list))
-	# print(weights_mt, len(weights_mt))
-	
-	c_mt = Counter()
-	for k, v in zip(edges_mt, weights_mt):
-		c_mt[k] += v
+	print(edges_mt, len(edges_mt))
 
-	weighted_edges = []
+	edges_mt_weighted = []
 	for e in edges_mt:
-		weighted_edges.append((e[0], e[1], c_mt[(e[0], e[1])]))
+		edges_mt_weighted.append((e[0], e[1], weights_t[e[1]]))
 
-	graph.add_weighted_edges_from(weighted_edges)
+	print(edges_mt_weighted, len(edges_mt_weighted))		
 
+	edges_mt_weighted = list(dict.fromkeys(edges_mt_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+
+	print(edges_mt_weighted, len(edges_mt_weighted))
+	graph.add_weighted_edges_from(edges_mt_weighted)
+
+
+	print('---------------------------------')
+
+	weights_m = Counter() 
+	for k, _, w in edges_mt_weighted:
+		weights_m[k] += w
+
+	print(weights_m, len(weights_m))
 
 	edges_gm = []
+	for m in monitors:
+		edges_gm.append((master, m))
+	
+	print(edges_gm, len(edges_gm))
 
-	for i in range(len(monitors[0])):
-				
+	edges_gm = list(dict.fromkeys(edges_gm))
+
+	print(edges_gm, len(edges_gm))
+
+
+	edges_gm_weighted = []
+
+	for e in edges_gm:
+		edges_gm_weighted.append((e[0], e[1], weights_m[e[1]]))
+
+	print(edges_gm_weighted, len(edges_gm_weighted))	
+
+	graph.add_weighted_edges_from(edges_gm_weighted)
 
 
 
@@ -108,7 +133,6 @@ def main():
 	parser = argparse.ArgumentParser(description='Create toy case')
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
-	parser.add_argument('--showpeers', '-p', help='show peers', action='store_true')
 	
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -120,8 +144,6 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-	global SHOWPEERS
-	SHOWPEERS = args.showpeers	
 
 	utils.init()
 
@@ -136,11 +158,12 @@ def main():
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 
-		m = (monitors[wir[0]:wir[1]], MONITOR, 'blue')
-		t = (trackers[wir[0]:wir[1]], TRACKER, 'red')		
-		pl = (peer_lists[wir[0]:wir[1]], PEER, 'green')
-
-		graph = create_graph_peer_weights(m, t, pl)
+		ms = 'MS'
+		m = monitors[wir[0]:wir[1]]
+		t = trackers[wir[0]:wir[1]]	
+		pl = peer_lists[wir[0]:wir[1]]
+		
+		graph = create_graph_peer_weights(ms, m, t, pl)
 
 		graphs.append(graph)
 
