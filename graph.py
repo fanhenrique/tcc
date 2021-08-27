@@ -127,8 +127,6 @@ def create_graph_peer_weights(monitors, trackers, peer_lists):
 		
 		graph.add_edges_from(edges_tp)
 
-
-
 	# arestas monitors trackers
 	edges_mt = list(zip(monitors[0], trackers[0]))
 	# print(edges_mt, len(edges_mt))
