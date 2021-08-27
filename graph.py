@@ -20,134 +20,140 @@ TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
 PEER = 'PEER'
+MASTERSERVER = 'MASTER SERVER'
+
+COLOR_TRACKER = 'red'
+COLOR_MONITOR = 'blue'
+COLOR_PEER = 'green'
+COLOR_MASTERSERVER = 'yellow'
 
 
-def create_graph(nodes_list):
+# def create_graph(nodes_list):
 
-	graph = nx.Graph()
+# 	graph = nx.Graph()
 
-	# vertices
-	for nodes in nodes_list:
-		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
+# 	# vertices
+# 	for nodes in nodes_list:
+# 		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
 
-	# label dos vertices 	
-	dict_nodes = {}	
-	for nodes in nodes_list:
-		for n in nodes[0]:
-			dict_nodes[n] = nodes[1]
-	nx.set_node_attributes(graph, dict_nodes, 'label')	
+# 	# label dos vertices 	
+# 	dict_nodes = {}	
+# 	for nodes in nodes_list:
+# 		for n in nodes[0]:
+# 			dict_nodes[n] = nodes[1]
+# 	nx.set_node_attributes(graph, dict_nodes, 'label')	
 
-	# cria as restas
-	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
+# 	# cria as restas
+# 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
 	
-	# conta os pesos das arestas
-	weights = dict(Counter(edges))
+# 	# conta os pesos das arestas
+# 	weights = dict(Counter(edges))
 	
-	# arestas com peso
-	weighted_edges = []
-	for e in edges:
-		weighted_edges.append((e[0], e[1], weights[(e[0], e[1])]))
+# 	# arestas com peso
+# 	weighted_edges = []
+# 	for e in edges:
+# 		weighted_edges.append((e[0], e[1], weights[(e[0], e[1])]))
 
-	graph.add_weighted_edges_from(weighted_edges)
+# 	graph.add_weighted_edges_from(weighted_edges)
 
-	return graph
+# 	return graph
 
-def create_graph_peer_weights2(nodes_list, peer_lists):
+# def create_graph_peer_weights2(nodes_list, peer_lists):
 
-	graph = nx.Graph()
+# 	graph = nx.Graph()
 
-	# vertices
-	for nodes in nodes_list:
-		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
+# 	# vertices
+# 	for nodes in nodes_list:
+# 		graph.add_nodes_from(nodes[0], color_nodes=nodes[2])
 
-	# label dos vertices 	
-	dict_nodes = {}	
-	for nodes in nodes_list:
-		for n in nodes[0]:
-			dict_nodes[n] = nodes[1]
-	nx.set_node_attributes(graph, dict_nodes, 'label')
+# 	# label dos vertices 	
+# 	dict_nodes = {}	
+# 	for nodes in nodes_list:
+# 		for n in nodes[0]:
+# 			dict_nodes[n] = nodes[1]
+# 	nx.set_node_attributes(graph, dict_nodes, 'label')
 
-	# cria as restas
-	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
-	# print(edges, len(edges))
-
-
-	# conta pesos das arestas
-	weights = []
-	for peer in peer_lists:
-		weights.append(len(peer))
-	# print(weights, len(weights))
+# 	# cria as restas
+# 	edges = list(zip(nodes_list[0][0], nodes_list[1][0]))
+# 	# print(edges, len(edges))
 
 
-	ew = zip(edges, weights)
+# 	# conta pesos das arestas
+# 	weights = []
+# 	for peer in peer_lists:
+# 		weights.append(len(peer))
+# 	# print(weights, len(weights))
 
-	c = Counter()
-	for k, v in ew:
-		c[k] += v
+
+# 	ew = zip(edges, weights)
+
+# 	c = Counter()
+# 	for k, v in ew:
+# 		c[k] += v
 	
 
-	weighted_edges = []
-	for e in edges:
-		weighted_edges.append((e[0], e[1], c[(e[0], e[1])]))
+# 	weighted_edges = []
+# 	for e in edges:
+# 		weighted_edges.append((e[0], e[1], c[(e[0], e[1])]))
 
-	graph.add_weighted_edges_from(weighted_edges)
+# 	graph.add_weighted_edges_from(weighted_edges)
 
-	return graph
+# 	return graph
 
-def create_graph_peer_weights3(monitors, trackers, peer_lists):
+# def create_graph_peer_weights3(monitors, trackers, peer_lists):
 
-	graph = nx.Graph()
+# 	graph = nx.Graph()
 
-	# vertices
-	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
-	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
+# 	# vertices
+# 	graph.add_nodes_from(monitors[0], color_nodes=monitors[2])
+# 	graph.add_nodes_from(trackers[0], color_nodes=trackers[2])
 	
-	if SHOWPEERS: 
-		for nodes in peer_lists[0]:
-			graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
+# 	if SHOWPEERS: 
+# 		for nodes in peer_lists[0]:
+# 			graph.add_nodes_from(nodes, color_nodes=peer_lists[2])
 
 		
-	# USADO NO STELLARGRAPH
-	# label dos vertices 	
-	# dict_nodes = {}	
-	# for nodes in nodes_list[0:-1]:
-	# 	for n in nodes[0]:
-	# 		dict_nodes[n] = nodes[1]
-	# nx.set_node_attributes(graph, dict_nodes, 'label')
+# 	# USADO NO STELLARGRAPH
+# 	# label dos vertices 	
+# 	# dict_nodes = {}	
+# 	# for nodes in nodes_list[0:-1]:
+# 	# 	for n in nodes[0]:
+# 	# 		dict_nodes[n] = nodes[1]
+# 	# nx.set_node_attributes(graph, dict_nodes, 'label')
 
 
-	# arestas trackers peers
-	if SHOWPEERS:
-		edges_tp = []	
-		for i in range(len(peer_lists[0])):
-			for peer in peer_lists[0][i]:
-				edges_tp.append((trackers[0][i], peer))
-		# print(edges_tp)
+# 	# arestas trackers peers
+# 	if SHOWPEERS:
+# 		edges_tp = []	
+# 		for i in range(len(peer_lists[0])):
+# 			for peer in peer_lists[0][i]:
+# 				edges_tp.append((trackers[0][i], peer))
+# 		# print(edges_tp)
 		
-		graph.add_edges_from(edges_tp)
+# 		graph.add_edges_from(edges_tp)
 
-	# arestas monitors trackers
-	edges_mt = list(zip(monitors[0], trackers[0]))
-	# print(edges_mt, len(edges_mt))
+# 	# arestas monitors trackers
+# 	edges_mt = list(zip(monitors[0], trackers[0]))
+# 	# print(edges_mt, len(edges_mt))
 
-	# conta pesos das arestas monitors trackers
-	weights_mt = []
-	for peer_list in peer_lists[0]:
-		weights_mt.append(len(peer_list))
-	# print(weights_mt, len(weights_mt))
+# 	# conta pesos das arestas monitors trackers
+# 	weights_mt = []
+# 	for peer_list in peer_lists[0]:
+# 		weights_mt.append(len(peer_list))
+# 	# print(weights_mt, len(weights_mt))
 	
-	c = Counter()
-	for k, v in zip(edges_mt, weights_mt):
-		c[k] += v
+# 	c = Counter()
+# 	for k, v in zip(edges_mt, weights_mt):
+# 		c[k] += v
 
-	weighted_edges = []
-	for e in edges_mt:
-		weighted_edges.append((e[0], e[1], c[(e[0], e[1])]))
+# 	weighted_edges = []
+# 	for e in edges_mt:
+# 		weighted_edges.append((e[0], e[1], c[(e[0], e[1])]))
 
-	graph.add_weighted_edges_from(weighted_edges)
+# 	graph.add_weighted_edges_from(weighted_edges)
 
 
-	return graph
+# 	return graph
 
 
 def create_graph_peer_weights(master, monitors, trackers, peer_lists):
