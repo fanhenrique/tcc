@@ -208,9 +208,9 @@ def main():
 	for wir in windows_index_range:
 		
 		ms = 'MS'
-		m = monitors[wir[0]:wir[1]]
-		t = trackers[wir[0]:wir[1]]	
-		pl = peer_lists[wir[0]:wir[1]]
+		m = monitor_labels[wir[0]:wir[1]]
+		t = tracker_labels[wir[0]:wir[1]]	
+		pl = peer_lists_labels[wir[0]:wir[1]]
 		
 		graph = utils.create_graph_peer_weights(ms, m, t, pl)
 
@@ -254,7 +254,7 @@ def main():
 
 	utils.save_graph_adj_csv(graphs)
 	utils.save_graph_weigths_csv(graphs)
-	
+
 	logging.info(str(len(graphs)) + ' graphs in directory: out/')
 	logging.info(str(len(graphs)) + ' images graphs in directory fig/')
 
