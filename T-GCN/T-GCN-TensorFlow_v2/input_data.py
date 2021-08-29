@@ -21,6 +21,13 @@ def load_los_data(dataset):
     los_tf = pd.read_csv(r'../data/los_speed.csv')
     return los_tf, adj
 
+def load_monitoring_data(dataset):
+    los_adj = pd.read_csv(r'/home/fanhenrique/Google Drive/tcc/tccTraces/monitoring_adj.csv',header=None)
+    adj = np.mat(los_adj)
+    los_tf = pd.read_csv(r'/home/fanhenrique/Google Drive/tcc/tccTraces/monitoring_weigths.csv')
+    return los_tf, adj
+
+
 
 def preprocess_data(data, time_len, rate, seq_len, pre_len):
     train_size = int(time_len * rate)

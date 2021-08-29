@@ -6,7 +6,7 @@ import numpy as np
 import math
 import os
 import numpy.linalg as la
-from input_data import preprocess_data,load_sz_data,load_los_data
+from input_data import preprocess_data,load_sz_data,load_los_data,load_monitoring_data
 from tgcn import tgcnCell
 #from gru import GRUCell 
 
@@ -25,13 +25,13 @@ time_start = time.time()
 flags = tf.compat.v1.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_float('learning_rate', 0.001, 'Initial learning rate.')
-flags.DEFINE_integer('training_epoch', 5000, 'Number of epochs to train.')
+flags.DEFINE_integer('training_epoch', 10, 'Number of epochs to train.')
 flags.DEFINE_integer('gru_units', 64, 'hidden units of gru.')
 flags.DEFINE_integer('seq_len',12 , '  time length of inputs.')
 flags.DEFINE_integer('pre_len', 3, 'time length of prediction.')
 flags.DEFINE_float('train_rate', 0.8, 'rate of training set.')
 flags.DEFINE_integer('batch_size', 32, 'batch size.')
-flags.DEFINE_string('dataset', 'los', 'sz or los.')
+flags.DEFINE_string('dataset', 'monitoring', 'sz or los.')
 flags.DEFINE_string('model_name', 'tgcn', 'tgcn')
 model_name = FLAGS.model_name
 data_name = FLAGS.dataset
@@ -48,6 +48,8 @@ if data_name == 'sz':
     data, adj = load_sz_data('sz')
 if data_name == 'los':
     data, adj = load_los_data('los')
+if data_name == 'monitoring':
+    data, adj = load_monitoring_data('monitoring')
 
 time_len = data.shape[0]
 num_nodes = data.shape[1]
