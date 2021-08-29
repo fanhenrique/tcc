@@ -8,6 +8,18 @@ import networkx as nx
 
 WINDOWS_LEN = 15.0
 
+
+TRACKER = 'TRACKER'
+MONITOR = 'MONITOR'
+PEER = 'PEER'
+MASTERSERVER = 'MASTER SERVER'
+
+COLOR_TRACKER = 'red'
+COLOR_MONITOR = 'blue'
+COLOR_PEER = 'green'
+COLOR_MASTERSERVER = 'yellow'
+
+
 hash_count_tracker = 1
 hash_table_tracker = {}
 
