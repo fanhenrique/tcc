@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 import networkx as nx
 
+from collections import Counter
 
 WINDOWS_LEN = 15.0
 
