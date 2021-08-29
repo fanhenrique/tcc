@@ -82,11 +82,11 @@ def main():
 
 		graphs.append(graph)
 
-		# utils.save_graph_txt(graph, len(graphs))
+		utils.save_graph_txt(graph, len(graphs))
 
 		# utils.show_graph(graph)
 
-		# utils.save_graph_fig(graph, len(graphs))
+		utils.save_graph_fig(graph, len(graphs))
 
 	utils.save_graph_adj_csv(graphs)
 	utils.save_graph_weigths_csv(graphs)		

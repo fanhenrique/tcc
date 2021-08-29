@@ -216,11 +216,11 @@ def main():
 
 		graphs.append(graph)
 
-		# utils.save_graph_txt(graph, len(graphs))
+		utils.save_graph_txt(graph, len(graphs))
 
 		# utils.show_graph(graph)
 
-		# utils.save_graph_fig(graph, len(graphs))	
+		utils.save_graph_fig(graph, len(graphs))	
 
 
 		# traker_nodes = traker_labels[wir[0]:wir[1]]
