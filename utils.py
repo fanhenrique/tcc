@@ -170,8 +170,8 @@ def draw_graph(graph):
 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
 	# nx.draw(graph, with_labels=True, node_color=colors)
 	
-	# pos = nx.spring_layout(graph)
-	pos = nx.drawing.nx_agraph.graphviz_layout(graph, prog='dot')
+	pos = nx.spring_layout(graph)
+	# pos = nx.drawing.nx_agraph.graphviz_layout(graph, prog='dot')
 	weights = nx.get_edge_attributes(graph, "weight")
 
 	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
