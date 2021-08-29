@@ -110,13 +110,11 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 	
 	print(edges_gm, len(edges_gm))
 
-	edges_gm = list(dict.fromkeys(edges_gm))
+	edges_gm = list(dict.fromkeys(edges_gm)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 
 	print(edges_gm, len(edges_gm))
 
-
 	edges_gm_weighted = []
-
 	for e in edges_gm:
 		edges_gm_weighted.append((e[0], e[1], weights_m[e[1]]))
 
@@ -124,9 +122,32 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 
 	graph.add_weighted_edges_from(edges_gm_weighted)
 
-
+	print('------------------------------')
 
 	return graph
+
+def save_graph_adj_csv(graphs):
+
+	with open('monitoring_adj.csv', 'w') as file:
+		for g in graphs:
+			matrix_adj = nx.adjacency_matrix(g)
+			for i in range(matrix_adj.shape[0]):
+				for j in range(matrix_adj.shape[1]):
+					
+					if matrix_adj[i,j] != 0:
+						file.write('1\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write('1,')
+					else:
+						file.write('0\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write('0,')
+
+def save_graph_weigths_csv(graphs):
+
+	with open('monitoring_weigths.csv', 'w') as file:
+		for g in graphs:
+			matrix_adj = nx.adjacency_matrix(g)
+			for i in range(matrix_adj.shape[0]):
+				for j in range(matrix_adj.shape[1]):				
+					file.write(str(matrix_adj[i,j])+'\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write(str(matrix_adj[i,j])+',')
+			
 
 def main():
 
@@ -167,11 +188,14 @@ def main():
 
 		graphs.append(graph)
 
-		utils.save_graph_txt(graph, len(graphs))
+		# utils.save_graph_txt(graph, len(graphs))
 
-		utils.show_graph(graph)
+		# utils.show_graph(graph)
 
-		utils.save_graph_fig(graph, len(graphs))	
+		# utils.save_graph_fig(graph, len(graphs))
+
+	save_graph_adj_csv(graphs)
+	save_graph_weigths_csv(graphs)		
 	
 	logging.info(str(len(graphs)) + ' graphs in directory: out/')
 	logging.info(str(len(graphs)) + ' images graphs in directory fig/')
