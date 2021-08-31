@@ -170,8 +170,8 @@ def draw_graph(graph):
 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
 	# nx.draw(graph, with_labels=True, node_color=colors)
 	
-	pos = nx.spring_layout(graph)
-	# pos = nx.drawing.nx_agraph.graphviz_layout(graph, prog='dot')
+	# pos = nx.spring_layout(graph)
+	pos = nx.drawing.nx_agraph.graphviz_layout(graph, prog='dot')
 	weights = nx.get_edge_attributes(graph, "weight")
 
 	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
@@ -201,11 +201,13 @@ def save_graph_txt(graph, g):
 
 def init():
 	try:
+		shutil.rmtree('./out_tgcn')
 		shutil.rmtree('./out')
 		shutil.rmtree('./fig')
 	except FileNotFoundError:
 		pass
 	try:
+		os.mkdir('./out_tgcn')
 		os.mkdir('./out')
 		os.mkdir('./fig')
 	except FileExistsError:
@@ -213,9 +215,11 @@ def init():
 
 def save_graph_adj_csv(graphs):
 
-	with open('monitoring_adj.csv', 'w') as file:
+	with open('out_tgcn/monitoring_adj.csv', 'w') as file:
 		for g in graphs:
 			matrix_adj = nx.adjacency_matrix(g)
+			print(matrix_adj.shape)
+			print(matrix_adj)
 			for i in range(matrix_adj.shape[0]):
 				for j in range(matrix_adj.shape[1]):
 					
@@ -226,7 +230,7 @@ def save_graph_adj_csv(graphs):
 
 def save_graph_weigths_csv(graphs):
 
-	with open('monitoring_weigths.csv', 'w') as file:
+	with open('out_tgcn/monitoring_weigths.csv', 'w') as file:
 		for g in graphs:
 			matrix_adj = nx.adjacency_matrix(g)
 			for i in range(matrix_adj.shape[0]):

@@ -186,21 +186,23 @@ def main():
 
 	logging.info('renaming entities ...')
 	# Label pra os vertices
-	tracker_labels = []
-	for t in trackers:
-		tracker_labels.append('T'+str(utils.my_hash_tracker(t)))
-		# traker_labels.append(str(utils.my_hash_tracker(t)))
 	monitor_labels = []
 	for m in monitors:
-		monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
-		# monitor_labels.append(str(utils.my_hash_monitor(m)))
+		# monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
+		monitor_labels.append(str(utils.my_hash_monitor(m)))
+	tracker_labels = []
+	for t in trackers:
+		# tracker_labels.append('T'+str(utils.my_hash_tracker(t)))
+		traker_labels.append(str(utils.my_hash_tracker(t)))
 	peer_lists_labels = []
 	for l in peer_lists:
 		pl_labels = []
 		for p in l:
-			pl_labels.append('P'+str(utils.my_hash_peer(p)))
-			# pl_labels.append(str(utils.my_hash_peer(p)))
+			# pl_labels.append('P'+str(utils.my_hash_peer(p)))
+			pl_labels.append(str(utils.my_hash_peer(p)))
 		peer_lists_labels.append(pl_labels)
+
+
 
 	graphs = []
 	# graphs_stellar = []

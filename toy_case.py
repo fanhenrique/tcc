@@ -1,3 +1,4 @@
+import numpy as np
 import networkx as nx
 
 from collections import Counter
@@ -41,6 +42,70 @@ def read_file(file):
 			peer_lists.append(pl)
 
 	return windows, monitors, trackers, peer_lists
+
+
+def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
+
+
+	print('#################################')
+	
+	
+	m = list(dict.fromkeys(monitors))
+	
+	t = list(dict.fromkeys(trackers))
+	pls = []
+	for pl in peer_lists:
+		for p in pl:
+			pls.append(p)
+	ps = list(dict.fromkeys(pls))
+
+	
+	vector = ['MS']
+	vector += m + t + ps
+	print(vector, len(vector))
+	
+	
+	for g in graphs:
+		matrix = np.zeros((len(vector), len(vector)), dtype=int)
+		print(g.edges(), len(g.edges()))
+		for e in g.edges():
+			matrix[vector.index(e[0]), vector.index(e[1])] = 1
+			matrix[vector.index(e[1]), vector.index(e[0])] = 1
+
+		print(matrix.shape)	
+		print(matrix)
+
+	print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+
+
+	with open('out_tgcn/monitoring_adj.csv', 'w') as file:
+
+		matrixt = np.zeros((len(vector)*len(graphs), len(vector)*len(graphs)), dtype=int)
+
+		for g in graphs:
+			print(graphs.index(g), g.edges(), len(g.edges()))
+			for e in g.edges():
+				matrixt[vector.index(e[0])*(graphs.index(g)+1), vector.index(e[1])*(graphs.index(g)+1)] = 1
+				matrixt[vector.index(e[1])*(graphs.index(g)+1), vector.index(e[0])*(graphs.index(g)+1)] = 1
+
+		print(matrixt.shape)	
+		print(matrixt)
+
+		for i in range(matrixt.shape[0]):
+			for j in range(matrixt.shape[1]):
+				file.write(str(matrixt[i,j])+'\n') if j == matrixt.shape[1]-1 else file.write(str(matrixt[i,j])+',')
+	
+
+	print('#################################')
+
+def save_graph_weigths_csv(graph, monitors, trackers, peer_lists):
+
+	
+	
+	with open('out_tgcn/monitoring_weigths.csv', 'w') as file:
+		for g in graph:
+			pass
+
 			
 
 def main():
@@ -69,6 +134,9 @@ def main():
 	logging.info('range windows ...')
 	windows_index_range = utils.windows_range(windows)
 
+	
+
+
 	graphs = []
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
@@ -79,17 +147,19 @@ def main():
 		pl = peer_lists[wir[0]:wir[1]]
 		
 		graph = utils.create_graph_peer_weights(ms, m, t, pl)
+	
 
 		graphs.append(graph)
 
 		utils.save_graph_txt(graph, len(graphs))
 
-		# utils.show_graph(graph)
+		utils.show_graph(graph)
 
 		utils.save_graph_fig(graph, len(graphs))
 
-	utils.save_graph_adj_csv(graphs)
-	utils.save_graph_weigths_csv(graphs)		
+	save_graph_adj_csv(graphs, monitors, trackers, peer_lists)
+	save_graph_weigths_csv(graphs, monitors, trackers, peer_lists)
+			
 	
 	logging.info(str(len(graphs)) + ' graphs in directory: out/')
 	logging.info(str(len(graphs)) + ' images graphs in directory fig/')
