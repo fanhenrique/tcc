@@ -51,7 +51,6 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 	
 	
 	m = list(dict.fromkeys(monitors))
-	
 	t = list(dict.fromkeys(trackers))
 	pls = []
 	for pl in peer_lists:
@@ -65,15 +64,15 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 	print(vector, len(vector))
 	
 	
-	for g in graphs:
-		matrix = np.zeros((len(vector), len(vector)), dtype=int)
-		print(g.edges(), len(g.edges()))
-		for e in g.edges():
-			matrix[vector.index(e[0]), vector.index(e[1])] = 1
-			matrix[vector.index(e[1]), vector.index(e[0])] = 1
+	# for g in graphs:
+	# 	matrix = np.zeros((len(vector), len(vector)), dtype=int)
+	# 	print(g.edges(), len(g.edges()))
+	# 	for e in g.edges():
+	# 		matrix[vector.index(e[0]), vector.index(e[1])] = 1
+	# 		matrix[vector.index(e[1]), vector.index(e[0])] = 1
 
-		print(matrix.shape)	
-		print(matrix)
+	# 	print(matrix.shape)	
+	# 	print(matrix)
 
 	print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
 
@@ -85,26 +84,56 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 		for g in graphs:
 			print(graphs.index(g), g.edges(), len(g.edges()))
 			for e in g.edges():
-				matrixt[vector.index(e[0])*(graphs.index(g)+1), vector.index(e[1])*(graphs.index(g)+1)] = 1
-				matrixt[vector.index(e[1])*(graphs.index(g)+1), vector.index(e[0])*(graphs.index(g)+1)] = 1
-
-		print(matrixt.shape)	
-		print(matrixt)
+				print((vector.index(e[0])+(graphs.index(g)*len(vector)), vector.index(e[1])+(graphs.index(g)*len(vector))), end=' ')
+				print((vector.index(e[1])+(graphs.index(g)*len(vector)), vector.index(e[0])+(graphs.index(g)*len(vector))), end=' ')
+				print((e[0], e[1]))
+				
+				matrixt[vector.index(e[0])+(graphs.index(g)*len(vector)), vector.index(e[1])+(graphs.index(g)*len(vector))] = 1
+				matrixt[vector.index(e[1])+(graphs.index(g)*len(vector)), vector.index(e[0])+(graphs.index(g)*len(vector))] = 1
+				
 
 		for i in range(matrixt.shape[0]):
 			for j in range(matrixt.shape[1]):
 				file.write(str(matrixt[i,j])+'\n') if j == matrixt.shape[1]-1 else file.write(str(matrixt[i,j])+',')
-	
+
 
 	print('#################################')
 
-def save_graph_weigths_csv(graph, monitors, trackers, peer_lists):
+def save_graph_weigths_csv(graphs, monitors, trackers, peer_lists):
 
+	m = list(dict.fromkeys(monitors))
+	t = list(dict.fromkeys(trackers))
+	pls = []
+	for pl in peer_lists:
+		for p in pl:
+			pls.append(p)
+	ps = list(dict.fromkeys(pls))
+
+	
+	vector = ['MS']
+	vector += m + t + ps
 	
 	
 	with open('out_tgcn/monitoring_weigths.csv', 'w') as file:
-		for g in graph:
-			pass
+		
+		matrixt = np.zeros((len(vector)*len(graphs), len(vector)*len(graphs)), dtype=int)
+
+		for g in graphs:
+			print(graphs.index(g), g.edges(), len(g.edges()))
+			for e in g.edges().data():
+
+				print((vector.index(e[0])+(graphs.index(g)*len(vector)), vector.index(e[1])+(graphs.index(g)*len(vector))), end=' ')
+				print((vector.index(e[1])+(graphs.index(g)*len(vector)), vector.index(e[0])+(graphs.index(g)*len(vector))), end=' ')
+				print((e[0], e[1]), e[2]['weight'])
+
+				
+				matrixt[vector.index(e[0])+(graphs.index(g)*len(vector)), vector.index(e[1])+(graphs.index(g)*len(vector))] = e[2]['weight']
+				matrixt[vector.index(e[1])+(graphs.index(g)*len(vector)), vector.index(e[0])+(graphs.index(g)*len(vector))] = e[2]['weight']
+				
+
+		for i in range(matrixt.shape[0]):
+			for j in range(matrixt.shape[1]):
+				file.write(str(matrixt[i,j])+'\n') if j == matrixt.shape[1]-1 else file.write(str(matrixt[i,j])+',')
 
 			
 

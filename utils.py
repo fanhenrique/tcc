@@ -258,11 +258,11 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 		for peer in peer_lists[i]:
 			edges_tp_weighted.append((trackers[i], peer, 1))
 
-	print(edges_tp_weighted, len(edges_tp_weighted))
+	print('EDGES TP WEIGHTED', edges_tp_weighted, len(edges_tp_weighted))
 
 	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 	
-	print(edges_tp_weighted, len(edges_tp_weighted))
+	print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
 	graph.add_weighted_edges_from(edges_tp_weighted)
 
 
@@ -273,22 +273,23 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 	for k, _, w in edges_tp_weighted:
 		weights_t[k] += w
 
-	print(weights_t, len(weights_t))
+	print('WEIGHT T', weights_t, len(weights_t))
 
 	# arestas monitors trackers
 	edges_mt = list(zip(monitors, trackers))
 
-	print(edges_mt, len(edges_mt))
+	print('EDGES MT', edges_mt, len(edges_mt))
+
+	edges_mt = list(dict.fromkeys(edges_mt)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+
+	print('EDGES MT (RD))', edges_mt, len(edges_mt))
 
 	edges_mt_weighted = []
 	for e in edges_mt:
 		edges_mt_weighted.append((e[0], e[1], weights_t[e[1]]))
 
-	print(edges_mt_weighted, len(edges_mt_weighted))		
 
-	edges_mt_weighted = list(dict.fromkeys(edges_mt_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
-
-	print(edges_mt_weighted, len(edges_mt_weighted))
+	print('EDGES MT WEIGHTED', edges_mt_weighted, len(edges_mt_weighted))
 	graph.add_weighted_edges_from(edges_mt_weighted)
 
 
@@ -298,27 +299,27 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 	for k, _, w in edges_mt_weighted:
 		weights_m[k] += w
 
-	print(weights_m, len(weights_m))
+	print('WEIGHT M', weights_m, len(weights_m))
 
 	edges_gm = []
 	for m in monitors:
 		edges_gm.append((master, m))
 	
-	print(edges_gm, len(edges_gm))
+	print('EDGES GM', edges_gm, len(edges_gm))
 
 	edges_gm = list(dict.fromkeys(edges_gm)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 
-	print(edges_gm, len(edges_gm))
+	print('EDGES GM (RD)', edges_gm, len(edges_gm))
 
 	edges_gm_weighted = []
 	for e in edges_gm:
 		edges_gm_weighted.append((e[0], e[1], weights_m[e[1]]))
 
-	print(edges_gm_weighted, len(edges_gm_weighted))	
+	print('EDGES GM WEIGHTED', edges_gm_weighted, len(edges_gm_weighted))	
 
 	graph.add_weighted_edges_from(edges_gm_weighted)
 
-	print('------------------------------')
+	print('********************************************')
 
 	return graph
 

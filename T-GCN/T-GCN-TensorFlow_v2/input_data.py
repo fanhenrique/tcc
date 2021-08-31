@@ -23,9 +23,9 @@ def load_los_data(dataset):
 
 def load_monitoring_data(dataset):
     # los_adj = pd.read_csv(r'../../out_tgcn/monitoring_adj.csv',header=None, error_bad_lines=False)
-    los_adj = pd.read_csv(r'out_tgcn/monitoring_adj.csv', header=None)
+    los_adj = pd.read_csv(r'out_tgcn/monitoring_adj.csv',header=None)
     adj = np.mat(los_adj)
-    los_tf = pd.read_csv(r'../../out_tgcn/monitoring_weigths.csv')
+    los_tf = pd.read_csv(r'out_tgcn/monitoring_weigths.csv')
     return los_tf, adj
 
 

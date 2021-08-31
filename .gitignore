@@ -1,7 +1,8 @@
 out/
+out_tgcn
 fig/
 __pycache__/
 traces_prediction.ipynb
 example_model.txt
-monitoring_adj.csv
-monitoring_weigths.csv
+
+
