@@ -4,4 +4,3 @@ fig/
 __pycache__/
 traces_prediction.ipynb
 example_model.txt
-T-GCN/tree_report.txt

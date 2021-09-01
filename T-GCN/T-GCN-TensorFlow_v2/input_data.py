@@ -16,13 +16,12 @@ def load_sz_data(dataset):
     return sz_tf, adj
 
 def load_los_data(dataset):
-    los_adj = pd.read_csv(r'../data/los_adj2.csv',header=None)
+    los_adj = pd.read_csv(r'../data/los_adj.csv',header=None)
     adj = np.mat(los_adj)
-    los_tf = pd.read_csv(r'../data/los_speed2.csv')
+    los_tf = pd.read_csv(r'../data/los_speed.csv')
     return los_tf, adj
 
 def load_monitoring_data(dataset):
-    # los_adj = pd.read_csv(r'../../out_tgcn/monitoring_adj.csv',header=None, error_bad_lines=False)
     los_adj = pd.read_csv(r'out_tgcn/monitoring_adj.csv',header=None)
     adj = np.mat(los_adj)
     los_tf = pd.read_csv(r'out_tgcn/monitoring_weigths.csv')
