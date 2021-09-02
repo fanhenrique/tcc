@@ -1,8 +1,3 @@
-import math
-import os
-import shutil
-import matplotlib.pyplot as plt
-
 import networkx as nx
 # import stellargraph as sg
 
@@ -184,22 +179,30 @@ def main():
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
 
+	print(len(epochs))
+	print(len(trackers))
+	print(len(monitors))
+	print(len(peer_lists))
+
+	print(len(windows))
+	print(windows_index_range)
+
 	logging.info('renaming entities ...')
 	# Label pra os vertices
 	monitor_labels = []
 	for m in monitors:
-		# monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
-		monitor_labels.append(str(utils.my_hash_monitor(m)))
+		monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
+		# monitor_labels.append(str(utils.my_hash_monitor(m)))
 	tracker_labels = []
 	for t in trackers:
-		# tracker_labels.append('T'+str(utils.my_hash_tracker(t)))
-		traker_labels.append(str(utils.my_hash_tracker(t)))
+		tracker_labels.append('T'+str(utils.my_hash_tracker(t)))
+		# tracker_labels.append(str(utils.my_hash_tracker(t)))
 	peer_lists_labels = []
 	for l in peer_lists:
 		pl_labels = []
 		for p in l:
-			# pl_labels.append('P'+str(utils.my_hash_peer(p)))
-			pl_labels.append(str(utils.my_hash_peer(p)))
+			pl_labels.append('P'+str(utils.my_hash_peer(p)))
+			# pl_labels.append(str(utils.my_hash_peer(p)))
 		peer_lists_labels.append(pl_labels)
 
 
@@ -254,12 +257,14 @@ def main():
 
 		# save_graph_fig(graph, len(graphs))
 
-	utils.save_graph_adj_csv(graphs)
-	utils.save_graph_weigths_csv(graphs)
-
 	logging.info(str(len(graphs)) + ' graphs in directory: out/')
 	logging.info(str(len(graphs)) + ' images graphs in directory fig/')
 
+	utils.save_graph_adj_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
+	utils.save_graph_weigths_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
+	logging.info('adjacency and weight matrices are directory: out_tgcn/')
+
+	
 # linha com problema 
 # 531964 ['1546539658.000000', "['udp://exodus.desync.com:6969/ann#planetlab1.pop-pa.rnp.br',", "'UTC_time',", "'UTC_epoch',", "'infohash',", "'tracker',", "'interval_sec',", "'minInterval_sec',", "'downloads',", "'leechers',", "'seeders',", "'size_of_peerlist',", "'monitor_name',", "'peerlist\\n']"]
 

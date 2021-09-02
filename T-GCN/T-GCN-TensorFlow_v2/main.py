@@ -31,7 +31,7 @@ flags.DEFINE_integer('seq_len',12 , '  time length of inputs.')
 flags.DEFINE_integer('pre_len', 3, 'time length of prediction.')
 flags.DEFINE_float('train_rate', 0.8, 'rate of training set.')
 flags.DEFINE_integer('batch_size', 32, 'batch size.')
-flags.DEFINE_string('dataset', 'los', 'sz or los.')
+flags.DEFINE_string('dataset', 'monitoring', 'sz or los.')
 flags.DEFINE_string('model_name', 'tgcn', 'tgcn')
 model_name = FLAGS.model_name
 data_name = FLAGS.dataset

@@ -1,3 +1,4 @@
+import numpy as np
 import math
 import os
 import shutil
@@ -8,7 +9,6 @@ import networkx as nx
 from collections import Counter
 
 WINDOWS_LEN = 15.0
-
 
 TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'
@@ -130,18 +130,18 @@ def read_file(file):
 			try:
 				epochs.append(float(line_split[0]))
 			except:
-				# print(line)
+				print(line)
 				continue
 			try:
 				trakers.append(line_split[1].split("'")[1])
 			except:
-				# print(line)
+				print(line)
 				epochs.pop()
 				continue
 			try:
 				monitors.append(line_split[16].split("'")[1])	
 			except:
-				# print(line)
+				print(line)
 				epochs.pop()
 				trakers.pop()
 				continue
@@ -157,7 +157,7 @@ def read_file(file):
 					i+=2
 				peer_lists.append(peer_list)
 			except:
-				# print(line)
+				print(line)
 				epochs.pop()
 				trakers.pop()
 				monitors.pop()	
@@ -213,29 +213,107 @@ def init():
 	except FileExistsError:
 		pass
 
-def save_graph_adj_csv(graphs):
+# def save_graph_adj_csv(graphs):
 
-	with open('out_tgcn/monitoring_adj.csv', 'w') as file:
-		for g in graphs:
-			matrix_adj = nx.adjacency_matrix(g)
-			print(matrix_adj.shape)
-			print(matrix_adj)
-			for i in range(matrix_adj.shape[0]):
-				for j in range(matrix_adj.shape[1]):
+# 	with open('out_tgcn/monitoring_adj.csv', 'w') as file:
+# 		for g in graphs:
+# 			matrix_adj = nx.adjacency_matrix(g)
+# 			print(matrix_adj.shape)
+# 			print(matrix_adj)
+# 			for i in range(matrix_adj.shape[0]):
+# 				for j in range(matrix_adj.shape[1]):
 					
-					if matrix_adj[i,j] != 0:
-						file.write('1\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write('1,')
-					else:
-						file.write('0\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write('0,')
+# 					if matrix_adj[i,j] != 0:
+# 						file.write('1\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write('1,')
+# 					else:
+# 						file.write('0\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write('0,')
 
-def save_graph_weigths_csv(graphs):
+# def save_graph_weigths_csv(graphs):
+
+# 	with open('out_tgcn/monitoring_weigths.csv', 'w') as file:
+# 		for g in graphs:
+# 			matrix_adj = nx.adjacency_matrix(g)
+# 			for i in range(matrix_adj.shape[0]):
+# 				for j in range(matrix_adj.shape[1]):				
+# 					file.write(str(matrix_adj[i,j])+'\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write(str(matrix_adj[i,j])+',')
+
+def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
+
+	monitor_list = list(dict.fromkeys(monitors))
+	tracker_list = list(dict.fromkeys(trackers))
+	pls = []
+	for pl in peer_lists:
+		for p in pl:
+			pls.append(p)
+	p_list = list(dict.fromkeys(pls))
+
+
+	vector = ['MS']
+	vector += monitor_list + tracker_list + p_list
+
+	# print(vector, len(vector))
+
+	matrix = np.zeros((len(vector), len(vector)), dtype=int)
+
+	for m in monitor_list:
+		matrix[0,vector.index(m)] = 1
+		matrix[vector.index(m), 0] = 1
+
+	for m in monitor_list:
+		for t in tracker_list:
+			# print(vector.index(m), vector.index(t))
+			matrix[vector.index(m), vector.index(t)] = 1
+			matrix[vector.index(t),vector.index(m)] = 1
+							
+
+	
+	for t in tracker_list:
+		for pl in p_list:
+			matrix[vector.index(t),vector.index(pl)] = 1
+			matrix[vector.index(pl),vector.index(t)] = 1
+			
+
+
+	# for graph in graphs:
+		# print(graph.edges()) 		
+
+
+	with open('out_tgcn/monitoring_adj.csv', 'w') as file:				
+
+		for i in range(matrix.shape[0]):
+			for j in range(matrix.shape[1]):
+				file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
+
+def save_graph_weigths_csv(graphs, monitors, trackers, peer_lists):
+
+	monitor_list = list(dict.fromkeys(monitors))
+	tracker_list = list(dict.fromkeys(trackers))
+	pls = []
+	for pl in peer_lists:
+		for p in pl:
+			pls.append(p)
+	p_list = list(dict.fromkeys(pls))
+
+
+	vector = ['MS']
+	vector += monitor_list + tracker_list + p_list
+
+	print(vector, len(vector))
+			
 
 	with open('out_tgcn/monitoring_weigths.csv', 'w') as file:
 		for g in graphs:
-			matrix_adj = nx.adjacency_matrix(g)
-			for i in range(matrix_adj.shape[0]):
-				for j in range(matrix_adj.shape[1]):				
-					file.write(str(matrix_adj[i,j])+'\n') if i == matrix_adj.shape[0]-1 and j == matrix_adj.shape[1]-1 else file.write(str(matrix_adj[i,j])+',')
+
+			matrix = np.zeros((len(vector), len(vector)), dtype=int)
+
+			for e in g.edges().data():
+
+				matrix[vector.index(e[0]), vector.index(e[1])] = e[2]['weight']
+				matrix[vector.index(e[1]), vector.index(e[0])] = e[2]['weight']
+
+			for i in range(matrix.shape[0]):
+				for j in range(matrix.shape[1]):
+					file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
 
 
 def create_graph_peer_weights(master, monitors, trackers, peer_lists):
@@ -258,68 +336,68 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 		for peer in peer_lists[i]:
 			edges_tp_weighted.append((trackers[i], peer, 1))
 
-	print('EDGES TP WEIGHTED', edges_tp_weighted, len(edges_tp_weighted))
+	# print('EDGES TP WEIGHTED', edges_tp_weighted, len(edges_tp_weighted))
 
 	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 	
-	print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
+	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
 	graph.add_weighted_edges_from(edges_tp_weighted)
 
 
-	print('----------------------------------')
+	# print('----------------------------------')
 
 	# pessos vindos dos trackers
 	weights_t = Counter() 
 	for k, _, w in edges_tp_weighted:
 		weights_t[k] += w
 
-	print('WEIGHT T', weights_t, len(weights_t))
+	# print('WEIGHT T', weights_t, len(weights_t))
 
 	# arestas monitors trackers
 	edges_mt = list(zip(monitors, trackers))
 
-	print('EDGES MT', edges_mt, len(edges_mt))
+	# print('EDGES MT', edges_mt, len(edges_mt))
 
 	edges_mt = list(dict.fromkeys(edges_mt)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 
-	print('EDGES MT (RD))', edges_mt, len(edges_mt))
+	# print('EDGES MT (RD))', edges_mt, len(edges_mt))
 
 	edges_mt_weighted = []
 	for e in edges_mt:
 		edges_mt_weighted.append((e[0], e[1], weights_t[e[1]]))
 
 
-	print('EDGES MT WEIGHTED', edges_mt_weighted, len(edges_mt_weighted))
+	# print('EDGES MT WEIGHTED', edges_mt_weighted, len(edges_mt_weighted))
 	graph.add_weighted_edges_from(edges_mt_weighted)
 
 
-	print('---------------------------------')
+	# print('---------------------------------')
 
 	weights_m = Counter() 
 	for k, _, w in edges_mt_weighted:
 		weights_m[k] += w
 
-	print('WEIGHT M', weights_m, len(weights_m))
+	# print('WEIGHT M', weights_m, len(weights_m))
 
 	edges_gm = []
 	for m in monitors:
 		edges_gm.append((master, m))
 	
-	print('EDGES GM', edges_gm, len(edges_gm))
+	# print('EDGES GM', edges_gm, len(edges_gm))
 
 	edges_gm = list(dict.fromkeys(edges_gm)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 
-	print('EDGES GM (RD)', edges_gm, len(edges_gm))
+	# print('EDGES GM (RD)', edges_gm, len(edges_gm))
 
 	edges_gm_weighted = []
 	for e in edges_gm:
 		edges_gm_weighted.append((e[0], e[1], weights_m[e[1]]))
 
-	print('EDGES GM WEIGHTED', edges_gm_weighted, len(edges_gm_weighted))	
+	# print('EDGES GM WEIGHTED', edges_gm_weighted, len(edges_gm_weighted))	
 
 	graph.add_weighted_edges_from(edges_gm_weighted)
 
-	print('********************************************')
+	# print('********************************************')
 
 	return graph
 
