@@ -182,12 +182,12 @@ def main():
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs)
 
-	print(len(epochs))
-	print(len(trackers))
-	print(len(monitors))
-	print(len(peer_lists))
-
-	print(len(windows))
+	print('epochs:', len(epochs))
+	print('trackers:', len(trackers))
+	print('monitors:', len(monitors))
+	print('peer_lists:', len(peer_lists))
+	print('windows:', len(windows))
+	
 	print(windows_index_range, len(windows_index_range))
 
 	logging.info('renaming entities ...')
@@ -209,9 +209,7 @@ def main():
 		peer_lists_labels.append(pl_labels)
 
 
-
 	graphs = []
-	# graphs_stellar = []
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 		
@@ -230,35 +228,6 @@ def main():
 
 		utils.save_graph_fig(graph, len(graphs))	
 
-
-		# traker_nodes = traker_labels[wir[0]:wir[1]]
-		# monitor_nodes = monitor_labels[wir[0]:wir[1]]
-		# peer_list_nodes = peer_lists_labels[wir[0]:wir[1]]
-	
-		# if args.numberedges <= 0 or args.numberedges >= len(traker_nodes):
-		# 	num_edges = len(traker_nodes)
-		# else:
-		# 	num_edges = args.numberedges	
-
-		# nodes_list = []
-		# # Label, tipo, cor dos vertices	
-		# nodes_list.append((traker_nodes[0:num_edges], TRACKER, 'red'))
-		# nodes_list.append((monitor_nodes[0:num_edges], MONITOR, 'blue'))
-		# # nodes_list.append((peer_list_nodes[0:num_edges], PEER, 'black'))
-
-		# # graph = create_graph(nodes_list)
-		# graph = create_graph_peer_weights(nodes_list, peer_list_nodes[0:num_edges])
-
-
-		# # graph_stellar = sg.StellarGraph.from_networkx(graph)
-		# # print(graph_stellar.info())
-		# # graphs_stellar.append(graph_stellar)
-
-		# graphs.append(graph)
-
-		# save_graph_txt(graph, len(graphs))
-
-		# save_graph_fig(graph, len(graphs))
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
 	logging.info(str(len(graphs)) + ' images graphs in directory figs_graphs/')

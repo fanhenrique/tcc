@@ -1,3 +1,4 @@
+from datetime import datetime
 # -*- coding: utf-8 -*-
 import pickle as pkl
 import tensorflow as tf
@@ -115,9 +116,9 @@ gpu_options = tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.333)
 sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpu_options))
 sess.run(tf.compat.v1.global_variables_initializer())
 
-out = 'out/%s'%(model_name)
+out = 'out_%s'%(model_name)
 #out = 'out/%s_%s'%(model_name,'perturbation')
-path1 = '%s_%s_lr%r_batch%r_unit%r_seq%r_pre%r_epoch%r'%(model_name,data_name,lr,batch_size,gru_units,seq_len,pre_len,training_epoch)
+path1 = '%s-%s_%s_lr%r_batch%r_unit%r_seq%r_pre%r_epoch%r'%(datetime.now().strftime('%d-%m_%H-%M-%S'),model_name,data_name,lr,batch_size,gru_units,seq_len,pre_len,training_epoch)
 path = os.path.join(out,path1)
 if not os.path.exists(path):
     os.makedirs(path)

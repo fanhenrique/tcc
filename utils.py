@@ -11,6 +11,11 @@ from collections import Counter
 global SHOWPEERS
 global SHOWMASTER
 
+PATH = './out'
+PATH_FIGS = PATH+'/figs_graphs'
+PATH_GRAPHS = PATH+'/out_graphs'
+PATH_MATRICES = PATH+'/out_matrices' 
+
 WINDOWS_LEN = 15.0
 
 TRACKER = 'TRACKER'
@@ -190,12 +195,12 @@ def save_graph_fig(graph, g):
 
 	draw_graph(graph)
 		
-	plt.savefig('figs_graphs/graph'+str(g)+'.png')
+	plt.savefig(PATH_FIGS+'/graph'+str(g)+'.png')
 	plt.clf()
 
 def save_graph_txt(graph, g):
 	# print(graph.nodes.data())
-	with open('out_graphs/graph'+str(g)+'.txt', 'w') as file:
+	with open(PATH_GRAPHS+'/graph'+str(g)+'.txt', 'w') as file:
 		for edge in graph.edges.data():
 			if edge[2]:
 				file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
@@ -211,15 +216,17 @@ def init(showpeers=True, showmaster=True):
 	SHOWMASTER = showmaster
 
 	try:
-		shutil.rmtree('./out_matrices')
-		shutil.rmtree('./out_graphs')
-		shutil.rmtree('./figs_graphs')
+		shutil.rmtree(PATH)
+		shutil.rmtree(PATH_FIGS)
+		shutil.rmtree(PATH_GRAPHS)
+		shutil.rmtree(PATH_MATRICES)
 	except FileNotFoundError:
 		pass
 	try:
-		os.mkdir('./out_matrices')
-		os.mkdir('./out_graphs')
-		os.mkdir('./figs_graphs')
+		os.mkdir(PATH)
+		os.mkdir(PATH_FIGS)
+		os.mkdir(PATH_GRAPHS)
+		os.mkdir(PATH_MATRICES)
 	except FileExistsError:
 		pass
 
@@ -244,13 +251,14 @@ def entities(monitors, trackers, peer_lists):
 	if SHOWPEERS:
 		vector += p_list
 
-	return vector
+	return vector, monitor_list, tracker_list, p_list
 
 
 def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 
-	
-	vector = entities(monitors, trackers, peer_lists)
+	vector, monitor_list, tracker_list, p_list = entities(monitors, trackers, peer_lists)
+
+	print(vector, len(vector))
 
 	matrix = np.zeros((len(vector), len(vector)), dtype=int)
 
@@ -270,7 +278,7 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 				matrix[vector.index(t),vector.index(pl)] = 1
 				matrix[vector.index(pl),vector.index(t)] = 1
 
-	with open('out_matrices/monitoring_adj.csv', 'w') as file:				
+	with open(PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
 
 		for i in range(matrix.shape[0]):
 			for j in range(matrix.shape[1]):
@@ -278,9 +286,9 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 
 def save_graph_weigths_csv(graphs, monitors, trackers, peer_lists):
 
-	vector = entities(monitors, trackers, peer_lists)			
+	vector, _ , _, _ = entities(monitors, trackers, peer_lists)			
 
-	with open('out_matrices/monitoring_weigths.csv', 'w') as file:
+	with open(PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
 		for g in graphs:
 
 			matrix = np.zeros((len(vector), len(vector)), dtype=int)
