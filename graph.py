@@ -156,9 +156,12 @@ def main():
 
 	parser = argparse.ArgumentParser(description='Traces')
 
-	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
+	parser.add_argument('--file', '-f', help='file input', required=True, type=str)
 
-	parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int)
+	parser.add_argument('--showpeers', '-p', help='peers in graph', action='store_true')
+	parser.add_argument('--showmaster', '-g', help='master in graph', action='store_true')
+
+	# parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int)
 	# parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
@@ -171,13 +174,13 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-	utils.init()
+	utils.init(args.showpeers, args.showmaster)
 
 	logging.info('reading file ...')
 	epochs, trackers, monitors, peer_lists =  utils.read_file(args.file)
 
 	logging.info('calculating windows ...')
-	time_min, windows, windows_index_range = utils.cal_windows(epochs, args.numberwindows)
+	time_min, windows, windows_index_range = utils.cal_windows(epochs)
 
 	print(len(epochs))
 	print(len(trackers))
@@ -185,7 +188,7 @@ def main():
 	print(len(peer_lists))
 
 	print(len(windows))
-	print(windows_index_range)
+	print(windows_index_range, len(windows_index_range))
 
 	logging.info('renaming entities ...')
 	# Label pra os vertices
@@ -257,26 +260,13 @@ def main():
 
 		# save_graph_fig(graph, len(graphs))
 
-	logging.info(str(len(graphs)) + ' graphs in directory: out/')
-	logging.info(str(len(graphs)) + ' images graphs in directory fig/')
+	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
+	logging.info(str(len(graphs)) + ' images graphs in directory figs_graphs/')
 
 	utils.save_graph_adj_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
 	utils.save_graph_weigths_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
-	logging.info('adjacency and weight matrices are directory: out_tgcn/')
+	logging.info('adjacency and weight matrices are directory: out_matrices/')
 
 	
-# linha com problema 
-# 531964 ['1546539658.000000', "['udp://exodus.desync.com:6969/ann#planetlab1.pop-pa.rnp.br',", "'UTC_time',", "'UTC_epoch',", "'infohash',", "'tracker',", "'interval_sec',", "'minInterval_sec',", "'downloads',", "'leechers',", "'seeders',", "'size_of_peerlist',", "'monitor_name',", "'peerlist\\n']"]
-
 if __name__ == '__main__':
 	main()
-
-
-
-# PALAVRAS CHAVES:
-# predict 
-# distributed systems 
-# fails 
-# monitoring
-# P2P
-# Bittorrent

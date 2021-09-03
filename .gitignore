@@ -1,6 +1,7 @@
 out/
-out_tgcn
-fig/
+figs_graphs/
+out_graphs/
+out_matrices/
 __pycache__/
 traces_prediction.ipynb
 example_model.txt
