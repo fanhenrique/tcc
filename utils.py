@@ -208,7 +208,6 @@ def init(showpeers=True, showmaster=True):
 	global SHOWMASTER
 
 	SHOWPEERS = showpeers
-
 	SHOWMASTER = showmaster
 
 	try:
@@ -225,9 +224,7 @@ def init(showpeers=True, showmaster=True):
 		pass
 
 
-
-
-def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
+def entities(monitors, trackers, peer_lists):
 
 	monitor_list = list(dict.fromkeys(monitors))
 	tracker_list = list(dict.fromkeys(trackers))
@@ -246,6 +243,14 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 
 	if SHOWPEERS:
 		vector += p_list
+
+	return vector
+
+
+def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
+
+	
+	vector = entities(monitors, trackers, peer_lists)
 
 	matrix = np.zeros((len(vector), len(vector)), dtype=int)
 
@@ -273,26 +278,7 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 
 def save_graph_weigths_csv(graphs, monitors, trackers, peer_lists):
 
-	monitor_list = list(dict.fromkeys(monitors))
-	tracker_list = list(dict.fromkeys(trackers))
-	pls = []
-	for pl in peer_lists:
-		for p in pl:
-			pls.append(p)
-	p_list = list(dict.fromkeys(pls))
-
-	vector = []
-
-	if SHOWMASTER:
-		vector.append('MS')
-
-	vector += monitor_list + tracker_list
-
-	if SHOWPEERS:
-		vector += p_list
-
-	print(vector, len(vector))
-			
+	vector = entities(monitors, trackers, peer_lists)			
 
 	with open('out_matrices/monitoring_weigths.csv', 'w') as file:
 		for g in graphs:
