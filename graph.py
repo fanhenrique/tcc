@@ -8,19 +8,11 @@ import logging
 
 #my imports
 import utils
+import saves
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
-TRACKER = 'TRACKER'
-MONITOR = 'MONITOR'
-PEER = 'PEER'
-MASTERSERVER = 'MASTER SERVER'
-
-COLOR_TRACKER = 'red'
-COLOR_MONITOR = 'blue'
-COLOR_PEER = 'green'
-COLOR_MASTERSERVER = 'yellow'
 
 
 # def create_graph(nodes_list):
@@ -174,10 +166,14 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-	utils.init(args.showpeers, args.showmaster)
+	utils.init(args.showmaster, args.showpeers)
 
 	logging.info('reading file ...')
-	epochs, trackers, monitors, peer_lists =  utils.read_file(args.file)
+	epochs, trackers, monitors, peer_lists, l, s, n =  utils.read_file(args.file)
+
+	ls = []
+	for a, b in zip(l, s):
+		ls.append(a+b)
 
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs)
@@ -186,9 +182,12 @@ def main():
 	print('trackers:', len(trackers))
 	print('monitors:', len(monitors))
 	print('peer_lists:', len(peer_lists))
+	print('ls:', len(ls))
+	print('n:', len(n))
 	print('windows:', len(windows))
 	
 	print(windows_index_range, len(windows_index_range))
+
 
 	logging.info('renaming entities ...')
 	# Label pra os vertices
@@ -217,23 +216,25 @@ def main():
 		m = monitor_labels[wir[0]:wir[1]]
 		t = tracker_labels[wir[0]:wir[1]]	
 		pl = peer_lists_labels[wir[0]:wir[1]]
+		wt = ls[wir[0]:wir[1]]
 		
 		graph = utils.create_graph_peer_weights(ms, m, t, pl)
+		# graph = utils.create_graph_wt(ms, m, t, pl, wt)
 
 		graphs.append(graph)
 
-		utils.save_graph_txt(graph, len(graphs))
+		saves.save_graph_txt(graph, len(graphs))
 
-		# utils.show_graph(graph)
+		# saves.show_graph(graph)
 
-		utils.save_graph_fig(graph, len(graphs))	
+		saves.save_graph_fig(graph, len(graphs))	
 
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
 	logging.info(str(len(graphs)) + ' images graphs in directory figs_graphs/')
 
-	utils.save_graph_adj_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
-	utils.save_graph_weigths_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
+	saves.save_graph_adj_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
+	saves.save_graph_weigths_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
 	logging.info('adjacency and weight matrices are directory: out_matrices/')
 
 	

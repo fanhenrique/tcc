@@ -1,33 +1,15 @@
-import numpy as np
 import math
 import os
 import shutil
-import matplotlib.pyplot as plt
 
 import networkx as nx
 
 from collections import Counter
 
-global SHOWPEERS
-global SHOWMASTER
-
-PATH = './out'
-PATH_FIGS = PATH+'/figs_graphs'
-PATH_GRAPHS = PATH+'/out_graphs'
-PATH_MATRICES = PATH+'/out_matrices' 
+#my imports
+import var
 
 WINDOWS_LEN = 15.0
-
-TRACKER = 'TRACKER'
-MONITOR = 'MONITOR'
-PEER = 'PEER'
-MASTERSERVER = 'MASTER SERVER'
-
-COLOR_TRACKER = 'red'
-COLOR_MONITOR = 'blue'
-COLOR_PEER = 'green'
-COLOR_MASTERSERVER = 'yellow'
-
 
 hash_count_tracker = 1
 hash_table_tracker = {}
@@ -37,6 +19,26 @@ hash_table_monitor = {}
 
 hash_count_peer = 1
 hash_table_peer = {}
+
+def init(showmaster=False, showpeers=False):
+
+	var.SHOWMASTER = showmaster
+	var.SHOWPEERS = showpeers
+
+	try:
+		shutil.rmtree(var.PATH)
+		shutil.rmtree(var.PATH_FIGS)
+		shutil.rmtree(var.PATH_GRAPHS)
+		shutil.rmtree(var.PATH_MATRICES)
+	except FileNotFoundError:
+		pass
+	try:
+		os.mkdir(var.PATH)
+		os.mkdir(var.PATH_FIGS)
+		os.mkdir(var.PATH_GRAPHS)
+		os.mkdir(var.PATH_MATRICES)
+	except FileExistsError:
+		pass
 
 def my_hash_tracker(tracker_str):
 
@@ -128,7 +130,7 @@ def windows_range(windows):
 	return windows_index_range
 
 def read_file(file):
-	epochs, trakers, monitors, peer_lists = [], [], [], []
+	epochs, trackers, monitors, peer_lists, l, s, n = [], [], [], [], [], [], []
 	with open(file, 'r') as file:
 		file.readline() #ignora cabeçalho 
 		for line in file:
@@ -136,24 +138,15 @@ def read_file(file):
 			line_split = line.split()
 			
 			try:
-				epochs.append(float(line_split[0]))
-			except:
-				print(line)
-				continue
-			try:
-				trakers.append(line_split[1].split("'")[1])
-			except:
-				print(line)
-				epochs.pop()
-				continue
-			try:
-				monitors.append(line_split[16].split("'")[1])	
-			except:
-				print(line)
-				epochs.pop()
-				trakers.pop()
-				continue
-			try:
+				epoch = float(line_split[0])
+				tracker = line_split[1].split("'")[1]	
+				monitor = line_split[16].split("'")[1]
+
+				el = int(line_split[9].split("'")[1])
+				es = int(line_split[11].split("'")[1])
+				en = int(line_split[13].split("'")[1])
+
+
 				peer_list = []
 				peer_list.append(line_split[18].split('{')[1].split(':')[0])
 				i = 20
@@ -163,144 +156,20 @@ def read_file(file):
 					except IndexError:
 						break
 					i+=2
-				peer_lists.append(peer_list)
 			except:
 				print(line)
-				epochs.pop()
-				trakers.pop()
-				monitors.pop()	
+				continue
 
-	return epochs, trakers, monitors, peer_lists
-
-
-def draw_graph(graph):
-
-	colors = [u[1] for u in graph.nodes(data='color_nodes')]
-	# nx.draw(graph, with_labels=True, node_color=colors)
-	
-	pos = nx.spring_layout(graph)
-	# pos = nx.drawing.nx_agraph.graphviz_layout(graph, prog='dot')
-	weights = nx.get_edge_attributes(graph, "weight")
-
-	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
-	nx.draw_networkx_edge_labels(graph, pos, edge_labels=weights)
-
-def show_graph(graph):
-
-	draw_graph(graph)
-	
-	plt.show()
-
-def save_graph_fig(graph, g):
-
-	draw_graph(graph)
-		
-	plt.savefig(PATH_FIGS+'/graph'+str(g)+'.png')
-	plt.clf()
-
-def save_graph_txt(graph, g):
-	# print(graph.nodes.data())
-	with open(PATH_GRAPHS+'/graph'+str(g)+'.txt', 'w') as file:
-		for edge in graph.edges.data():
-			if edge[2]:
-				file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
-			else:
-				file.write(edge[0] + ' ' + edge[1] + '\n')
-
-def init(showpeers=True, showmaster=True):
-
-	global SHOWPEERS
-	global SHOWMASTER
-
-	SHOWPEERS = showpeers
-	SHOWMASTER = showmaster
-
-	try:
-		shutil.rmtree(PATH)
-		shutil.rmtree(PATH_FIGS)
-		shutil.rmtree(PATH_GRAPHS)
-		shutil.rmtree(PATH_MATRICES)
-	except FileNotFoundError:
-		pass
-	try:
-		os.mkdir(PATH)
-		os.mkdir(PATH_FIGS)
-		os.mkdir(PATH_GRAPHS)
-		os.mkdir(PATH_MATRICES)
-	except FileExistsError:
-		pass
+			epochs.append(epoch)
+			trackers.append(tracker)
+			monitors.append(monitor)
+			l.append(el)
+			s.append(es)
+			n.append(en)
+			peer_lists.append(peer_list)
 
 
-def entities(monitors, trackers, peer_lists):
-
-	monitor_list = list(dict.fromkeys(monitors))
-	tracker_list = list(dict.fromkeys(trackers))
-	pls = []
-	for pl in peer_lists:
-		for p in pl:
-			pls.append(p)
-	p_list = list(dict.fromkeys(pls))
-
-	vector = []
-
-	if SHOWMASTER:
-		vector.append('MS')
-
-	vector += monitor_list + tracker_list
-
-	if SHOWPEERS:
-		vector += p_list
-
-	return vector, monitor_list, tracker_list, p_list
-
-
-def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
-
-	vector, monitor_list, tracker_list, p_list = entities(monitors, trackers, peer_lists)
-
-	print(vector, len(vector))
-
-	matrix = np.zeros((len(vector), len(vector)), dtype=int)
-
-	if SHOWMASTER:
-		for m in monitor_list:
-			matrix[0,vector.index(m)] = 1
-			matrix[vector.index(m), 0] = 1
-
-	for m in monitor_list:
-		for t in tracker_list:
-			matrix[vector.index(m), vector.index(t)] = 1
-			matrix[vector.index(t),vector.index(m)] = 1
-	
-	if SHOWPEERS:
-		for t in tracker_list:
-			for pl in p_list:
-				matrix[vector.index(t),vector.index(pl)] = 1
-				matrix[vector.index(pl),vector.index(t)] = 1
-
-	with open(PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
-
-		for i in range(matrix.shape[0]):
-			for j in range(matrix.shape[1]):
-				file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
-
-def save_graph_weigths_csv(graphs, monitors, trackers, peer_lists):
-
-	vector, _ , _, _ = entities(monitors, trackers, peer_lists)			
-
-	with open(PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
-		for g in graphs:
-
-			matrix = np.zeros((len(vector), len(vector)), dtype=int)
-
-			for e in g.edges().data():
-
-				matrix[vector.index(e[0]), vector.index(e[1])] = e[2]['weight']
-				matrix[vector.index(e[1]), vector.index(e[0])] = e[2]['weight']
-
-			for i in range(matrix.shape[0]):
-				for j in range(matrix.shape[1]):
-					file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
+	return epochs, trackers, monitors, peer_lists, l, s, n
 
 
 def create_graph_peer_weights(master, monitors, trackers, peer_lists):
@@ -309,14 +178,13 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 
 	# vertices
 
-	if SHOWMASTER:
-		graph.add_node(master, color_nodes=COLOR_MASTERSERVER)
-	graph.add_nodes_from(monitors, color_nodes=COLOR_MONITOR)
-	graph.add_nodes_from(trackers, color_nodes=COLOR_TRACKER)
-
-	if SHOWPEERS:
+	if var.SHOWMASTER:
+		graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
+	graph.add_nodes_from(monitors, color_nodes=var.COLOR_MONITOR)
+	graph.add_nodes_from(trackers, color_nodes=var.COLOR_TRACKER)
+	if var.SHOWPEERS:
 		for peer_list in peer_lists:
-			graph.add_nodes_from(peer_list, color_nodes=COLOR_PEER)
+			graph.add_nodes_from(peer_list, color_nodes=var.COLOR_PEER)
 
 
 	# arestas trackers peers
@@ -330,7 +198,7 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 	
 	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
-	if SHOWPEERS:
+	if var.SHOWPEERS:
 		graph.add_weighted_edges_from(edges_tp_weighted)
 
 
@@ -363,7 +231,114 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 
 	# print('---------------------------------')
 
-	if SHOWMASTER:
+	if var.SHOWMASTER:
+		weights_m = Counter() 
+		for k, _, w in edges_mt_weighted:
+			weights_m[k] += w
+
+		# print('WEIGHT M', weights_m, len(weights_m))
+
+		edges_gm = []
+		for m in monitors:
+			edges_gm.append((master, m))
+		
+		# print('EDGES GM', edges_gm, len(edges_gm))
+
+		edges_gm = list(dict.fromkeys(edges_gm)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+
+		# print('EDGES GM (RD)', edges_gm, len(edges_gm))
+
+		edges_gm_weighted = []
+		for e in edges_gm:
+			edges_gm_weighted.append((e[0], e[1], weights_m[e[1]]))
+
+		# print('EDGES GM WEIGHTED', edges_gm_weighted, len(edges_gm_weighted))	
+
+		graph.add_weighted_edges_from(edges_gm_weighted)
+
+	# print('********************************************')
+
+	return graph
+
+
+
+
+def create_graph_wt(master, monitors, trackers, peer_lists, wt):
+
+	graph = nx.Graph()
+
+	# vertices
+
+	if var.SHOWMASTER:
+		graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
+	graph.add_nodes_from(monitors, color_nodes=var.COLOR_MONITOR)
+	graph.add_nodes_from(trackers, color_nodes=var.COLOR_TRACKER)
+	if var.SHOWPEERS:
+		for peer_list in peer_lists:
+			graph.add_nodes_from(peer_list, color_nodes=var.COLOR_PEER)
+
+
+		
+	# arestas trackers peers
+	edges_tp_weighted = []	
+	for i in range(len(trackers)):
+		for peer in peer_lists[i]:
+			edges_tp_weighted.append((trackers[i], peer, 1))
+
+	# print('EDGES TP WEIGHTED', edges_tp_weighted, len(edges_tp_weighted))
+
+	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+	
+	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
+	
+	if var.SHOWPEERS:
+		graph.add_weighted_edges_from(edges_tp_weighted)
+
+
+
+
+	# print('----------------------------------')
+
+	print(len(trackers), len(wt))
+
+	weights_t =  list(zip(trackers, wt))
+	
+	print(weights_t, len(weights_t))
+
+	a = list(dict.fromkeys(weights_t))
+
+	print(a, len(a))
+
+	exit()
+	# pessos vindos dos trackers
+	weights_t = Counter() 
+	for k, _, w in edges_tp_weighted:
+		weights_t[k] += w
+
+	# print('WEIGHT T', weights_t, len(weights_t))
+
+	# arestas monitors trackers
+	edges_mt = list(zip(monitors, trackers))
+
+	# print('EDGES MT', edges_mt, len(edges_mt))
+
+
+	edges_mt = list(dict.fromkeys(edges_mt)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+
+	# print('EDGES MT (RD))', edges_mt, len(edges_mt))
+
+	edges_mt_weighted = []
+	for e in edges_mt:
+		edges_mt_weighted.append((e[0], e[1], weights_t[e[1]]))
+
+
+	# print('EDGES MT WEIGHTED', edges_mt_weighted, len(edges_mt_weighted))
+	graph.add_weighted_edges_from(edges_mt_weighted)
+
+
+	# print('---------------------------------')
+
+	if var.SHOWMASTER:
 		weights_m = Counter() 
 		for k, _, w in edges_mt_weighted:
 			weights_m[k] += w
