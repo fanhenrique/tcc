@@ -190,7 +190,7 @@ def main():
 
 
 	for i in range(len(windows_index_range)):
-		print(i, windows_index_range(i))
+		print(i, windows_index_range[i])
 
 	exit()
 
