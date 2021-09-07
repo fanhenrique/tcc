@@ -186,8 +186,13 @@ def main():
 	print('n:', len(n))
 	print('windows:', len(windows))
 	
-	print(windows_index_range, len(windows_index_range))
+	# print(windows_index_range, len(windows_index_range))
 
+
+	for i in range(len(windows_index_range)):
+		print(i, windows_index_range(i))
+
+	exit()
 
 	logging.info('renaming entities ...')
 	# Label pra os vertices
