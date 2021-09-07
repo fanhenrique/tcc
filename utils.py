@@ -130,6 +130,7 @@ def windows_range(windows):
 	return windows_index_range
 
 def read_file(file):
+	problem_lines = 0
 	epochs, trackers, monitors, peer_lists, l, s, n = [], [], [], [], [], [], []
 	with open(file, 'r') as file:
 		file.readline() #ignora cabeçalho 
@@ -157,6 +158,7 @@ def read_file(file):
 						break
 					i+=2
 			except:
+				problem_lines+=1
 				print(line)
 				continue
 
@@ -168,6 +170,7 @@ def read_file(file):
 			n.append(en)
 			peer_lists.append(peer_list)
 
+	print('Problem lines: ', problem_lines)
 
 	return epochs, trackers, monitors, peer_lists, l, s, n
 
