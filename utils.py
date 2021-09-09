@@ -131,9 +131,8 @@ def windows_range(windows):
 
 def read_file(file):
 	problem_lines = 0
-	epochs, trackers, monitors, peer_lists, l, s, n = [], [], [], [], [], [], []
+	epochs, trackers, monitors, peer_lists, leechers, seeders, ns = [], [], [], [], [], [], []
 	with open(file, 'r') as file:
-		file.readline() #ignora cabeçalho 
 		for line in file:
 
 			line_split = line.split()
@@ -143,9 +142,9 @@ def read_file(file):
 				tracker = line_split[1].split("'")[1]	
 				monitor = line_split[16].split("'")[1]
 
-				el = int(line_split[9].split("'")[1])
-				es = int(line_split[11].split("'")[1])
-				en = int(line_split[13].split("'")[1])
+				l = int(line_split[9].split("'")[1])
+				s = int(line_split[11].split("'")[1])
+				n = int(line_split[13].split("'")[1])
 
 
 				peer_list = []
@@ -165,14 +164,14 @@ def read_file(file):
 			epochs.append(epoch)
 			trackers.append(tracker)
 			monitors.append(monitor)
-			l.append(el)
-			s.append(es)
-			n.append(en)
+			leechers.append(l)
+			seeders.append(s)
+			ns.append(n)
 			peer_lists.append(peer_list)
 
 	print('Problem lines: ', problem_lines)
 
-	return epochs, trackers, monitors, peer_lists, l, s, n
+	return epochs, trackers, monitors, peer_lists, leechers, seeders, ns
 
 
 def create_graph_peer_weights(master, monitors, trackers, peer_lists):
@@ -302,17 +301,18 @@ def create_graph_wt(master, monitors, trackers, peer_lists, wt):
 
 	# print('----------------------------------')
 
-	print(len(trackers), len(wt))
-
 	weights_t =  list(zip(trackers, wt))
-	
+
 	print(weights_t, len(weights_t))
 
 	a = list(dict.fromkeys(weights_t))
 
 	print(a, len(a))
 
+
 	exit()
+
+
 	# pessos vindos dos trackers
 	weights_t = Counter() 
 	for k, _, w in edges_tp_weighted:

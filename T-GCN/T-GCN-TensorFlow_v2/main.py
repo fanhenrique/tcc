@@ -23,6 +23,7 @@ tf.disable_v2_behavior()
 
 time_start = time.time()
 ###### Settings ######
+# flags = tf.app.flags
 flags = tf.compat.v1.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_float('learning_rate', 0.001, 'Initial learning rate.')

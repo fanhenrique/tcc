@@ -169,10 +169,10 @@ def main():
 	utils.init(args.showmaster, args.showpeers)
 
 	logging.info('reading file ...')
-	epochs, trackers, monitors, peer_lists, l, s, n =  utils.read_file(args.file)
+	epochs, trackers, monitors, peer_lists, leechers, seeders, ns =  utils.read_file(args.file)
 
 	ls = []
-	for a, b in zip(l, s):
+	for a, b in zip(leechers, seeders):
 		ls.append(a+b)
 
 	logging.info('calculating windows ...')
@@ -183,7 +183,7 @@ def main():
 	print('monitors:', len(monitors))
 	print('peer_lists:', len(peer_lists))
 	print('ls:', len(ls))
-	print('n:', len(n))
+	print('n:', len(ns))
 	print('windows:', len(windows))
 	
 	print(windows_index_range, len(windows_index_range))
@@ -199,16 +199,19 @@ def main():
 	for m in monitors:
 		monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
 		# monitor_labels.append(str(utils.my_hash_monitor(m)))
+		# monitor_labels.append(m)
 	tracker_labels = []
 	for t in trackers:
 		tracker_labels.append('T'+str(utils.my_hash_tracker(t)))
 		# tracker_labels.append(str(utils.my_hash_tracker(t)))
+		# tracker_labels.append(t)
 	peer_lists_labels = []
 	for l in peer_lists:
 		pl_labels = []
 		for p in l:
 			pl_labels.append('P'+str(utils.my_hash_peer(p)))
 			# pl_labels.append(str(utils.my_hash_peer(p)))
+			# pl_labels.append(p)
 		peer_lists_labels.append(pl_labels)
 
 
@@ -222,8 +225,8 @@ def main():
 		pl = peer_lists_labels[wir[0]:wir[1]]
 		wt = ls[wir[0]:wir[1]]
 		
-		graph = utils.create_graph_peer_weights(ms, m, t, pl)
-		# graph = utils.create_graph_wt(ms, m, t, pl, wt)
+		# graph = utils.create_graph_peer_weights(ms, m, t, pl)
+		graph = utils.create_graph_wt(ms, m, t, pl, wt)
 
 		graphs.append(graph)
 
