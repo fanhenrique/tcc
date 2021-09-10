@@ -225,8 +225,8 @@ def main():
 		pl = peer_lists_labels[wir[0]:wir[1]]
 		wt = ls[wir[0]:wir[1]]
 		
-		# graph = utils.create_graph_peer_weights(ms, m, t, pl)
-		graph = utils.create_graph_wt(ms, m, t, pl, wt)
+		graph = utils.create_graph_peer_weights(ms, m, t, pl)
+		# graph = utils.create_graph_wt(ms, m, t, pl, wt)
 
 		graphs.append(graph)
 
