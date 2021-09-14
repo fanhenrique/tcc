@@ -12,7 +12,7 @@ def plot_result(test_result,test_label1,path):
     plt.plot(a_pred,'r-',label='prediction')
     plt.plot(a_true,'b-',label='true')
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/test_all.jpg')
+    plt.savefig(path+'/test_all.eps', format='eps')
     plt.show()
     ## oneday test result visualization
     fig1 = plt.figure(figsize=(15,9))
@@ -22,7 +22,7 @@ def plot_result(test_result,test_label1,path):
     plt.plot(a_pred,'r-',label="prediction")
     plt.plot(a_true,'b-',label="true")
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/test_oneday.jpg')
+    plt.savefig(path+'/test_oneday.eps', format='eps')
     plt.show()
     
 def plot_error(train_rmse,train_loss,test_rmse,test_acc,test_mae,path):
@@ -31,38 +31,38 @@ def plot_error(train_rmse,train_loss,test_rmse,test_acc,test_mae,path):
     plt.plot(train_rmse, 'r-', label="train_rmse")
     plt.plot(test_rmse, 'b-', label="test_rmse")
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/rmse.jpg')
+    plt.savefig(path+'/rmse.eps', format='eps')
     plt.show()
     #### train_loss & train_rmse
     fig1 = plt.figure(figsize=(10,6))
     plt.plot(train_loss,'b-', label='train_loss')
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/train_loss.jpg')
+    plt.savefig(path+'/train_loss.eps', format='eps')
     plt.show()
 
     fig1 = plt.figure(figsize=(10,6))
     plt.plot(train_rmse,'b-', label='train_rmse')
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/train_rmse.jpg')
+    plt.savefig(path+'/train_rmse.eps', format='eps')
     plt.show()
 
     ### accuracy
     fig1 = plt.figure(figsize=(10,6))
     plt.plot(test_acc, 'b-', label="test_acc")
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/test_acc.jpg')
+    plt.savefig(path+'/test_acc.eps', format='eps')
     plt.show()
     ### rmse
     fig1 = plt.figure(figsize=(10,6))
     plt.plot(test_rmse, 'b-', label="test_rmse")
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/test_rmse.jpg')
+    plt.savefig(path+'/test_rmse.eps', format='eps')
     plt.show()
     ### mae
     fig1 = plt.figure(figsize=(10,6))
     plt.plot(test_mae, 'b-', label="test_mae")
     plt.legend(loc='best',fontsize=10)
-    plt.savefig(path+'/test_mae.jpg')
+    plt.savefig(path+'/test_mae.eps', format='eps')
     plt.show()
 
 
