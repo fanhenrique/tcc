@@ -186,11 +186,10 @@ def main():
 	print('n:', len(ns))
 	print('windows:', len(windows))
 	
-	print(windows_index_range, len(windows_index_range))
+	# print(windows_index_range, len(windows_index_range))
 
-
-	# for i in range(len(windows_index_range)):
-		# print(i, windows_index_range[i])
+	for i in range(len(windows_index_range)):
+		print(i, windows_index_range[i])
 	# exit()
 
 	logging.info('renaming entities ...')
@@ -240,8 +239,8 @@ def main():
 	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
 	logging.info(str(len(graphs)) + ' images graphs in directory figs_graphs/')
 
-	saves.save_graph_adj_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
-	saves.save_graph_weigths_csv(graphs, monitor_labels, tracker_labels, peer_lists_labels)
+	saves.save_graph_adj_csv(graphs)
+	saves.save_graph_weigths_csv(graphs)
 	logging.info('adjacency and weight matrices are directory: out_matrices/')
 
 	

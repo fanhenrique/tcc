@@ -8,6 +8,7 @@ import logging
 
 #my imports
 import utils
+import saves
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -49,6 +50,9 @@ def main():
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
 	
+	parser.add_argument('--showpeers', '-p', help='peers in graph', action='store_true')
+	parser.add_argument('--showmaster', '-g', help='master in graph', action='store_true')
+	
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
 
@@ -60,7 +64,7 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
 
-	utils.init()
+	utils.init(args.showmaster, args.showpeers)
 
 	logging.info('reading file ...')
 	windows, monitors, trackers, peer_lists = read_file(args.file)
@@ -70,11 +74,12 @@ def main():
 	windows_index_range = utils.windows_range(windows)
 
 
+	ms = 'MS'
+
 	graphs = []
 	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 
-		ms = 'MS'
 		m = monitors[wir[0]:wir[1]]
 		t = trackers[wir[0]:wir[1]]	
 		pl = peer_lists[wir[0]:wir[1]]
@@ -83,18 +88,19 @@ def main():
 	
 		graphs.append(graph)
 
-		utils.save_graph_txt(graph, len(graphs))
+		saves.save_graph_txt(graph, len(graphs))
 
-		# utils.show_graph(graph)
+		saves.show_graph(graph)
 
-		utils.save_graph_fig(graph, len(graphs))
+		saves.save_graph_fig(graph, len(graphs))
+
 
 	
 	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
 	logging.info(str(len(graphs)) + ' images graphs in directory figs_graphs/')
 
-	utils.save_graph_adj_csv(graphs, monitors, trackers, peer_lists)
-	utils.save_graph_weigths_csv(graphs, monitors, trackers, peer_lists)
+	saves.save_graph_adj_csv(graphs)
+	saves.save_graph_weigths_csv(graphs)
 	logging.info('adjacency and weight matrices are directory: out_matrices/')	
 	
 

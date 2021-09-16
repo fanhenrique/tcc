@@ -11,8 +11,8 @@ def draw_graph(graph):
 	colors = [u[1] for u in graph.nodes(data='color_nodes')]
 	# nx.draw(graph, with_labels=True, node_color=colors)
 	
-	pos = nx.spring_layout(graph)
-	# pos = nx.drawing.nx_agraph.graphviz_layout(graph, prog='dot')
+	# pos = nx.spring_layout(graph)
+	pos = nx.drawing.nx_agraph.graphviz_layout(graph, prog='dot')
 	weights = nx.get_edge_attributes(graph, "weight")
 
 	nx.draw_networkx(graph, pos, with_labels=True, node_color=colors)
@@ -63,7 +63,7 @@ def entities(monitors, trackers, peer_lists):
 	return vector, monitor_list, tracker_list, p_list
 
 
-def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
+def save_graph_adj_csv_entities(graphs, monitors, trackers, peer_lists):
 
 	vector, monitor_list, tracker_list, p_list = entities(monitors, trackers, peer_lists)
 
@@ -93,7 +93,7 @@ def save_graph_adj_csv(graphs, monitors, trackers, peer_lists):
 			for j in range(matrix.shape[1]):
 				file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
 
-def save_graph_weigths_csv(graphs, monitors, trackers, peer_lists):
+def save_graph_weigths_csv_entities(graphs, monitors, trackers, peer_lists):
 
 	vector, _ , _, _ = entities(monitors, trackers, peer_lists)			
 
@@ -108,5 +108,54 @@ def save_graph_weigths_csv(graphs, monitors, trackers, peer_lists):
 				matrix[vector.index(e[1]), vector.index(e[0])] = e[2]['weight']
 
 			for i in range(matrix.shape[0]):
+				for j in range(matrix.shape[1]):
+					file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
+
+
+
+def full_edges(graphs):
+
+	full_edges = []
+
+	for g in graphs:
+		full_edges += g.edges()
+
+	full_graph = list(dict.fromkeys(full_edges))
+
+	return full_graph
+
+
+def save_graph_adj_csv(graphs):
+	
+	fe = full_edges(graphs)
+
+	matrix = np.zeros((len(fe), len(fe)), dtype=int)
+
+	for e1 in fe:
+		for e2 in fe:
+			if fe.index(e1) != fe.index(e2):
+				if e1[0] == e2[0] or e1[0] == e2[1] or e1[1] == e2[0] or e1[1] == e2[1]:
+					matrix[fe.index(e1), fe.index(e2)] = 1
+		
+	with open(var.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
+
+		for i in range(matrix.shape[0]):
+			for j in range(matrix.shape[1]):
+				file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
+
+
+def save_graph_weigths_csv(graphs):
+	
+	fe = full_edges(graphs)
+
+	matrix = np.zeros((len(graphs), len(fe)), dtype=int)
+	
+	for i in range(len(graphs)):
+		for e in graphs[i].edges.data():
+			matrix[i, fe.index((e[0], e[1]))] = e[2]['weight']
+
+	with open(var.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
+
+		for i in range(matrix.shape[0]):
 				for j in range(matrix.shape[1]):
 					file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
