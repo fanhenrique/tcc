@@ -230,11 +230,11 @@ def main():
 
 		graphs.append(graph)
 
-		saves.save_graph_txt(graph, len(graphs))
+		# saves.save_graph_txt(graph, len(graphs))
 
 		# saves.show_graph(graph)
 
-		saves.save_graph_fig(graph, len(graphs))	
+		# saves.save_graph_fig(graph, len(graphs))	
 
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
