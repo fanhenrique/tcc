@@ -48,5 +48,7 @@ def preprocess_data(data, time_len, rate, seq_len, pre_len):
     trainY1 = np.array(trainY)
     testX1 = np.array(testX)
     testY1 = np.array(testY)
+
+
     return trainX1, trainY1, testX1, testY1
     

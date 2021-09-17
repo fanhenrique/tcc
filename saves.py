@@ -129,6 +129,8 @@ def save_graph_adj_csv(graphs):
 	
 	fe = full_edges(graphs)
 
+	print(fe, len(fe))
+
 	matrix = np.zeros((len(fe), len(fe)), dtype=int)
 
 	for e1 in fe:
@@ -137,6 +139,9 @@ def save_graph_adj_csv(graphs):
 				if e1[0] == e2[0] or e1[0] == e2[1] or e1[1] == e2[0] or e1[1] == e2[1]:
 					matrix[fe.index(e1), fe.index(e2)] = 1
 		
+
+	print(matrix.shape)
+
 	with open(var.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
 
 		for i in range(matrix.shape[0]):
@@ -153,6 +158,9 @@ def save_graph_weigths_csv(graphs):
 	for i in range(len(graphs)):
 		for e in graphs[i].edges.data():
 			matrix[i, fe.index((e[0], e[1]))] = e[2]['weight']
+
+
+	print(matrix.shape)
 
 	with open(var.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
 

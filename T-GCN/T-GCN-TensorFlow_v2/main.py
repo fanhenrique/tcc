@@ -27,13 +27,13 @@ time_start = time.time()
 flags = tf.compat.v1.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_float('learning_rate', 0.001, 'Initial learning rate.')
-flags.DEFINE_integer('training_epoch', 1, 'Number of epochs to train.')
+flags.DEFINE_integer('training_epoch', 100, 'Number of epochs to train.')
 flags.DEFINE_integer('gru_units', 64, 'hidden units of gru.')
 flags.DEFINE_integer('seq_len',12 , '  time length of inputs.')
 flags.DEFINE_integer('pre_len', 3, 'time length of prediction.')
 flags.DEFINE_float('train_rate', 0.8, 'rate of training set.')
 flags.DEFINE_integer('batch_size', 32, 'batch size.')
-flags.DEFINE_string('dataset', 'sz', 'sz or los.')
+flags.DEFINE_string('dataset', 'monitoring', 'sz or los.')
 flags.DEFINE_string('model_name', 'tgcn', 'tgcn')
 model_name = FLAGS.model_name
 data_name = FLAGS.dataset
@@ -54,18 +54,13 @@ if data_name == 'monitoring':
     data, adj = load_monitoring_data('monitoring')
 
 
-
 time_len = data.shape[0]
-print('time_len: ', time_len)
 num_nodes = data.shape[1]
-print('num_nodes', num_nodes)
 data1 =np.mat(data,dtype=np.float32)
 
 
 #### normalization
 max_value = np.max(data1)
-print('max_value', max_value)
-
 data1  = data1/max_value
 trainX, trainY, testX, testY = preprocess_data(data1, time_len, train_rate, seq_len, pre_len)
 
@@ -192,7 +187,7 @@ test_result = test_pred[index]
 var = pd.DataFrame(test_result)
 var.to_csv(path+'/test_result.csv',index = False,header = False)
 plot_result(test_result,test_label1,path)
-plot_error(train_rmse,train_loss,test_rmse,test_acc,test_mae,path)
+# plot_error(train_rmse,train_loss,test_rmse,test_acc,test_mae,path)
 
 print('min_rmse:%r'%(np.min(test_rmse)),
       'min_mae:%r'%(test_mae[index]),
