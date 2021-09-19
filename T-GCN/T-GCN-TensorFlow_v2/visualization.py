@@ -6,22 +6,32 @@ import matplotlib.pyplot as plt
 def plot_result(test_result,test_label1,path):
     ##all test result visualization
     fig1 = plt.figure(figsize=(15,9))
-#    ax1 = fig1.add_subplot(1,1,1)
+    # ax1 = fig1.add_subplot(1,1,1)
     a_pred = test_result[:,0]
     a_true = test_label1[:,0]
-    plt.plot(a_pred,'r-',label='prediction')
+    print(a_pred)
+    print(len(a_pred))
+    print(a_pred.shape)
+    print(a_true)
+    print(len(a_true))
+    print(a_true.shape)
     plt.plot(a_true,'b-',label='true')
+    plt.plot(a_pred,'r-',label='prediction')
     plt.legend(loc='best',fontsize=10)
+    plt.xlabel('Quantidade de janelas')
+    plt.ylabel('Quantidade de pares')    
     plt.savefig(path+'/test_all.eps', format='eps')
     plt.show()
     ## oneday test result visualization
     fig1 = plt.figure(figsize=(15,9))
-#    ax1 = fig1.add_subplot(1,1,1)
+    # ax1 = fig1.add_subplot(1,1,1)
     a_pred = test_result[0:96,0]
     a_true = test_label1[0:96,0]
-    plt.plot(a_pred,'r-',label="prediction")
     plt.plot(a_true,'b-',label="true")
+    plt.plot(a_pred,'r-',label="prediction")
     plt.legend(loc='best',fontsize=10)
+    plt.xlabel('Quantidade de janelas')
+    plt.ylabel('Quantidade de pares')
     plt.savefig(path+'/test_oneday.eps', format='eps')
     plt.show()
     

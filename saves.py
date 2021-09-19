@@ -155,7 +155,10 @@ def save_graph_weigths_csv(graphs):
 
 	matrix = np.zeros((len(graphs), len(fe)), dtype=int)
 	
-	for i in range(len(graphs)):
+	# for i in range(len(fe)):
+		# matrix[0, i] = 0
+
+	for i in range(0, len(graphs)):
 		for e in graphs[i].edges.data():
 			matrix[i, fe.index((e[0], e[1]))] = e[2]['weight']
 

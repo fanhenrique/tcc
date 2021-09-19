@@ -27,13 +27,13 @@ time_start = time.time()
 flags = tf.compat.v1.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_float('learning_rate', 0.001, 'Initial learning rate.')
-flags.DEFINE_integer('training_epoch', 100, 'Number of epochs to train.')
+flags.DEFINE_integer('training_epoch', 1, 'Number of epochs to train.')
 flags.DEFINE_integer('gru_units', 64, 'hidden units of gru.')
-flags.DEFINE_integer('seq_len',12 , '  time length of inputs.')
+flags.DEFINE_integer('seq_len', 12, '  time length of inputs.')
 flags.DEFINE_integer('pre_len', 3, 'time length of prediction.')
 flags.DEFINE_float('train_rate', 0.8, 'rate of training set.')
 flags.DEFINE_integer('batch_size', 32, 'batch size.')
-flags.DEFINE_string('dataset', 'monitoring', 'sz or los.')
+flags.DEFINE_string('dataset', 'los', 'sz or los.')
 flags.DEFINE_string('model_name', 'tgcn', 'tgcn')
 model_name = FLAGS.model_name
 data_name = FLAGS.dataset
@@ -56,6 +56,9 @@ if data_name == 'monitoring':
 
 time_len = data.shape[0]
 num_nodes = data.shape[1]
+print('num_nodes',num_nodes)
+print('time_len', time_len)
+
 data1 =np.mat(data,dtype=np.float32)
 
 
@@ -145,12 +148,18 @@ for epoch in range(training_epoch):
         mini_label = trainY[m * batch_size : (m+1) * batch_size]
         _, loss1, rmse1, train_output = sess.run([optimizer, loss, error, y_pred],
                                                  feed_dict = {inputs:mini_batch, labels:mini_label})
+        
+        # print(train_output)
+        # print(train_output.shape)
         batch_loss.append(loss1)
         batch_rmse.append(rmse1 * max_value)
 
      # Test completely at every epoch
     loss2, rmse2, test_output = sess.run([loss, error, y_pred],
                                          feed_dict = {inputs:testX, labels:testY})
+    
+    # print(test_output)
+    # print(test_output.shape)
     test_label = np.reshape(testY,[-1,num_nodes])
     rmse, mae, acc, r2_score, var_score = evaluation(test_label, test_output)
     test_label1 = test_label * max_value
@@ -162,6 +171,8 @@ for epoch in range(training_epoch):
     test_r2.append(r2_score)
     test_var.append(var_score)
     test_pred.append(test_output1)
+    
+    # print(test_pred)
     
     print('Iter:{}'.format(epoch),
           'train_rmse:{:.4}'.format(batch_rmse[-1]),

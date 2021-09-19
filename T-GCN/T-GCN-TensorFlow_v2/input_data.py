@@ -24,8 +24,9 @@ def load_los_data(dataset):
 def load_monitoring_data(dataset):
     los_adj = pd.read_csv(r'out/out_matrices/monitoring_adj.csv',header=None)
     adj = np.mat(los_adj)
-    los_tf = pd.read_csv(r'out/out_matrices/monitoring_weigths.csv')
-    return los_tf, adj
+    los_tf = pd.read_csv(r'out/out_matrices/monitoring_weigths.csv', header=None)
+    tf = np.mat(los_tf)
+    return tf, adj
 
 
 
@@ -33,6 +34,9 @@ def preprocess_data(data, time_len, rate, seq_len, pre_len):
     train_size = int(time_len * rate)
     train_data = data[0:train_size]
     test_data = data[train_size:time_len]
+    
+    print('train_data', train_data.shape)
+    print('test_data', test_data.shape)
     
     trainX, trainY, testX, testY = [], [], [], []
     for i in range(len(train_data) - seq_len - pre_len):
@@ -49,6 +53,10 @@ def preprocess_data(data, time_len, rate, seq_len, pre_len):
     testX1 = np.array(testX)
     testY1 = np.array(testY)
 
+    print(trainX1.shape)
+    print(trainY1.shape)
+    print(testX1.shape)
+    print(testY1.shape)
 
     return trainX1, trainY1, testX1, testY1
     
