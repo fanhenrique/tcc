@@ -1,5 +1,6 @@
 out_tgcn/
 out/
 __pycache__/
-traces_prediction.ipynb
 example_model.txt
+gcn_lstm/out_gcn_lstm/
+gcn_lstm/out/
