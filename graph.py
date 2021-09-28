@@ -237,10 +237,10 @@ def main():
 		# saves.save_graph_fig(graph, len(graphs))	
 
 
-	for g in graphs:
-		for e in g.edges.data():
-			print(e)
-		print('-------------')
+	# for g in graphs:
+	# 	for e in g.edges.data():
+	# 		print(e)
+	# 	print('-------------')
 
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
