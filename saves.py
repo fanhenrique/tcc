@@ -40,76 +40,76 @@ def save_graph_txt(graph, g):
 			else:
 				file.write(edge[0] + ' ' + edge[1] + '\n')
 
-def entities(monitors, trackers, peer_lists):
+# def entities(monitors, trackers, peer_lists):
 
-	monitor_list = list(dict.fromkeys(monitors))
-	tracker_list = list(dict.fromkeys(trackers))
-	pls = []
-	for pl in peer_lists:
-		for p in pl:
-			pls.append(p)
-	p_list = list(dict.fromkeys(pls))
+# 	monitor_list = list(dict.fromkeys(monitors))
+# 	tracker_list = list(dict.fromkeys(trackers))
+# 	pls = []
+# 	for pl in peer_lists:
+# 		for p in pl:
+# 			pls.append(p)
+# 	p_list = list(dict.fromkeys(pls))
 
-	vector = []
+# 	vector = []
 
-	if var.SHOWMASTER:
-		vector.append('MS')
+# 	if var.SHOWMASTER:
+# 		vector.append('MS')
 
-	vector += monitor_list + tracker_list
+# 	vector += monitor_list + tracker_list
 
-	if var.SHOWPEERS:
-		vector += p_list
+# 	if var.SHOWPEERS:
+# 		vector += p_list
 
-	return vector, monitor_list, tracker_list, p_list
+# 	return vector, monitor_list, tracker_list, p_list
 
 
-def save_graph_adj_csv_entities(graphs, monitors, trackers, peer_lists):
+# def save_graph_adj_csv_entities(graphs, monitors, trackers, peer_lists):
 
-	vector, monitor_list, tracker_list, p_list = entities(monitors, trackers, peer_lists)
+# 	vector, monitor_list, tracker_list, p_list = entities(monitors, trackers, peer_lists)
 
-	print(vector, len(vector))
+# 	print(vector, len(vector))
 
-	matrix = np.zeros((len(vector), len(vector)), dtype=int)
+# 	matrix = np.zeros((len(vector), len(vector)), dtype=int)
 
-	if var.SHOWMASTER:
-		for m in monitor_list:
-			matrix[0,vector.index(m)] = 1
-			matrix[vector.index(m), 0] = 1
+# 	if var.SHOWMASTER:
+# 		for m in monitor_list:
+# 			matrix[0,vector.index(m)] = 1
+# 			matrix[vector.index(m), 0] = 1
 
-	for m in monitor_list:
-		for t in tracker_list:
-			matrix[vector.index(m), vector.index(t)] = 1
-			matrix[vector.index(t),vector.index(m)] = 1
+# 	for m in monitor_list:
+# 		for t in tracker_list:
+# 			matrix[vector.index(m), vector.index(t)] = 1
+# 			matrix[vector.index(t),vector.index(m)] = 1
 	
-	if var.SHOWPEERS:
-		for t in tracker_list:
-			for pl in p_list:
-				matrix[vector.index(t),vector.index(pl)] = 1
-				matrix[vector.index(pl),vector.index(t)] = 1
+# 	if var.SHOWPEERS:
+# 		for t in tracker_list:
+# 			for pl in p_list:
+# 				matrix[vector.index(t),vector.index(pl)] = 1
+# 				matrix[vector.index(pl),vector.index(t)] = 1
 
-	with open(var.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
+# 	with open(var.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
 
-		for i in range(matrix.shape[0]):
-			for j in range(matrix.shape[1]):
-				file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
+# 		for i in range(matrix.shape[0]):
+# 			for j in range(matrix.shape[1]):
+# 				file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
 
-def save_graph_weigths_csv_entities(graphs, monitors, trackers, peer_lists):
+# def save_graph_weigths_csv_entities(graphs, monitors, trackers, peer_lists):
 
-	vector, _ , _, _ = entities(monitors, trackers, peer_lists)			
+# 	vector, _ , _, _ = entities(monitors, trackers, peer_lists)			
 
-	with open(var.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
-		for g in graphs:
+# 	with open(var.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
+# 		for g in graphs:
 
-			matrix = np.zeros((len(vector), len(vector)), dtype=int)
+# 			matrix = np.zeros((len(vector), len(vector)), dtype=int)
 
-			for e in g.edges().data():
+# 			for e in g.edges().data():
 
-				matrix[vector.index(e[0]), vector.index(e[1])] = e[2]['weight']
-				matrix[vector.index(e[1]), vector.index(e[0])] = e[2]['weight']
+# 				matrix[vector.index(e[0]), vector.index(e[1])] = e[2]['weight']
+# 				matrix[vector.index(e[1]), vector.index(e[0])] = e[2]['weight']
 
-			for i in range(matrix.shape[0]):
-				for j in range(matrix.shape[1]):
-					file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
+# 			for i in range(matrix.shape[0]):
+# 				for j in range(matrix.shape[1]):
+# 					file.write(str(matrix[i,j])+'\n') if j == matrix.shape[1]-1 else file.write(str(matrix[i,j])+',')
 
 
 
@@ -140,7 +140,7 @@ def save_graph_adj_csv(graphs):
 					matrix[fe.index(e1), fe.index(e2)] = 1
 		
 
-	print(matrix.shape)
+	print('shape adj', matrix.shape)
 
 	with open(var.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
 
@@ -155,15 +155,13 @@ def save_graph_weigths_csv(graphs):
 
 	matrix = np.zeros((len(graphs), len(fe)), dtype=int)
 	
-	# for i in range(len(fe)):
-		# matrix[0, i] = 0
 
 	for i in range(0, len(graphs)):
 		for e in graphs[i].edges.data():
 			matrix[i, fe.index((e[0], e[1]))] = e[2]['weight']
 
 
-	print(matrix.shape)
+	print('shape weigths', matrix.shape)
 
 	with open(var.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
 

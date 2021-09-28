@@ -52,11 +52,11 @@ def preprocess_data(data, time_len, rate, seq_len, pre_len):
     trainY1 = np.array(trainY)
     testX1 = np.array(testX)
     testY1 = np.array(testY)
-
-    print(trainX1.shape)
-    print(trainY1.shape)
-    print(testX1.shape)
-    print(testY1.shape)
-
+    
+    print('TrainX', trainX1.shape)
+    print('TrainY', trainY1.shape)
+    print('TestX', testX1.shape)
+    print('TestY', testY1.shape)
+    
     return trainX1, trainY1, testX1, testY1
     

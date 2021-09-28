@@ -1,6 +1,7 @@
 import os
 import sys
 import urllib.request
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -17,15 +18,17 @@ import stellargraph as sg
 
 
 
-los_adj = pd.read_csv(r'../tccTraces/T-GCN/data/los_adj.csv', header=None)
+# los_adj = pd.read_csv(r'../T-GCN/data/los_adj.csv', header=None)
+# los_adj = pd.read_csv(r'../T-GCN/data/sz_adj.csv', header=None)
 
-# los_adj = pd.read_csv(r'out/out_matrices/monitoring_adj.csv',header=None))
+los_adj = pd.read_csv(r'out/out_matrices/monitoring_adj.csv',header=None)
 sensor_dist_adj = np.mat(los_adj)
 
 
-los_speed = pd.read_csv(r'../tccTraces/T-GCN/data/los_speed.csv')
+# los_speed = pd.read_csv(r'../T-GCN/data/los_speed.csv')
+#los_speed = pd.read_csv(r'../T-GCN/data/sz_speed.csv')
 
-# los_speed = pd.read_csv(r'out/out_matrices/monitoring_weigths.csv',header=None)
+los_speed = pd.read_csv(r'out/out_matrices/monitoring_weigths.csv',header=None)
 speed_data = np.mat(los_speed)
 
 
@@ -54,15 +57,20 @@ print("Test data: ", test_data.shape)
 def scale_data(train_data, test_data):
     max_speed = train_data.max()
     min_speed = train_data.min()
-    train_scaled = (train_data - min_speed) / (max_speed - min_speed)
-    test_scaled = (test_data - min_speed) / (max_speed - min_speed)
+
+    # train_scaled = (train_data - min_speed) / (max_speed - min_speed)
+    # test_scaled = (test_data - min_speed) / (max_speed - min_speed)
+    
+    train_scaled = train_data / max_speed    
+    test_scaled = test_data / max_speed
+
     return train_scaled, test_scaled
 
 train_scaled, test_scaled = scale_data(train_data, test_data)
 
 
-seq_len = 12
-pre_len = 3
+seq_len = 7
+pre_len = 2
 
 
 def sequence_data_preparation(seq_len, pre_len, train_data, test_data):
@@ -89,10 +97,10 @@ def sequence_data_preparation(seq_len, pre_len, train_data, test_data):
 trainX, trainY, testX, testY = sequence_data_preparation(
     seq_len, pre_len, train_scaled, test_scaled
 )
-print(trainX.shape)
-print(trainY.shape)
-print(testX.shape)
-print(testY.shape)
+print('TrainX', trainX.shape)
+print('TrainY', trainY.shape)
+print('TestX', testX.shape)
+print('TestY', testY.shape)
 
 
 from stellargraph.layer import GCN_LSTM
@@ -116,7 +124,7 @@ model.compile(optimizer="adam", loss="mae", metrics=["mse"])
 history = model.fit(
     trainX,
     trainY,
-    epochs=10,
+    epochs=100,
     batch_size=32,
     shuffle=True,
     verbose=0,
@@ -135,7 +143,47 @@ print(
 )
 
 
-sg.utils.plot_history(history)
+model_name = 'gcn_lstm'
+
+out = 'out_%s'%(model_name)
+#out = 'out/%s_%s'%(model_name,'perturbation')
+path1 = '%s' % datetime.now().strftime('%d-%m_%H-%M-%S')
+path = os.path.join(out,path1)
+if not os.path.exists(path):
+    os.makedirs(path)
+
+
+
+print(history.history.keys())
+
+colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+plt.figure(figsize=(15,8))
+plt.plot(history.history['loss'], color=colors[0], linestyle='-', label='treino')
+plt.plot(history.history['val_loss'], color=colors[1], linestyle='-', label='validação')
+plt.xlabel("Épocas", fontsize=12)
+plt.ylabel("Erro médio absoluto", fontsize=12)
+plt.legend(loc="best", fontsize=15)
+plt.savefig(path+'/loss.eps', format='eps')
+plt.show()
+
+
+
+plt.figure(figsize=(15,8))
+plt.plot(history.history['mse'], color=colors[0], linestyle='-', label='treino')
+plt.plot(history.history['val_mse'], color=colors[1], linestyle='-', label='validação')
+plt.xlabel("Épocas", fontsize=12)
+plt.ylabel("Erro quadrático médio", fontsize=12)
+plt.legend(loc="best", fontsize=15)
+plt.savefig(path+'/mse.eps', format='eps')
+plt.show()
+
+
+
+
+# fig = sg.utils.plot_history(history=history, individual_figsize=(7, 7),return_figure=True)
+# fig.savefig(path+'/loss_mse.eps', format='eps')
+
 
 
 ythat = model.predict(trainX)
@@ -196,6 +244,8 @@ print(
 )
 
 
+
+
 # plot violin plot of MAE for naive and NN predictions
 fig, ax = plt.subplots()
 # xl = minsl
@@ -215,17 +265,41 @@ ax.set_xlabel("Scaled distribution amplitude (after Gaussian convolution)")
 ax.set_ylabel("Mean Absolute Error")
 ax.set_title("Distribution over segments: NN pred (blue) and naive pred (orange)")
 plt.legend(handles=(line1, line2), title="Prediction Model", loc=2)
+plt.savefig(path+'/nn_naivepred.eps', format='eps')
 plt.show()
+
+
 
 
 ##all test result visualization
-fig1 = plt.figure(figsize=(15, 8))
+# fig1 = plt.figure(figsize=(15, 8))
 #    ax1 = fig1.add_subplot(1,1,1)
-a_pred = test_rescpred[:, 100]
-a_true = test_rescref[:, 100]
-plt.plot(a_pred, "r-", label="prediction")
-plt.plot(a_true, "b-", label="true")
-plt.xlabel("time")
-plt.ylabel("speed")
-plt.legend(loc="best", fontsize=10)
+
+plt.figure(figsize=(15,8))
+a_pred = test_rescpred[:, 0]
+a_true = test_rescref[:, 0]
+
+plt.xlim([-(a_pred.shape[0]*0.02), a_pred.shape[0]+(a_pred.shape[0]*0.02)])
+
+xticks = np.arange(0, a_pred.shape[0], 20)
+xticks = np.append(xticks, a_pred.shape[0])
+plt.xticks(xticks)
+
+ylim = np.max(a_true)
+yticks = np.arange(0, ylim, 10)
+yticks = np.append(yticks, ylim)
+plt.yticks(yticks)
+
+
+plt.plot(a_true, "b-", label="verdadeiro")
+plt.plot(a_pred, "r-", label="predição")
+plt.xlabel("Snapshots", fontsize=12)
+plt.ylabel("Quantidade de pares", fontsize=12)
+plt.legend(loc="best", fontsize=15)
+plt.savefig(path+'/test_all.eps', format='eps')
 plt.show()
+
+
+with open(path+'/pred.txt', 'w') as file:
+    for p in a_pred:
+        file.write(str(p)+', ')

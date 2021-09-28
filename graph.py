@@ -152,6 +152,8 @@ def main():
 
 	parser.add_argument('--showpeers', '-p', help='peers in graph', action='store_true')
 	parser.add_argument('--showmaster', '-g', help='master in graph', action='store_true')
+	parser.add_argument('--showtrackers', '-t', help='trackers in graph', action='store_true')
+	parser.add_argument('--showmonitors', '-m', help='monitors in graph', action='store_true')
 
 	# parser.add_argument('--numberwindows', '-w', help='number windows', default=1, type=int)
 	# parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
@@ -166,7 +168,7 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-	utils.init(args.showmaster, args.showpeers)
+	utils.init(showmaster = args.showmaster, showpeers = args.showpeers, showtrackers = args.showtrackers, showmonitors = args.showmonitors)
 
 	logging.info('reading file ...')
 	epochs, trackers, monitors, peer_lists, leechers, seeders, ns =  utils.read_file(args.file)
@@ -224,8 +226,7 @@ def main():
 		pl = peer_lists_labels[wir[0]:wir[1]]
 		wt = ls[wir[0]:wir[1]]
 		
-		graph = utils.create_graph_peer_weights(ms, m, t, pl)
-		# graph = utils.create_graph_wt(ms, m, t, pl, wt)
+		graph = utils.create_graph_master_tracker(ms, m, t, pl)
 
 		graphs.append(graph)
 
@@ -234,6 +235,12 @@ def main():
 		# saves.show_graph(graph)
 
 		# saves.save_graph_fig(graph, len(graphs))	
+
+
+	for g in graphs:
+		for e in g.edges.data():
+			print(e)
+		print('-------------')
 
 
 	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')

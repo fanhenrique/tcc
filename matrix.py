@@ -1,15 +1,47 @@
 import sys
 import random
+import numpy
 # with open('/home/fanhenrique/Google Drive/tcc/tccTraces/out_matrices/adj.csv') as file:
 # 	for i in range(int(sys.argv[1])):
 # 		for j in range(int(sys.argv[1])):
 
 
+# with open('out/out_matrices/monitoring_weigths.csv', 'w') as file:
+# 	for i in range(int(int(sys.argv[1]))):
+# 		for j in range(int(sys.argv[2])-1):
+# 			file.write('100,')
+# 		file.write('100\n')
+
+
+a = numpy.random.randint(2, size = (int(sys.argv[1]), int(sys.argv[1])))
+
+print(a)
+
+print(a.shape)
+
+with open('out/out_matrices/monitoring_adj.csv', 'w') as file:
+	for i in range(a.shape[0]):
+		for j in range(a.shape[1]-1):
+			file.write(str(a[i,j])+',')				
+		file.write(str(a[i, a.shape[1]-1])+'\n')	
+		
+
+
+
+# with open('out/out_matrices/monitoring_weigths.csv', 'w') as file:
+# 	for i in range(int(int(sys.argv[2]))):
+# 		for j in range(int(sys.argv[1])-1):
+# 			file.write(str(random.uniform(20.0,120.0))+',')
+# 		file.write(str(random.uniform(20.0,120.0))+'\n')
+
+
+
 with open('out/out_matrices/monitoring_weigths.csv', 'w') as file:
-	for i in range(int(int(sys.argv[1]))):
-		for j in range(int(sys.argv[2])-1):
-			file.write(str(random.randint(99,100))+',')
-		file.write(str(random.randint(99,100))+'\n')
+	for i in range(int(int(sys.argv[2]))):
+		for j in range(int(sys.argv[1])-1):
+			file.write(str(random.randint(98,100))+',')
+		file.write(str(random.randint(98,100))+'\n')
+
 
 
 # with open('out/out_matrices/monitoring_weigths.csv', 'w') as file:

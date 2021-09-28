@@ -20,10 +20,12 @@ hash_table_monitor = {}
 hash_count_peer = 1
 hash_table_peer = {}
 
-def init(showmaster=False, showpeers=False):
+def init(showmaster=False, showpeers=False, showtrackers=False, showmonitors=False):
 
 	var.SHOWMASTER = showmaster
 	var.SHOWPEERS = showpeers
+	var.SHOWTRACKERS = showtrackers
+	var.SHOWMONITORS = showmonitors
 
 	try:
 		shutil.rmtree(var.PATH)
@@ -265,22 +267,29 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 
 
 
-def create_graph_wt(master, monitors, trackers, peer_lists, wt):
+
+
+
+
+
+
+
+def create_graph_master_tracker(master, monitors, trackers, peer_lists):
+
 
 	graph = nx.Graph()
 
 	# vertices
-
-	if var.SHOWMASTER:
-		graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
-	graph.add_nodes_from(monitors, color_nodes=var.COLOR_MONITOR)
+	
+	graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
+	
 	graph.add_nodes_from(trackers, color_nodes=var.COLOR_TRACKER)
+	
 	if var.SHOWPEERS:
 		for peer_list in peer_lists:
 			graph.add_nodes_from(peer_list, color_nodes=var.COLOR_PEER)
 
-
-		
+			
 	# arestas trackers peers
 	edges_tp_weighted = []	
 	for i in range(len(trackers)):
@@ -292,83 +301,149 @@ def create_graph_wt(master, monitors, trackers, peer_lists, wt):
 	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 	
 	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
-	
 	if var.SHOWPEERS:
 		graph.add_weighted_edges_from(edges_tp_weighted)
-
-
-
+		
 
 	# print('----------------------------------')
-
-	weights_t =  list(zip(trackers, wt))
-
-	print(weights_t, len(weights_t))
-
-	a = list(dict.fromkeys(weights_t))
-
-	print(a, len(a))
-
-
-	exit()
-
 
 	# pessos vindos dos trackers
 	weights_t = Counter() 
 	for k, _, w in edges_tp_weighted:
 		weights_t[k] += w
 
-	# print('WEIGHT T', weights_t, len(weights_t))
 
-	# arestas monitors trackers
-	edges_mt = list(zip(monitors, trackers))
-
-	# print('EDGES MT', edges_mt, len(edges_mt))
-
-
-	edges_mt = list(dict.fromkeys(edges_mt)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
-
-	# print('EDGES MT (RD))', edges_mt, len(edges_mt))
-
-	edges_mt_weighted = []
-	for e in edges_mt:
-		edges_mt_weighted.append((e[0], e[1], weights_t[e[1]]))
-
-
-	# print('EDGES MT WEIGHTED', edges_mt_weighted, len(edges_mt_weighted))
-	graph.add_weighted_edges_from(edges_mt_weighted)
-
-
-	# print('---------------------------------')
-
-	if var.SHOWMASTER:
-		weights_m = Counter() 
-		for k, _, w in edges_mt_weighted:
-			weights_m[k] += w
-
-		# print('WEIGHT M', weights_m, len(weights_m))
-
-		edges_gm = []
-		for m in monitors:
-			edges_gm.append((master, m))
+	edges_gt = []
+	for t in trackers:
+		edges_gt.append((master, t))
 		
-		# print('EDGES GM', edges_gm, len(edges_gm))
 
-		edges_gm = list(dict.fromkeys(edges_gm)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+	edges_gt = list(dict.fromkeys(edges_gt))
 
-		# print('EDGES GM (RD)', edges_gm, len(edges_gm))
+	
+	edges_gt_weighted = []
+	for e in edges_gt:
+		edges_gt_weighted.append((e[0], e[1], weights_t[e[1]]))
 
-		edges_gm_weighted = []
-		for e in edges_gm:
-			edges_gm_weighted.append((e[0], e[1], weights_m[e[1]]))
+	
 
-		# print('EDGES GM WEIGHTED', edges_gm_weighted, len(edges_gm_weighted))	
+	graph.add_weighted_edges_from(edges_gt_weighted)
 
-		graph.add_weighted_edges_from(edges_gm_weighted)
 
-	# print('********************************************')
 
 	return graph
+
+
+
+
+
+
+
+
+# def create_graph_wt(master, monitors, trackers, peer_lists, wt):
+
+# 	graph = nx.Graph()
+
+# 	# vertices
+
+# 	if var.SHOWMASTER:
+# 		graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
+# 	graph.add_nodes_from(monitors, color_nodes=var.COLOR_MONITOR)
+# 	graph.add_nodes_from(trackers, color_nodes=var.COLOR_TRACKER)
+# 	if var.SHOWPEERS:
+# 		for peer_list in peer_lists:
+# 			graph.add_nodes_from(peer_list, color_nodes=var.COLOR_PEER)
+
+
+		
+# 	# arestas trackers peers
+# 	edges_tp_weighted = []	
+# 	for i in range(len(trackers)):
+# 		for peer in peer_lists[i]:
+# 			edges_tp_weighted.append((trackers[i], peer, 1))
+
+# 	# print('EDGES TP WEIGHTED', edges_tp_weighted, len(edges_tp_weighted))
+
+# 	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+	
+# 	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
+	
+# 	if var.SHOWPEERS:
+# 		graph.add_weighted_edges_from(edges_tp_weighted)
+
+
+
+
+# 	# print('----------------------------------')
+
+# 	weights_t =  list(zip(trackers, wt))
+
+# 	print(weights_t, len(weights_t))
+
+# 	a = list(dict.fromkeys(weights_t))
+
+# 	print(a, len(a))
+
+
+# 	exit()
+
+
+# 	# pessos vindos dos trackers
+# 	weights_t = Counter() 
+# 	for k, _, w in edges_tp_weighted:
+# 		weights_t[k] += w
+
+# 	# print('WEIGHT T', weights_t, len(weights_t))
+
+# 	# arestas monitors trackers
+# 	edges_mt = list(zip(monitors, trackers))
+
+# 	# print('EDGES MT', edges_mt, len(edges_mt))
+
+
+# 	edges_mt = list(dict.fromkeys(edges_mt)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+
+# 	# print('EDGES MT (RD))', edges_mt, len(edges_mt))
+
+# 	edges_mt_weighted = []
+# 	for e in edges_mt:
+# 		edges_mt_weighted.append((e[0], e[1], weights_t[e[1]]))
+
+
+# 	# print('EDGES MT WEIGHTED', edges_mt_weighted, len(edges_mt_weighted))
+# 	graph.add_weighted_edges_from(edges_mt_weighted)
+
+
+# 	# print('---------------------------------')
+
+# 	if var.SHOWMASTER:
+# 		weights_m = Counter() 
+# 		for k, _, w in edges_mt_weighted:
+# 			weights_m[k] += w
+
+# 		# print('WEIGHT M', weights_m, len(weights_m))
+
+# 		edges_gm = []
+# 		for m in monitors:
+# 			edges_gm.append((master, m))
+		
+# 		# print('EDGES GM', edges_gm, len(edges_gm))
+
+# 		edges_gm = list(dict.fromkeys(edges_gm)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
+
+# 		# print('EDGES GM (RD)', edges_gm, len(edges_gm))
+
+# 		edges_gm_weighted = []
+# 		for e in edges_gm:
+# 			edges_gm_weighted.append((e[0], e[1], weights_m[e[1]]))
+
+# 		# print('EDGES GM WEIGHTED', edges_gm_weighted, len(edges_gm_weighted))	
+
+# 		graph.add_weighted_edges_from(edges_gm_weighted)
+
+# 	# print('********************************************')
+
+# 	return graph
 
 
 
