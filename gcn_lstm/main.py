@@ -283,19 +283,19 @@ plt.xlim([-(a_pred.shape[0]*0.02), a_pred.shape[0]+(a_pred.shape[0]*0.02)])
 
 xticks = np.arange(0, a_pred.shape[0], 20)
 xticks = np.append(xticks, a_pred.shape[0])
-plt.xticks(xticks)
+plt.xticks(xticks, fontsize=20)
 
 ylim = np.max(a_true)
 yticks = np.arange(0, ylim, 10)
 yticks = np.append(yticks, ylim)
-plt.yticks(yticks)
+plt.yticks(yticks, fontsize=20)
 
 
 plt.plot(a_true, "b-", label="verdadeiro")
 plt.plot(a_pred, "r-", label="predição")
-plt.xlabel("Snapshots", fontsize=12)
-plt.ylabel("Quantidade de pares", fontsize=12)
-plt.legend(loc="best", fontsize=15)
+plt.xlabel("Snapshots", fontsize=20)
+plt.ylabel("Quantidade de pares", fontsize=20)
+plt.legend(loc="best", fontsize=20)
 plt.savefig(path+'/test_all.eps', format='eps')
 plt.show()
 
