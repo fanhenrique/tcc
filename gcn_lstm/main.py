@@ -109,10 +109,10 @@ from stellargraph.layer import GCN_LSTM
 gcn_lstm = GCN_LSTM(
     seq_len=seq_len,
     adj=sensor_dist_adj,
-    gc_layer_sizes=[16, 10],
-    gc_activations=["relu", "relu"],
-    lstm_layer_sizes=[200, 200],
-    lstm_activations=["tanh", "tanh"],
+    gc_layer_sizes=[16],
+    gc_activations=["relu"],
+    lstm_layer_sizes=[200],
+    lstm_activations=["tanh"],
 )
 
 x_input, x_output = gcn_lstm.in_out_tensors()
@@ -124,7 +124,7 @@ model.compile(optimizer="adam", loss="mae", metrics=["mse"])
 history = model.fit(
     trainX,
     trainY,
-    epochs=100,
+    epochs=1000,
     batch_size=32,
     shuffle=True,
     verbose=0,
