@@ -164,7 +164,7 @@ plt.plot(history.history['val_loss'], color=colors[1], linestyle='-', label='val
 plt.xlabel("Épocas", fontsize=12)
 plt.ylabel("Erro médio absoluto", fontsize=12)
 plt.legend(loc="best", fontsize=15)
-plt.savefig(path+'/mae.eps', format='eps')
+plt.savefig(path+'/mae.png', format='png')
 plt.show()
 
 
@@ -175,7 +175,7 @@ plt.plot(history.history['val_mse'], color=colors[1], linestyle='-', label='vali
 plt.xlabel("Épocas", fontsize=12)
 plt.ylabel("Erro quadrático médio", fontsize=12)
 plt.legend(loc="best", fontsize=15)
-plt.savefig(path+'/mse.eps', format='eps')
+plt.savefig(path+'/mse.png', format='png')
 plt.show()
 
 
@@ -296,7 +296,7 @@ plt.plot(a_pred, "r-", label="predição")
 plt.xlabel("Snapshots", fontsize=15)
 plt.ylabel("Quantidade de pares", fontsize=15)
 plt.legend(loc="best", fontsize=15)
-plt.savefig(path+'/test_all.eps', format='eps')
+plt.savefig(path+'/test_all.png', format='png')
 plt.show()
 
 
