@@ -147,7 +147,7 @@ model_name = 'gcn_lstm'
 
 out = 'out_%s'%(model_name)
 #out = 'out/%s_%s'%(model_name,'perturbation')
-path1 = '%s' % datetime.now().strftime('%d-%m_%H-%M-%S')
+path1 = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
 path = os.path.join(out,path1)
 if not os.path.exists(path):
     os.makedirs(path)
