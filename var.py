@@ -1,7 +1,13 @@
-PATH = './out'
-PATH_FIGS = PATH+'/figs_graphs'
-PATH_GRAPHS = PATH+'/out_graphs'
-PATH_MATRICES = PATH+'/out_matrices' 
+import inspect
+import os
+
+filename = inspect.getframeinfo(inspect.currentframe()).filename
+path = os.path.dirname(os.path.abspath(filename))
+
+PATH = path+'/out'
+PATH_FIGS = PATH+'/figs-graphs'
+PATH_GRAPHS = PATH+'/out-graphs'
+PATH_MATRICES = PATH+'/out-matrices' 
 
 TRACKER = 'TRACKER'
 MONITOR = 'MONITOR'

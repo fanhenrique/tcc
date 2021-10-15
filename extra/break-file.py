@@ -1,3 +1,10 @@
+'''
+Break input files
+
+use: python3 <input.txt> <output.txt> <start-line> <end-line>
+
+'''
+
 import sys
 
 with open(sys.argv[1], 'r') as ifile:

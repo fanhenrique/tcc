@@ -1,3 +1,9 @@
+'''
+Creates falese/fakes matrices for RNA input
+
+use: python3 <adj-size> <time-series-size>
+'''
+
 import sys
 import random
 import numpy
@@ -24,7 +30,6 @@ with open('out/out_matrices/monitoring_adj.csv', 'w') as file:
 		for j in range(a.shape[1]-1):
 			file.write(str(a[i,j])+',')				
 		file.write(str(a[i, a.shape[1]-1])+'\n')	
-		
 
 
 
@@ -77,3 +82,6 @@ with open('out/out_matrices/monitoring_weigths.csv', 'w') as file:
 # 			file.write(str(random.randint(2900,3000))+',')
 # 		file.write(str(random.randint(2900,3000))+'\n')
 
+
+print('update: out/out_matrices/monitoring_adj.csv')
+print('update: out/out_matrices/monitoring_weigths.csv')

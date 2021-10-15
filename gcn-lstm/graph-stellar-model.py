@@ -1,7 +1,9 @@
 import os
 import sys
+import inspect
 import urllib.request
 from datetime import datetime
+
 
 import numpy as np
 import pandas as pd
@@ -21,14 +23,14 @@ import stellargraph as sg
 # los_adj = pd.read_csv(r'../T-GCN/data/los_adj.csv', header=None)
 # los_adj = pd.read_csv(r'../T-GCN/data/sz_adj.csv', header=None)
 
-los_adj = pd.read_csv(r'out/out_matrices/monitoring_adj.csv',header=None)
+los_adj = pd.read_csv('../out/out-matrices/monitoring-adj.csv', header=None)
 sensor_dist_adj = np.mat(los_adj)
 
 
 # los_speed = pd.read_csv(r'../T-GCN/data/los_speed.csv')
 #los_speed = pd.read_csv(r'../T-GCN/data/sz_speed.csv')
 
-los_speed = pd.read_csv(r'out/out_matrices/monitoring_weigths.csv',header=None)
+los_speed = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 speed_data = np.mat(los_speed)
 
 
@@ -124,7 +126,7 @@ model.compile(optimizer="adam", loss="mae", metrics=["mse"])
 history = model.fit(
     trainX,
     trainY,
-    epochs=1000,
+    epochs=20,
     batch_size=32,
     shuffle=True,
     verbose=0,
@@ -143,14 +145,15 @@ print(
 )
 
 
-model_name = 'gcn_lstm'
 
-out = 'out_%s'%(model_name)
-#out = 'out/%s_%s'%(model_name,'perturbation')
+filename = inspect.getframeinfo(inspect.currentframe()).filename
+path = os.path.dirname(os.path.abspath(filename))
+
+out = path+'/out-gcn-lstm'
 path1 = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
-path = os.path.join(out,path1)
-if not os.path.exists(path):
-    os.makedirs(path)
+path_out = os.path.join(out,path1)
+if not os.path.exists(path_out):
+    os.makedirs(path_out)
 
 
 
@@ -164,7 +167,7 @@ plt.plot(history.history['val_loss'], color=colors[1], linestyle='-', label='val
 plt.xlabel("Épocas", fontsize=12)
 plt.ylabel("Erro médio absoluto", fontsize=12)
 plt.legend(loc="best", fontsize=15)
-plt.savefig(path+'/mae.png', format='png')
+plt.savefig(path_out+'/mae.png', format='png')
 plt.show()
 
 
@@ -175,7 +178,7 @@ plt.plot(history.history['val_mse'], color=colors[1], linestyle='-', label='vali
 plt.xlabel("Épocas", fontsize=12)
 plt.ylabel("Erro quadrático médio", fontsize=12)
 plt.legend(loc="best", fontsize=15)
-plt.savefig(path+'/mse.png', format='png')
+plt.savefig(path_out+'/mse.png', format='png')
 plt.show()
 
 
@@ -265,7 +268,7 @@ ax.set_xlabel("Scaled distribution amplitude (after Gaussian convolution)")
 ax.set_ylabel("Mean Absolute Error")
 ax.set_title("Distribution over segments: NN pred (blue) and naive pred (orange)")
 plt.legend(handles=(line1, line2), title="Prediction Model", loc=2)
-plt.savefig(path+'/nn_naivepred.eps', format='eps')
+plt.savefig(path_out+'/nn_naivepred.eps', format='eps')
 plt.show()
 
 
@@ -296,10 +299,10 @@ plt.plot(a_pred, "r-", label="predição")
 plt.xlabel("Snapshots", fontsize=15)
 plt.ylabel("Quantidade de pares", fontsize=15)
 plt.legend(loc="best", fontsize=15)
-plt.savefig(path+'/test_all.png', format='png')
+plt.savefig(path_out+'/test_all.png', format='png')
 plt.show()
 
 
-with open(path+'/pred.txt', 'w') as file:
+with open(path_out+'/pred.txt', 'w') as file:
     for p in a_pred:
         file.write(str(p)+', ')

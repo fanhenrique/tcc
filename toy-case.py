@@ -1,3 +1,7 @@
+"""
+Create the graphs using example_model.txt 
+"""
+
 import networkx as nx
 # import stellargraph as sg
 

@@ -1,3 +1,7 @@
+'''
+cria os graficos e tira algumas metricas
+'''
+
 import matplotlib
 import networkx as nx
 import networkx

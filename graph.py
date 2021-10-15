@@ -9,6 +9,7 @@ import logging
 #my imports
 import utils
 import saves
+import var
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -198,19 +199,19 @@ def main():
 	# Label pra os vertices
 	monitor_labels = []
 	for m in monitors:
-		monitor_labels.append('M'+str(utils.my_hash_monitor(m)))
+		monitor_labels.append('M%d' % utils.my_hash_monitor(m))
 		# monitor_labels.append(str(utils.my_hash_monitor(m)))
 		# monitor_labels.append(m)
 	tracker_labels = []
 	for t in trackers:
-		tracker_labels.append('T'+str(utils.my_hash_tracker(t)))
+		tracker_labels.append('T%d' % utils.my_hash_tracker(t))
 		# tracker_labels.append(str(utils.my_hash_tracker(t)))
 		# tracker_labels.append(t)
 	peer_lists_labels = []
 	for l in peer_lists:
 		pl_labels = []
 		for p in l:
-			pl_labels.append('P'+str(utils.my_hash_peer(p)))
+			pl_labels.append('P%d' % utils.my_hash_peer(p))
 			# pl_labels.append(str(utils.my_hash_peer(p)))
 			# pl_labels.append(p)
 		peer_lists_labels.append(pl_labels)
@@ -230,11 +231,7 @@ def main():
 
 		graphs.append(graph)
 
-		# saves.save_graph_txt(graph, len(graphs))
-
 		# saves.show_graph(graph)
-
-		# saves.save_graph_fig(graph, len(graphs))	
 
 
 	# for g in graphs:
@@ -242,13 +239,15 @@ def main():
 	# 		print(e)
 	# 	print('-------------')
 
+	saves.save_graphs_txt(graphs)
+	logging.info(str(len(graphs)) + ' graphs in directory:' + var.PATH_GRAPHS + '/')
 
-	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
-	logging.info(str(len(graphs)) + ' images graphs in directory figs_graphs/')
+	# saves.save_graphs_fig(graphs)	
+	# logging.info(str(len(graphs)) + ' images graphs in directory:' + var.PATH_FIGS + '/')
 
 	saves.save_graph_adj_csv(graphs)
 	saves.save_graph_weigths_csv(graphs)
-	logging.info('adjacency and weight matrices are directory: out_matrices/')
+	logging.info('adjacency and weight matrices are directory:' + var.PATH_MATRICES + '/')
 
 	
 if __name__ == '__main__':

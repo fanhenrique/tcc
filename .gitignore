@@ -1,6 +1,9 @@
-out_tgcn/
-out/
 __pycache__/
-example_model.txt
-gcn_lstm/out_gcn_lstm/
-gcn_lstm/out/
+data/
+out/
+example-model.txt
+gcn-lstm/out-gcn-lstm/
+T-GCN/data
+T-GCN/tree_report.txt
+T-GCN/T-GCN-TensorFlow-v2/out
+T-GCN/T-GCN-TensorFlow-v2/__pycache__

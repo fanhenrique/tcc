@@ -24,21 +24,25 @@ def show_graph(graph):
 	
 	plt.show()
 
-def save_graph_fig(graph, g):
+def save_graphs_fig(graphs):
 
-	draw_graph(graph)
+	for i in range(len(graphs)):
+
+		draw_graph(graphs[i])
 		
-	plt.savefig(var.PATH_FIGS+'/graph'+str(g)+'.png')
-	plt.clf()
+		plt.savefig(var.PATH_FIGS+'/graph'+str(i)+'.png')
+		plt.clf()
 
-def save_graph_txt(graph, g):
-	# print(graph.nodes.data())
-	with open(var.PATH_GRAPHS+'/graph'+str(g)+'.txt', 'w') as file:
-		for edge in graph.edges.data():
-			if edge[2]:
-				file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
-			else:
-				file.write(edge[0] + ' ' + edge[1] + '\n')
+def save_graphs_txt(graphs):
+	
+
+	for i in range(len(graphs)):
+		with open(var.PATH_GRAPHS+'/graph'+str(i)+'.txt', 'w') as file:
+			for edge in graphs[i].edges.data():
+				if edge[2]:
+					file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
+				else:
+					file.write(edge[0] + ' ' + edge[1] + '\n')
 
 # def entities(monitors, trackers, peer_lists):
 
@@ -142,7 +146,7 @@ def save_graph_adj_csv(graphs):
 
 	print('shape adj', matrix.shape)
 
-	with open(var.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
+	with open(var.PATH_MATRICES+'/monitoring-adj.csv', 'w') as file:				
 
 		for i in range(matrix.shape[0]):
 			for j in range(matrix.shape[1]):
@@ -163,7 +167,7 @@ def save_graph_weigths_csv(graphs):
 
 	print('shape weigths', matrix.shape)
 
-	with open(var.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
+	with open(var.PATH_MATRICES+'/monitoring-weigths.csv', 'w') as file:
 
 		for i in range(matrix.shape[0]):
 				for j in range(matrix.shape[1]):
