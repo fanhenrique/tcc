@@ -25,3 +25,4 @@ Requirenents: `tensorflow 2.6` `pandas` `scipy` `matplotlib` `sklearn` `numpy`
 `pygraphviz 1.7`
 `numpy 1.19.5`
 
+`statsmodels-0.13.0`

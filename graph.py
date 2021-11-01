@@ -9,7 +9,7 @@ import logging
 #my imports
 import utils
 import saves
-import var
+import vars_paths as vp
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -193,7 +193,7 @@ def main():
 
 	for i in range(len(windows_index_range)):
 		print(i, windows_index_range[i])
-	# exit()
+	
 
 	logging.info('renaming entities ...')
 	# Label pra os vertices
@@ -217,8 +217,9 @@ def main():
 		peer_lists_labels.append(pl_labels)
 
 
-	graphs = []
+	
 	logging.info('creating graphs ...')
+	graphs = []
 	for wir in windows_index_range:
 		
 		ms = 'MS'
@@ -240,14 +241,14 @@ def main():
 	# 	print('-------------')
 
 	saves.save_graphs_txt(graphs)
-	logging.info(str(len(graphs)) + ' graphs in directory:' + var.PATH_GRAPHS + '/')
+	logging.info(str(len(graphs)) + ' graphs in directory:' + vp.PATH_GRAPHS + '/')
 
 	# saves.save_graphs_fig(graphs)	
-	# logging.info(str(len(graphs)) + ' images graphs in directory:' + var.PATH_FIGS + '/')
+	# logging.info(str(len(graphs)) + ' images graphs in directory:' + vp.PATH_FIGS + '/')
 
 	saves.save_graph_adj_csv(graphs)
 	saves.save_graph_weigths_csv(graphs)
-	logging.info('adjacency and weight matrices are directory:' + var.PATH_MATRICES + '/')
+	logging.info('adjacency and weight matrices are directory:' + vp.PATH_MATRICES + '/')
 
 	
 if __name__ == '__main__':

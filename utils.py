@@ -6,7 +6,7 @@ import networkx as nx
 from collections import Counter
 
 #my imports
-import var
+import vars_paths as vp
 
 WINDOWS_LEN = 15.0
 
@@ -21,23 +21,23 @@ hash_table_peer = {}
 
 def init(showmaster=False, showpeers=False, showtrackers=False, showmonitors=False):
 
-	var.SHOWMASTER = showmaster
-	var.SHOWPEERS = showpeers
-	var.SHOWTRACKERS = showtrackers
-	var.SHOWMONITORS = showmonitors
+	vp.SHOWMASTER = showmaster
+	vp.SHOWPEERS = showpeers
+	vp.SHOWTRACKERS = showtrackers
+	vp.SHOWMONITORS = showmonitors
 
 	try:
-		shutil.rmtree(var.PATH)
-		shutil.rmtree(var.PATH_FIGS)
-		shutil.rmtree(var.PATH_GRAPHS)
-		shutil.rmtree(var.PATH_MATRICES)
+		shutil.rmtree(vp.PATH)
+		shutil.rmtree(vp.PATH_FIGS)
+		shutil.rmtree(vp.PATH_GRAPHS)
+		shutil.rmtree(vp.PATH_MATRICES)
 	except FileNotFoundError:
 		pass
 	try:
-		os.mkdir(var.PATH)
-		os.mkdir(var.PATH_FIGS)
-		os.mkdir(var.PATH_GRAPHS)
-		os.mkdir(var.PATH_MATRICES)
+		os.mkdir(vp.PATH)
+		os.mkdir(vp.PATH_FIGS)
+		os.mkdir(vp.PATH_GRAPHS)
+		os.mkdir(vp.PATH_MATRICES)
 	except FileExistsError:
 		pass
 
@@ -181,13 +181,13 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 
 	# vertices
 
-	if var.SHOWMASTER:
-		graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
-	graph.add_nodes_from(monitors, color_nodes=var.COLOR_MONITOR)
-	graph.add_nodes_from(trackers, color_nodes=var.COLOR_TRACKER)
-	if var.SHOWPEERS:
+	if vp.SHOWMASTER:
+		graph.add_node(master, color_nodes=vp.COLOR_MASTERSERVER)
+	graph.add_nodes_from(monitors, color_nodes=vp.COLOR_MONITOR)
+	graph.add_nodes_from(trackers, color_nodes=vp.COLOR_TRACKER)
+	if vp.SHOWPEERS:
 		for peer_list in peer_lists:
-			graph.add_nodes_from(peer_list, color_nodes=var.COLOR_PEER)
+			graph.add_nodes_from(peer_list, color_nodes=vp.COLOR_PEER)
 
 
 	# arestas trackers peers
@@ -201,7 +201,7 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 	
 	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
-	if var.SHOWPEERS:
+	if vp.SHOWPEERS:
 		graph.add_weighted_edges_from(edges_tp_weighted)
 
 
@@ -234,7 +234,7 @@ def create_graph_peer_weights(master, monitors, trackers, peer_lists):
 
 	# print('---------------------------------')
 
-	if var.SHOWMASTER:
+	if vp.SHOWMASTER:
 		weights_m = Counter() 
 		for k, _, w in edges_mt_weighted:
 			weights_m[k] += w
@@ -280,13 +280,13 @@ def create_graph_master_tracker(master, monitors, trackers, peer_lists):
 
 	# vertices
 	
-	graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
+	graph.add_node(master, color_nodes=vp.COLOR_MASTERSERVER)
 	
-	graph.add_nodes_from(trackers, color_nodes=var.COLOR_TRACKER)
+	graph.add_nodes_from(trackers, color_nodes=vp.COLOR_TRACKER)
 	
-	if var.SHOWPEERS:
+	if vp.SHOWPEERS:
 		for peer_list in peer_lists:
-			graph.add_nodes_from(peer_list, color_nodes=var.COLOR_PEER)
+			graph.add_nodes_from(peer_list, color_nodes=vp.COLOR_PEER)
 
 			
 	# arestas trackers peers
@@ -300,7 +300,7 @@ def create_graph_master_tracker(master, monitors, trackers, peer_lists):
 	edges_tp_weighted = list(dict.fromkeys(edges_tp_weighted)) #remove duplicados (caso venha duas mensagens de um numa mesma janela)
 	
 	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
-	if var.SHOWPEERS:
+	if vp.SHOWPEERS:
 		graph.add_weighted_edges_from(edges_tp_weighted)
 		
 
@@ -345,13 +345,13 @@ def create_graph_master_tracker(master, monitors, trackers, peer_lists):
 
 # 	# vertices
 
-# 	if var.SHOWMASTER:
-# 		graph.add_node(master, color_nodes=var.COLOR_MASTERSERVER)
-# 	graph.add_nodes_from(monitors, color_nodes=var.COLOR_MONITOR)
-# 	graph.add_nodes_from(trackers, color_nodes=var.COLOR_TRACKER)
-# 	if var.SHOWPEERS:
+# 	if vp.SHOWMASTER:
+# 		graph.add_node(master, color_nodes=vp.COLOR_MASTERSERVER)
+# 	graph.add_nodes_from(monitors, color_nodes=vp.COLOR_MONITOR)
+# 	graph.add_nodes_from(trackers, color_nodes=vp.COLOR_TRACKER)
+# 	if vp.SHOWPEERS:
 # 		for peer_list in peer_lists:
-# 			graph.add_nodes_from(peer_list, color_nodes=var.COLOR_PEER)
+# 			graph.add_nodes_from(peer_list, color_nodes=vp.COLOR_PEER)
 
 
 		
@@ -367,7 +367,7 @@ def create_graph_master_tracker(master, monitors, trackers, peer_lists):
 	
 # 	# print('EDGES TP WEIGHTED (RD)', edges_tp_weighted, len(edges_tp_weighted))
 	
-# 	if var.SHOWPEERS:
+# 	if vp.SHOWPEERS:
 # 		graph.add_weighted_edges_from(edges_tp_weighted)
 
 
@@ -415,7 +415,7 @@ def create_graph_master_tracker(master, monitors, trackers, peer_lists):
 
 # 	# print('---------------------------------')
 
-# 	if var.SHOWMASTER:
+# 	if vp.SHOWMASTER:
 # 		weights_m = Counter() 
 # 		for k, _, w in edges_mt_weighted:
 # 			weights_m[k] += w

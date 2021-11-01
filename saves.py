@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 #my imports
-import var
+import vars_paths as vp
 
 def draw_graph(graph):
 
@@ -30,14 +30,14 @@ def save_graphs_fig(graphs):
 
 		draw_graph(graphs[i])
 		
-		plt.savefig(var.PATH_FIGS+'/graph'+str(i)+'.png')
+		plt.savefig(vp.PATH_FIGS+'/graph'+str(i)+'.png')
 		plt.clf()
 
 def save_graphs_txt(graphs):
 	
 
 	for i in range(len(graphs)):
-		with open(var.PATH_GRAPHS+'/graph'+str(i)+'.txt', 'w') as file:
+		with open(vp.PATH_GRAPHS+'/graph'+str(i)+'.txt', 'w') as file:
 			for edge in graphs[i].edges.data():
 				if edge[2]:
 					file.write(edge[0] + ' ' + str(edge[2]['weight']) + ' ' + edge[1] + '\n')
@@ -56,12 +56,12 @@ def save_graphs_txt(graphs):
 
 # 	vector = []
 
-# 	if var.SHOWMASTER:
+# 	if vp.SHOWMASTER:
 # 		vector.append('MS')
 
 # 	vector += monitor_list + tracker_list
 
-# 	if var.SHOWPEERS:
+# 	if vp.SHOWPEERS:
 # 		vector += p_list
 
 # 	return vector, monitor_list, tracker_list, p_list
@@ -75,7 +75,7 @@ def save_graphs_txt(graphs):
 
 # 	matrix = np.zeros((len(vector), len(vector)), dtype=int)
 
-# 	if var.SHOWMASTER:
+# 	if vp.SHOWMASTER:
 # 		for m in monitor_list:
 # 			matrix[0,vector.index(m)] = 1
 # 			matrix[vector.index(m), 0] = 1
@@ -85,13 +85,13 @@ def save_graphs_txt(graphs):
 # 			matrix[vector.index(m), vector.index(t)] = 1
 # 			matrix[vector.index(t),vector.index(m)] = 1
 	
-# 	if var.SHOWPEERS:
+# 	if vp.SHOWPEERS:
 # 		for t in tracker_list:
 # 			for pl in p_list:
 # 				matrix[vector.index(t),vector.index(pl)] = 1
 # 				matrix[vector.index(pl),vector.index(t)] = 1
 
-# 	with open(var.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
+# 	with open(vp.PATH_MATRICES+'/monitoring_adj.csv', 'w') as file:				
 
 # 		for i in range(matrix.shape[0]):
 # 			for j in range(matrix.shape[1]):
@@ -101,7 +101,7 @@ def save_graphs_txt(graphs):
 
 # 	vector, _ , _, _ = entities(monitors, trackers, peer_lists)			
 
-# 	with open(var.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
+# 	with open(vp.PATH+'/out_matrices/monitoring_weigths.csv', 'w') as file:
 # 		for g in graphs:
 
 # 			matrix = np.zeros((len(vector), len(vector)), dtype=int)
@@ -146,7 +146,7 @@ def save_graph_adj_csv(graphs):
 
 	print('shape adj', matrix.shape)
 
-	with open(var.PATH_MATRICES+'/monitoring-adj.csv', 'w') as file:				
+	with open(vp.PATH_MATRICES+'/monitoring-adj.csv', 'w') as file:				
 
 		for i in range(matrix.shape[0]):
 			for j in range(matrix.shape[1]):
@@ -167,7 +167,7 @@ def save_graph_weigths_csv(graphs):
 
 	print('shape weigths', matrix.shape)
 
-	with open(var.PATH_MATRICES+'/monitoring-weigths.csv', 'w') as file:
+	with open(vp.PATH_MATRICES+'/monitoring-weigths.csv', 'w') as file:
 
 		for i in range(matrix.shape[0]):
 				for j in range(matrix.shape[1]):
