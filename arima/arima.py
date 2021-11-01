@@ -68,7 +68,7 @@ plot_acf(df['sum'], lags=df['sum'].size-1, ax=axes[1], title='Autocorrelation su
 
 plt.show()
 
-model = ARIMA(df['sum'], order=(1,1,1))
+model = ARIMA(df['sum'], order=(1,0,1))
 model_fit = model.fit()
 print(model_fit.summary())
 
