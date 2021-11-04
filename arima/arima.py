@@ -7,13 +7,9 @@ from statsmodels.tsa.arima.model import ARIMA
 
 # df = pd.read_csv('https://raw.githubusercontent.com/selva86/datasets/master/wwwusage.csv', names=['value'], header=0)
 
-ts = ['t1', 't2', 't3', 't4', 't5', 't6', 't7']
-
-df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', names=ts, header=None)
+df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 
 print(df)
-
-print(df.t1)
 
 df['sum'] = df.sum(axis=1)
 
