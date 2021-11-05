@@ -60,7 +60,7 @@ def main():
 	axes[0].plot(df['sum'])
 	axes[0].set_title('sum')
 	plot_acf(df['sum'], lags=df['sum'].size-1, ax=axes[1], title='Autocorrelation sum')
-	fig.savefig(path_out+'/autocorrlation.png', format='png')
+	fig.savefig(path_out+'/autocorrlation.svg', format='svg')
 	plt.show()
 
 
@@ -101,15 +101,17 @@ def main():
 		history.append(valor_real)
 
 		# imprime valor predito e valor real
-		print('Valor predito=%.3f, Valor esperado=%3.f' % (valor_predito, valor_real))
+		print('%d predito=%.3f, esperado=%3.f' % (t, valor_predito, valor_real))
 
 
+	pred = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
+	
 
-
-		
-
-
-	pred = model_fit.predict(start=train_data.size, end=data.size, dynamic=False)
+	print(data.size)
+	print(train_data.size)
+	print(test_data.size)
+	print(pred.size)	
+	
 
 	# plt.plot(data, 'y-', label='data')
 	plt.plot(test_data, "b-", label="verdadeiro")
@@ -117,7 +119,7 @@ def main():
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Quantidade de pares", fontsize=15)
 	plt.legend(loc="best", fontsize=15)
-	plt.savefig(path_out+'/test_all.png', format='png')
+	plt.savefig(path_out+'/test_all.svg', format='svg')
 	plt.show()
 
 
