@@ -19,7 +19,7 @@
 ```python3 graph.py -f <input_file>```
 
 
-### Run GCN_LSTM:
+## Run GCN_LSTM:
 
 Requirements: `stellargraph 1.2.1`
 
@@ -28,7 +28,7 @@ Requirements: `stellargraph 1.2.1`
 ```python3 stellar_model.py```
 
 
-### Run ARIMA:
+## Run ARIMA:
 
 Requirements: `statsmodels 0.13.0` `pmdarima 1.8.3`
 
