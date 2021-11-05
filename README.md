@@ -14,7 +14,7 @@ Requirenents: `tensorflow 2.6` `pandas` `scipy` `matplotlib` `sklearn` `numpy`
 
 ## Run graph.py or toy_case.py
 
- Requirements :
+ Requirements:
 
 `stellargraph 1.2.1`
 `matplotlib 3.4.2`
@@ -24,5 +24,10 @@ Requirenents: `tensorflow 2.6` `pandas` `scipy` `matplotlib` `sklearn` `numpy`
 `scipy 1.7.0`
 `pygraphviz 1.7`
 `numpy 1.19.5`
+
+## Run arima.py:
+
+Requirements:
+
 `statsmodels 0.13.0`
 `pmdarima 1.8.3`
