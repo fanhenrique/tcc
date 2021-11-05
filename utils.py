@@ -130,6 +130,7 @@ def windows_range(windows):
 
 	return windows_index_range
 
+
 def read_file(file):
 	problem_lines = 0
 	epochs, trackers, monitors, peer_lists, leechers, seeders, ns = [], [], [], [], [], [], []

@@ -149,7 +149,7 @@ def main():
 
 	parser = argparse.ArgumentParser(description='Traces')
 
-	parser.add_argument('--file', '-f', help='file input', required=True, type=str)
+	parser.add_argument('--file', '-f', help='input file', required=True, type=str)
 
 	parser.add_argument('--showpeers', '-p', help='peers in graph', action='store_true')
 	parser.add_argument('--showmaster', '-g', help='master in graph', action='store_true')
