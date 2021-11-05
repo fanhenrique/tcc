@@ -1,4 +1,4 @@
-## Run T-GCN (TensorFlow 2):
+<!-- ## Run T-GCN (TensorFlow 2): -->
 
 Requirenents: `tensorflow 2.6` `pandas` `scipy` `matplotlib` `sklearn` `numpy` 
 
@@ -14,20 +14,14 @@ Requirenents: `tensorflow 2.6` `pandas` `scipy` `matplotlib` `sklearn` `numpy`
 
 ## Run graph.py or toy_case.py
 
- Requirements:
+ Requirements: `stellargraph 1.2.1` `matplotlib 3.4.2` `networkx 2.5.1` `argparse 1.1` `logging 0.5.1.2` `scipy 1.7.0` `pygraphviz 1.7` `numpy 1.19.5`
 
-`stellargraph 1.2.1`
-`matplotlib 3.4.2`
-`networkx 2.5.1`
-`argparse 1.1`
-`logging 0.5.1.2`
-`scipy 1.7.0`
-`pygraphviz 1.7`
-`numpy 1.19.5`
 
-## Run arima.py:
+## Run GCN_LSTM:
 
-Requirements:
 
-`statsmodels 0.13.0`
-`pmdarima 1.8.3`
+
+
+## Run ARIMA:
+
+Requirements: `statsmodels 0.13.0` `pmdarima 1.8.3`
