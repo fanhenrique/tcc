@@ -136,7 +136,6 @@ history = model.fit(
 model.summary()
 
 
-
 print(
     "Train loss: ",
     history.history["loss"][-1],
