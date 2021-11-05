@@ -126,7 +126,7 @@ model.compile(optimizer="adam", loss="mae", metrics=["mse"])
 history = model.fit(
     trainX,
     trainY,
-    epochs=20,
+    epochs=1000,
     batch_size=32,
     shuffle=True,
     verbose=0,
@@ -156,8 +156,7 @@ if not os.path.exists(path_out):
     os.makedirs(path_out)
 
 
-
-print(history.history.keys())
+# print(history.history.keys())
 
 colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
@@ -270,7 +269,6 @@ ax.set_title("Distribution over segments: NN pred (blue) and naive pred (orange)
 plt.legend(handles=(line1, line2), title="Prediction Model", loc=2)
 plt.savefig(path_out+'/nn_naivepred.eps', format='eps')
 plt.show()
-
 
 
 

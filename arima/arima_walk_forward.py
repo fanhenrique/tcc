@@ -1,3 +1,7 @@
+import inspect
+import os
+from datetime import datetime
+
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 import numpy as np, pandas as pd
@@ -13,8 +17,22 @@ def train_test_split(data, train_portion):
     return train_data, test_data
 
 
+def init():
+	
+	filename = inspect.getframeinfo(inspect.currentframe()).filename
+	path = os.path.dirname(os.path.abspath(filename))
+
+	out = path+'/out-arima'
+	path1 = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
+	path_out = os.path.join(out,path1)
+	if not os.path.exists(path_out):
+	    os.makedirs(path_out)
+
+	return path_out
 
 def main():
+
+	path_out = init()
 
 	df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 
@@ -42,6 +60,7 @@ def main():
 	axes[0].plot(df['sum'])
 	axes[0].set_title('sum')
 	plot_acf(df['sum'], lags=df['sum'].size-1, ax=axes[1], title='Autocorrelation sum')
+	fig.savefig(path_out+'/autocorrlation.png', format='png')
 	plt.show()
 
 
@@ -61,12 +80,9 @@ def main():
 	# inicia Walk-Forward
 	for t in range(test_data.shape[0]):
 	  
-		# difference data
-		# meses_no_ano = 12
-		# diff = difference(history, meses_no_ano)
 		
 		# cria um modelo ARIMA com os dados de history
-		model = ARIMA(history, order=(0,0,1))
+		model = ARIMA(history, order=(1,0,1))
 		
 		# treina o modelo ARIMA
 		model_fit = model.fit()
@@ -74,9 +90,7 @@ def main():
 		# a variável valor_predito recebe o valor previsto pelo modelo
 		valor_predito = model_fit.forecast()[0]
 
-		# valor_predito recebe o valor revertido (escala original)
-		# valor_predito = inverse_difference(history, valor_predito, meses_no_ano)
-
+		
 		# adiciona o valor predito na lista de predicões
 		predictions.append(valor_predito)
 
@@ -91,15 +105,19 @@ def main():
 
 
 
-	pred = model_fit.predict(dynamic=False)
 
-	plt.plot(data, 'y-', label='data')
-	plt.plot(train_data, "b-", label="treino")
+		
+
+
+	pred = model_fit.predict(start=train_data.size, end=data.size, dynamic=False)
+
+	# plt.plot(data, 'y-', label='data')
+	plt.plot(test_data, "b-", label="verdadeiro")
 	plt.plot(pred, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Quantidade de pares", fontsize=15)
 	plt.legend(loc="best", fontsize=15)
-	# plt.savefig(path_out+'/test_all.png', format='png')
+	plt.savefig(path_out+'/test_all.png', format='png')
 	plt.show()
 
 
