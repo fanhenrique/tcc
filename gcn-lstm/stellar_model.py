@@ -19,7 +19,6 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 import stellargraph as sg
 
 
-
 # los_adj = pd.read_csv(r'../T-GCN/data/los_adj.csv', header=None)
 # los_adj = pd.read_csv(r'../T-GCN/data/sz_adj.csv', header=None)
 

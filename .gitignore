@@ -1,7 +1,6 @@
 __pycache__/
 data/
 out/
-example-model.txt
 gcn-lstm/out-gcn-lstm/
 T-GCN/data
 T-GCN/tree_report.txt

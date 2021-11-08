@@ -13,6 +13,7 @@ import logging
 #my imports
 import utils
 import saves
+import vars_paths as vp
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -54,8 +55,8 @@ def main():
 
 	parser.add_argument('--file', '-f', help='Arquivo de entrada', required=True, type=str)
 	
-	parser.add_argument('--showpeers', '-p', help='peers in graph', action='store_true')
-	parser.add_argument('--showmaster', '-g', help='master in graph', action='store_true')
+	parser.add_argument('--showpeers', '-p', help='peers in graph', action='store_false')
+	parser.add_argument('--showmaster', '-g', help='master in graph', action='store_false')
 	
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -92,21 +93,19 @@ def main():
 	
 		graphs.append(graph)
 
-		saves.save_graph_txt(graph, len(graphs))
-
 		saves.show_graph(graph)
 
-		saves.save_graph_fig(graph, len(graphs))
 
 
-	
-	logging.info(str(len(graphs)) + ' graphs in directory: out_graphs/')
-	logging.info(str(len(graphs)) + ' images graphs in directory figs_graphs/')
+	saves.save_graphs_txt(graphs)
+	logging.info(str(len(graphs)) + ' graphs in directory:' + vp.PATH_GRAPHS + '/')
+
+	saves.save_graphs_fig(graphs)	
+	logging.info(str(len(graphs)) + ' images graphs in directory:' + vp.PATH_FIGS + '/')
 
 	saves.save_graph_adj_csv(graphs)
 	saves.save_graph_weigths_csv(graphs)
-	logging.info('adjacency and weight matrices are directory: out_matrices/')	
-	
+	logging.info('adjacency and weight matrices are directory:' + vp.PATH_MATRICES + '/')
 
 
 if __name__ == '__main__':
