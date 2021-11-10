@@ -1,3 +1,7 @@
+# referencias arima
+# https://www.machinelearningplus.com/time-series/arima-model-time-series-forecasting-python/
+# https://github.com/stacktecnologias/stack-repo/blob/164cf328d0e007de260666d75a84bbf76defd2c3/Arima-Tutorial.ipynb
+
 import inspect
 import os
 from datetime import datetime
@@ -8,6 +12,7 @@ import numpy as np, pandas as pd
 import matplotlib.pyplot as plt
 from pmdarima.arima.utils import ndiffs
 from statsmodels.tsa.arima.model import ARIMA
+
 
 def train_test_split(data, train_portion):
     time_len = data.size
@@ -30,6 +35,11 @@ def init():
 
 	return path_out
 
+def mean_squared_error(trues, predictions):
+	
+	return [((predictions[i]-trues[i])**2)/len(trues) for i in range(len(trues))]
+
+
 def main():
 
 	path_out = init()
@@ -38,36 +48,38 @@ def main():
 
 	print(df)
 
-	df['sum'] = df.sum(axis=1)
+	df['mean'] = df.mean(axis=1)
 
 	print(df)
 
-	print('sum')
-	result = adfuller(df['sum'].dropna())
+	print('mean')
+	result = adfuller(df['mean'].dropna())
 	print('ADF Statistic: %f' % result[0])
 	print('p-value: %f' % result[1])
 
 
-	print('adf %d' % ndiffs(df['sum'], test='adf'))
-	print('kpss %d' % ndiffs(df['sum'], test='kpss'))
-	print('pp %d' % ndiffs(df['sum'], test='pp'))
+	print('adf %d' % ndiffs(df['mean'], test='adf'))
+	print('kpss %d' % ndiffs(df['mean'], test='kpss'))
+	print('pp %d' % ndiffs(df['mean'], test='pp'))
 
 
 	plt.rcParams.update({'figure.figsize':(9,7), 'figure.dpi':120})
 
 	fig, axes = plt.subplots(2, sharex=True)
 
-	axes[0].plot(df['sum'])
-	axes[0].set_title('sum')
-	plot_acf(df['sum'], lags=df['sum'].size-1, ax=axes[1], title='Autocorrelation sum')
+	axes[0].plot(df['mean'])
+	axes[0].set_title('mean')
+	plot_acf(df['mean'], lags=df['mean'].size-1, ax=axes[1], title='Autocorrelation mean')
 	fig.savefig(path_out+'/autocorrlation.svg', format='svg')
 	plt.show()
 
 
+
+
+
+
 	# SPLIT DATA
-
-	data = df['sum'].to_numpy()
-
+	data = df['mean'].to_numpy()
 
 	train_rate = 0.8
 	train_data, test_data = train_test_split(data, train_rate)
@@ -76,6 +88,8 @@ def main():
 
 	predictions = []
 	history = [x for x in train_data]
+
+	mse = []
 
 	# inicia Walk-Forward
 	for t in range(test_data.shape[0]):
@@ -104,14 +118,32 @@ def main():
 		print('%d predito=%.3f, esperado=%3.f' % (t, valor_predito, valor_real))
 
 
+	print(model_fit.summary())
+
+	model_fit.plot_diagnostics(figsize=(15,8))
+	plt.show()
+	
 	pred = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
 	
+	pred_full = model_fit.predict(start=0, end=data.size-1, dynamic=False)
 
-	print(data.size)
-	print(train_data.size)
-	print(test_data.size)
-	print(pred.size)	
+
+	print('data', data.size)
+	print('train', train_data.size)
+	print('test', test_data.size)
+	print('pred', pred.size)
+	print('predfull', pred_full.size)
+
+	mse = mean_squared_error(data, pred_full)
 	
+	print(mse, len(mse))
+
+
+	plt.figure(figsize=(15,8))
+	plt.plot(mse, 'y-', label='mse')
+	plt.xlabel("Épocas", fontsize=12)
+	plt.savefig(path_out+'/mse.svg', format='svg')
+	plt.show()
 
 	# plt.plot(data, 'y-', label='data')
 	plt.plot(test_data, "b-", label="verdadeiro")
