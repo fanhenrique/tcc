@@ -295,6 +295,7 @@ plt.plot(a_pred, "r-", label="predição")
 plt.xlabel("Snapshots", fontsize=15)
 plt.ylabel("Quantidade de pares", fontsize=15)
 plt.legend(loc="best", fontsize=15)
+plt.ylim(0, 60)
 plt.savefig(path_out+'/test_all.png', format='png')
 plt.show()
 

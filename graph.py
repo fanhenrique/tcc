@@ -169,17 +169,28 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
+
+
+
 	utils.init(showmaster = args.showmaster, showpeers = args.showpeers, showtrackers = args.showtrackers, showmonitors = args.showmonitors)
+
+
 
 	logging.info('reading file ...')
 	epochs, trackers, monitors, peer_lists, leechers, seeders, ns =  utils.read_file(args.file)
+
+
 
 	ls = []
 	for a, b in zip(leechers, seeders):
 		ls.append(a+b)
 
+
+
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs)
+
+
 
 	print('epochs:', len(epochs))
 	print('trackers:', len(trackers))
@@ -188,12 +199,13 @@ def main():
 	print('ls:', len(ls))
 	print('n:', len(ns))
 	print('windows:', len(windows))
-	
-	# print(windows_index_range, len(windows_index_range))
 
 	for i in range(len(windows_index_range)):
 		print(i, windows_index_range[i])
 	
+
+
+
 
 	logging.info('renaming entities ...')
 	# Label pra os vertices
@@ -217,12 +229,13 @@ def main():
 		peer_lists_labels.append(pl_labels)
 
 
-	
-	logging.info('creating graphs ...')
+
+
+	ms = 'MS'
 	graphs = []
+	logging.info('creating graphs ...')
 	for wir in windows_index_range:
 		
-		ms = 'MS'
 		m = monitor_labels[wir[0]:wir[1]]
 		t = tracker_labels[wir[0]:wir[1]]	
 		pl = peer_lists_labels[wir[0]:wir[1]]

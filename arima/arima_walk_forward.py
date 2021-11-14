@@ -6,6 +6,9 @@ import inspect
 import os
 from datetime import datetime
 
+import argparse
+import logging
+
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 import numpy as np, pandas as pd
@@ -14,147 +17,203 @@ from pmdarima.arima.utils import ndiffs
 from statsmodels.tsa.arima.model import ARIMA
 
 
-def train_test_split(data, train_portion):
+DEFAULT_LOG_LEVEL = logging.INFO
+TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
+
+
+TRAIN_RATE = 0.8
+
+
+def train_test_split(data):
     time_len = data.size
-    train_size = int(time_len * train_portion)
+    train_size = int(time_len * TRAIN_RATE)
     train_data = np.array(data[:train_size])
     test_data = np.array(data[train_size:])
     return train_data, test_data
 
 
 def init():
-	
 	filename = inspect.getframeinfo(inspect.currentframe()).filename
 	path = os.path.dirname(os.path.abspath(filename))
 
-	out = path+'/out-arima'
-	path1 = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
-	path_out = os.path.join(out,path1)
-	if not os.path.exists(path_out):
-	    os.makedirs(path_out)
+	path_plots = path + '/plots'
+	path_data = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
+	path_plots = os.path.join(path_plots, path_data)
+	if not os.path.exists(path_plots):
+	    os.makedirs(path_plots)
 
-	return path_out
-
-def mean_squared_error(trues, predictions):
+	path_outs = path + '/outs'
+	if not os.path.exists(path_outs):
+	    os.makedirs(path_outs)
 	
-	return [((predictions[i]-trues[i])**2)/len(trues) for i in range(len(trues))]
+	return path_outs, path_plots
 
+def mean_squared_error(data, prediction):
+	
+	return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
-def main():
+def plot(path_outs, path_plots):
 
-	path_out = init()
+	print(path_outs, path_plots)
 
-	df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
+	data = pd.read_csv(path_outs+'/data.csv', header=None)
+	data = data[data.shape[1]-1].to_numpy()
 
-	print(df)
+	prediction = pd.read_csv(path_outs+'/prediction.cvs', header=None).to_numpy()
 
-	df['mean'] = df.mean(axis=1)
+	
 
-	print(df)
+	train_data, test_data = train_test_split(data)		
+	train_predictions, test_predictions = train_test_split(prediction)		
+	
 
-	print('mean')
-	result = adfuller(df['mean'].dropna())
-	print('ADF Statistic: %f' % result[0])
-	print('p-value: %f' % result[1])
-
-
-	print('adf %d' % ndiffs(df['mean'], test='adf'))
-	print('kpss %d' % ndiffs(df['mean'], test='kpss'))
-	print('pp %d' % ndiffs(df['mean'], test='pp'))
-
-
+	## AUTOCORRELATION ##
 	plt.rcParams.update({'figure.figsize':(9,7), 'figure.dpi':120})
 
 	fig, axes = plt.subplots(2, sharex=True)
 
-	axes[0].plot(df['mean'])
-	axes[0].set_title('mean')
-	plot_acf(df['mean'], lags=df['mean'].size-1, ax=axes[1], title='Autocorrelation mean')
-	fig.savefig(path_out+'/autocorrlation.svg', format='svg')
+	axes[0].plot(data)
+	axes[0].set_title('Mean')
+	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation mean')
+	fig.savefig(path_outs+'/autocorrelation.svg', format='svg')
 	plt.show()
 
-
-
-
-
-
-	# SPLIT DATA
-	data = df['mean'].to_numpy()
-
-	train_rate = 0.8
-	train_data, test_data = train_test_split(data, train_rate)
-	print("Train data: ", train_data.shape)
-	print("Test data: ", test_data.shape)
-
-	predictions = []
-	history = [x for x in train_data]
-
-	mse = []
-
-	# inicia Walk-Forward
-	for t in range(test_data.shape[0]):
-	  
-		
-		# cria um modelo ARIMA com os dados de history
-		model = ARIMA(history, order=(1,0,1))
-		
-		# treina o modelo ARIMA
-		model_fit = model.fit()
-
-		# a variável valor_predito recebe o valor previsto pelo modelo
-		valor_predito = model_fit.forecast()[0]
-
-		
-		# adiciona o valor predito na lista de predicões
-		predictions.append(valor_predito)
-
-		# a variável valor_real recebe o valor real do teste
-		valor_real = test_data[t]
-
-		# adiciona o valor real a variável history
-		history.append(valor_real)
-
-		# imprime valor predito e valor real
-		print('%d predito=%.3f, esperado=%3.f' % (t, valor_predito, valor_real))
-
-
-	print(model_fit.summary())
-
-	model_fit.plot_diagnostics(figsize=(15,8))
-	plt.show()
 	
-	pred = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
-	
-	pred_full = model_fit.predict(start=0, end=data.size-1, dynamic=False)
-
-
-	print('data', data.size)
-	print('train', train_data.size)
-	print('test', test_data.size)
-	print('pred', pred.size)
-	print('predfull', pred_full.size)
-
-	mse = mean_squared_error(data, pred_full)
-	
-	print(mse, len(mse))
-
+	## MSE TEST ##
+	mse = mean_squared_error(test_data, test_predictions)
 
 	plt.figure(figsize=(15,8))
 	plt.plot(mse, 'y-', label='mse')
-	plt.xlabel("Épocas", fontsize=12)
-	plt.savefig(path_out+'/mse.svg', format='svg')
+	plt.ylabel('mean squared error', fontsize=12)
+	plt.savefig(path_plots+'/mse_test.svg', format='svg')
 	plt.show()
 
-	# plt.plot(data, 'y-', label='data')
+	## PREDICTION TEST ##
+	plt.figure(figsize=(15,8))
 	plt.plot(test_data, "b-", label="verdadeiro")
-	plt.plot(pred, "r-", label="predição")
+	plt.plot(test_predictions, "r-", label="predição")
+	plt.xlabel("Snapshots", fontsize=15)
+	plt.ylabel("Quantidade de pares", fontsize=15)
+	plt.ylim(0, 60)
+	plt.legend(loc="best", fontsize=15)
+	plt.savefig(path_plots+'/prediction_test.svg', format='svg')
+	plt.show()
+
+	## PREDICTION FULL ##
+	plt.figure(figsize=(15,8))
+	plt.plot(data, 'y-', label='data')
+	plt.plot(train_data, "b-", label="treino")
+	plt.plot(prediction, "r-", label="predição total")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Quantidade de pares", fontsize=15)
 	plt.legend(loc="best", fontsize=15)
-	plt.savefig(path_out+'/test_all.svg', format='svg')
+	plt.savefig(path_plots+'/prediction_full.svg', format='svg')
+	plt.show()
+
+	## MSE FULL ##
+	mse_full = mean_squared_error(data, prediction)	
+	
+	plt.figure(figsize=(15,8))
+	plt.plot(mse_full, 'y-', label='mse')
+	plt.ylabel('full - mean squared error', fontsize=12)
+	plt.savefig(path_plots+'/mse_full.svg', format='svg')
 	plt.show()
 
 
+def main():
+
+	parser = argparse.ArgumentParser(description='Arima')
+
+	parser.add_argument('--plot', '-p', help='plot mode', action='store_true')
+
+	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
+	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
+
+	args = parser.parse_args()
+
+	if args.log == logging.DEBUG:
+		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
+	else:
+		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
+
+
+	path_outs, path_plots = init()
+ 
+		
+	if args.plot:
+	
+		plot(path_outs, path_plots)
+		
+	else:
+
+		df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
+
+		print(df)
+
+		df['mean'] = df.mean(axis=1)
+
+		print(df)
+
+		result = adfuller(df['mean'].dropna())
+		print('ADF Statistic: %f' % result[0])
+		print('p-value: %f' % result[1])
+
+		print('adf %d' % ndiffs(df['mean'], test='adf'))
+		print('kpss %d' % ndiffs(df['mean'], test='kpss'))
+		print('pp %d' % ndiffs(df['mean'], test='pp'))
+
+		# SPLIT DATA
+		data = df['mean'].to_numpy()
+		train_data, test_data = train_test_split(data)
+		print("Train data: ", train_data.shape)
+		print("Test data: ", test_data.shape)
+
+		prediction = []
+		history = [x for x in train_data]
+
+		mse = []
+
+		# inicia Walk-Forward
+		for t in range(test_data.shape[0]):
+		  
+			model = ARIMA(history, order=(1,0,1))
+			
+			model_fit = model.fit()
+
+			valor_predito = model_fit.forecast()[0]
+
+			prediction.append(valor_predito)
+
+			valor_real = test_data[t]
+
+			# history.append(prediction[t])
+			history.append(valor_real)
+
+
+			print('%d predito=%.3f, esperado=%3.f' % (t, valor_predito, valor_real))
+
+
+		print(model_fit.summary())
+
+		model_fit.plot_diagnostics(figsize=(15,8))
+		plt.show()
+
+		pred = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
+		
+		pred_full = model_fit.predict(start=0, end=data.size-1, dynamic=False)
+
+
+		df.to_csv(path_outs+'/data.csv', index=False, header=False)	
+		np.savetxt(path_outs+'/prediction.cvs', pred_full)
+
+
+		print('data', data.size)
+		print('train', train_data.size)
+		print('test', test_data.size)
+		print('prediction', len(prediction))
+		print('predfull', pred_full.size)
+
+		plot(path_outs, path_plots)
 
 if __name__ == '__main__':
 	main()
