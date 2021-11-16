@@ -16,12 +16,11 @@ import matplotlib.pyplot as plt
 from pmdarima.arima.utils import ndiffs
 from statsmodels.tsa.arima.model import ARIMA
 
+TRAIN_RATE = 0.8
+
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
-
-
-TRAIN_RATE = 0.8
 
 
 def train_test_split(data):
@@ -52,20 +51,8 @@ def mean_squared_error(data, prediction):
 	
 	return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
-def plot(path_outs, path_plots):
+def plot(data, prediction, train_data, test_data, train_predictions, test_predictions, path_plots):
 
-	print(path_outs, path_plots)
-
-	data = pd.read_csv(path_outs+'/data.csv', header=None)
-	data = data[data.shape[1]-1].to_numpy()
-
-	prediction = pd.read_csv(path_outs+'/prediction.cvs', header=None).to_numpy()
-
-	
-
-	train_data, test_data = train_test_split(data)		
-	train_predictions, test_predictions = train_test_split(prediction)		
-	
 
 	## AUTOCORRELATION ##
 	plt.rcParams.update({'figure.figsize':(9,7), 'figure.dpi':120})
@@ -75,7 +62,7 @@ def plot(path_outs, path_plots):
 	axes[0].plot(data)
 	axes[0].set_title('Mean')
 	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation mean')
-	fig.savefig(path_outs+'/autocorrelation.svg', format='svg')
+	fig.savefig(path_plots+'/autocorrelation.svg', format='svg')
 	plt.show()
 
 	
@@ -141,8 +128,20 @@ def main():
  
 		
 	if args.plot:
+
+		# print(path_outs, path_plots)
+
+		data = pd.read_csv(path_outs+'/data.csv', header=None)
+		data = data[data.shape[1]-1].to_numpy()
+
+		predictions = pd.read_csv(path_outs+'/prediction.cvs', header=None).to_numpy()
+
+
+		train_data, test_data = train_test_split(data)		
+		train_predictions, test_predictions = train_test_split(predictions)		
 	
-		plot(path_outs, path_plots)
+	
+		plot(data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
 		
 	else:
 
@@ -198,22 +197,23 @@ def main():
 		model_fit.plot_diagnostics(figsize=(15,8))
 		plt.show()
 
-		pred = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
+		# train_predictions = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
 		
-		pred_full = model_fit.predict(start=0, end=data.size-1, dynamic=False)
+		predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
 
-
-		df.to_csv(path_outs+'/data.csv', index=False, header=False)	
-		np.savetxt(path_outs+'/prediction.cvs', pred_full)
-
+		train_predictions, test_predictions = train_test_split(predictions)
 
 		print('data', data.size)
 		print('train', train_data.size)
 		print('test', test_data.size)
-		print('prediction', len(prediction))
-		print('predfull', pred_full.size)
+		print('train predictions', train_predictions.size)
+		print('test predictions', test_predictions.size)
 
-		plot(path_outs, path_plots)
+		plot(data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
+
+		df.to_csv(path_outs+'/data.csv', index=False, header=False)	
+		np.savetxt(path_outs+'/prediction.cvs', predictions)
+
 
 if __name__ == '__main__':
 	main()
