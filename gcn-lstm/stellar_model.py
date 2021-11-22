@@ -33,11 +33,11 @@ def scale_data(train_data, test_data):
     max_speed = train_data.max()
     min_speed = train_data.min()
 
-    # train_scaled = (train_data - min_speed) / (max_speed - min_speed)
-    # test_scaled = (test_data - min_speed) / (max_speed - min_speed)
+    train_scaled = (train_data - min_speed) / (max_speed - min_speed)
+    test_scaled = (test_data - min_speed) / (max_speed - min_speed)
     
-    train_scaled = train_data / max_speed    
-    test_scaled = test_data / max_speed
+    # train_scaled = train_data / max_speed    
+    # test_scaled = test_data / max_speed
 
     return train_scaled, test_scaled
 
@@ -90,7 +90,7 @@ def init():
     return path_outs, path_plots
 
 
-def plot(a_true, a_pred, loss, val_loss, mse, val_mse, path_plots):
+def plot(test_true, test_pred, loss, val_loss, mse, val_mse, path_plots):
 
     colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
@@ -113,26 +113,80 @@ def plot(a_true, a_pred, loss, val_loss, mse, val_mse, path_plots):
     plt.show()
 
 
-    plt.figure(figsize=(15,8))
-    plt.xlim([-(a_pred.shape[0]*0.02), a_pred.shape[0]+(a_pred.shape[0]*0.02)])
+    # plt.figure(figsize=(15,8))
+    # plt.xlim([-(a_pred.shape[0]*0.02), a_pred.shape[0]+(a_pred.shape[0]*0.02)])
 
-    xticks = np.arange(0, a_pred.shape[0], 20)
-    xticks = np.append(xticks, a_pred.shape[0])
+    # xticks = np.arange(0, a_pred.shape[0], 20)
+    # xticks = np.append(xticks, a_pred.shape[0])
+    # plt.xticks(xticks, fontsize=13)
+
+    # # ylim = np.max(a_true)
+    # # yticks = np.arange(0, ylim, 10)
+    # # yticks = np.append(yticks, ylim)
+    # # plt.yticks(yticks, fontsize=13)
+
+    # plt.plot(a_true, "b-", label="verdadeiro")
+    # plt.plot(a_pred, "r-", label="predição")
+    # plt.xlabel("Snapshots", fontsize=15)
+    # plt.ylabel("Quantidade de pares", fontsize=15)
+    # plt.legend(loc="best", fontsize=15)
+    # plt.ylim(0, 60)
+    # plt.savefig(path_plots+'/test_all.svg', format='svg')
+    # plt.show()
+
+
+
+    df_test_true = pd.DataFrame(test_true)
+    df_test_pred = pd.DataFrame(test_pred)    
+        
+    df_test_true['mean'] = test_true.mean(axis=1)
+    df_test_pred['mean'] = test_pred.mean(axis=1)
+
+    mean_true = df_test_true['mean'].to_numpy()
+    mean_pred = df_test_pred['mean'].to_numpy()
+
+    plt.figure(figsize=(15,8))
+
+    plt.xlim([-(mean_true.shape[0]*0.02), mean_true.shape[0]+(mean_true.shape[0]*0.02)])
+
+    xticks = np.arange(0, mean_true.shape[0], 20)
+    xticks = np.append(xticks, mean_true.shape[0])
     plt.xticks(xticks, fontsize=13)
 
-    # ylim = np.max(a_true)
-    # yticks = np.arange(0, ylim, 10)
-    # yticks = np.append(yticks, ylim)
-    # plt.yticks(yticks, fontsize=13)
 
-    plt.plot(a_true, "b-", label="verdadeiro")
-    plt.plot(a_pred, "r-", label="predição")
-    plt.xlabel("Snapshots", fontsize=15)
-    plt.ylabel("Quantidade de pares", fontsize=15)
+    plt.plot(mean_true, 'b-', label='verdadeiro')
+    plt.plot(mean_pred, 'r-', label='predição')
+    plt.xlabel("Snapshots", fontsize=12)
+    plt.ylabel("Média dos resultados das predições", fontsize=12)
     plt.legend(loc="best", fontsize=15)
     plt.ylim(0, 60)
-    plt.savefig(path_plots+'/test_all.svg', format='svg')
+    plt.title('Predição RNA - Teste')
+    plt.savefig(path_plots+'/prediction_test.svg', format='svg')
     plt.show()
+
+
+    for i in range(test_true.shape[1]):
+        plt.figure(figsize=(15,8))
+        plt.xlim([-(test_pred[:, i].shape[0]*0.02), test_pred[:, i].shape[0]+(test_pred[:, i].shape[0]*0.02)])
+
+        xticks = np.arange(0, test_pred[:, i].shape[0], 20)
+        xticks = np.append(xticks, test_pred[:, i].shape[0])
+        plt.xticks(xticks, fontsize=13)
+
+        # ylim = np.max(a_true)
+        # yticks = np.arange(0, ylim, 10)
+        # yticks = np.append(yticks, ylim)
+        # plt.yticks(yticks, fontsize=13)
+
+        plt.plot(test_true[:, i], "b-", label="verdadeiro")
+        plt.plot(test_pred[:, i], "r-", label="predição")
+        plt.xlabel("Snapshots", fontsize=15)
+        plt.ylabel("Quantidade de pares", fontsize=15)
+        plt.legend(loc="best", fontsize=15)
+        plt.savefig(path_plots+'/prediction_test'+str(i)+'.svg', format='svg')
+        plt.show()
+
+
 
 
 def main():
@@ -194,17 +248,22 @@ def main():
         print("No. of sensors:", num_nodes, "\nNo of timesteps:", time_len)
 
 
+
         train_data, test_data = train_test_split(speed_data)
         print("Train data: ", train_data.shape)
         print("Test data: ", test_data.shape)
 
+        
+
         train_scaled, test_scaled = scale_data(train_data, test_data)
+
 
         trainX, trainY, testX, testY = sequence_data_preparation(train_scaled, test_scaled)
         print('TrainX', trainX.shape)
         print('TrainY', trainY.shape)
         print('TestX', testX.shape)
         print('TestY', testY.shape)
+
 
 
         gcn_lstm = GCN_LSTM(
@@ -225,7 +284,7 @@ def main():
         history = model.fit(
             trainX,
             trainY,
-            epochs=100,
+            epochs=1000,
             batch_size=32,
             shuffle=True,
             verbose=0,
@@ -254,7 +313,7 @@ def main():
         ythat = model.predict(trainX)
         yhat = model.predict(testX)
 
-
+    
         ## Rescale values
         max_speed = train_data.max()
         min_speed = train_data.min()
@@ -263,11 +322,14 @@ def main():
         train_rescref = np.array(trainY * max_speed)
         test_rescref = np.array(testY * max_speed)
 
-        ## Rescale model predicted values
+
+        # ## Rescale model predicted values
         train_rescpred = np.array((ythat) * max_speed)
         test_rescpred = np.array((yhat) * max_speed)
 
 
+
+        
 
         # ## Naive prediction benchmark (using previous observed value)
 
@@ -331,14 +393,10 @@ def main():
         # plt.show()
 
 
-
-        ##all test result visualization
-        # fig1 = plt.figure(figsize=(15, 8))
-        #    ax1 = fig1.add_subplot(1,1,1)
-
     
         a_pred = test_rescpred[:, 0]
         a_true = test_rescref[:, 0]
+
 
         loss = history.history['loss']
         val_loss = history.history['val_loss']
@@ -348,7 +406,7 @@ def main():
         val_mse = history.history['val_mse']
         
 
-        plot(a_true, a_pred, loss, val_loss, mse, val_mse, path_plots)
+        plot(test_rescref, test_rescpred, loss, val_loss, mse, val_mse, path_plots)
 
 
         np.savetxt(path_outs+'/loss.csv', loss)

@@ -80,9 +80,10 @@ def plot(data, prediction, train_data, test_data, train_predictions, test_predic
 	plt.plot(test_data, "b-", label="verdadeiro")
 	plt.plot(test_predictions, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
-	plt.ylabel("Quantidade de pares", fontsize=15)
+	plt.ylabel("Média da quantidade de pares", fontsize=15)
 	plt.ylim(0, 60)
 	plt.legend(loc="best", fontsize=15)
+	plt.title('Predição ARIMA - Teste')
 	plt.savefig(path_plots+'/prediction_test.svg', format='svg')
 	plt.show()
 
@@ -93,6 +94,7 @@ def plot(data, prediction, train_data, test_data, train_predictions, test_predic
 	plt.plot(prediction, "r-", label="predição total")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Quantidade de pares", fontsize=15)
+	plt.ylim(0, 100)
 	plt.legend(loc="best", fontsize=15)
 	plt.savefig(path_plots+'/prediction_full.svg', format='svg')
 	plt.show()
@@ -169,8 +171,6 @@ def main():
 
 		prediction = []
 		history = [x for x in train_data]
-
-		mse = []
 
 		# inicia Walk-Forward
 		for t in range(test_data.shape[0]):
