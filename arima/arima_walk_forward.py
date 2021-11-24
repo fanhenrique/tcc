@@ -71,9 +71,9 @@ def plot(column, data, prediction, train_data, test_data, train_predictions, tes
 
 	plt.figure(figsize=(15,8))
 	plt.plot(mse, 'y-', label='mse')
+	plt.ylim(0, 3.0)
 	plt.ylabel('mean squared error', fontsize=12)
 	plt.savefig(path_plots+'/mse_test_'+str(column)+'.svg', format='svg')
-	plt.ylim(0, 3.0)
 	# plt.show()
 
 
