@@ -1,5 +1,6 @@
 import inspect
 import os
+import logging
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
 path = os.path.dirname(os.path.abspath(filename))
@@ -23,3 +24,6 @@ SHOWMASTER = None
 SHOWPEERS = None
 SHOWTRACKERS = None
 SHOWMONITORS = None
+
+DEFAULT_LOG_LEVEL = logging.INFO
+TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'

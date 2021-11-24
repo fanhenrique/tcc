@@ -145,6 +145,9 @@ def plot(test_true, test_pred, loss, val_loss, mse, val_mse, path_plots):
     mean_true = df_test_true['mean'].to_numpy()
     mean_pred = df_test_pred['mean'].to_numpy()
 
+
+
+    ## PREDICTION TEST ##
     plt.figure(figsize=(15,8))
 
     plt.xlim([-(mean_true.shape[0]*0.02), mean_true.shape[0]+(mean_true.shape[0]*0.02)])
@@ -153,16 +156,18 @@ def plot(test_true, test_pred, loss, val_loss, mse, val_mse, path_plots):
     xticks = np.append(xticks, mean_true.shape[0])
     plt.xticks(xticks, fontsize=13)
 
-
     plt.plot(mean_true, 'b-', label='verdadeiro')
     plt.plot(mean_pred, 'r-', label='predição')
-    plt.xlabel("Snapshots", fontsize=12)
-    plt.ylabel("Média dos resultados das predições", fontsize=12)
+    plt.xlabel("Snapshots", fontsize=15)
+    plt.ylabel("Média dos resultados das predições", fontsize=15)
+    plt.ylim(0, 60)    
     plt.legend(loc="best", fontsize=15)
-    plt.ylim(0, 60)
     plt.title('Predição RNA - Teste')
     plt.savefig(path_plots+'/prediction_test.svg', format='svg')
     plt.show()
+
+
+
 
 
     for i in range(test_true.shape[1]):
@@ -183,6 +188,7 @@ def plot(test_true, test_pred, loss, val_loss, mse, val_mse, path_plots):
         plt.xlabel("Snapshots", fontsize=15)
         plt.ylabel("Quantidade de pares", fontsize=15)
         plt.legend(loc="best", fontsize=15)
+        plt.title('Predição RNA - Teste Tracker '+str(i))
         plt.savefig(path_plots+'/prediction_test'+str(i)+'.svg', format='svg')
         plt.show()
 
