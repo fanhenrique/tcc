@@ -51,7 +51,7 @@ def mean_squared_error(data, prediction):
 	
 	return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
-def plot(data, prediction, train_data, test_data, train_predictions, test_predictions, path_plots):
+def plot(column, data, prediction, train_data, test_data, train_predictions, test_predictions, path_plots):
 
 
 	## AUTOCORRELATION ##
@@ -62,8 +62,8 @@ def plot(data, prediction, train_data, test_data, train_predictions, test_predic
 	axes[0].plot(data)
 	axes[0].set_title('Mean')
 	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation mean')
-	fig.savefig(path_plots+'/autocorrelation.svg', format='svg')
-	plt.show()
+	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.svg', format='svg')
+	# plt.show()
 
 	
 	## MSE TEST ##
@@ -72,41 +72,55 @@ def plot(data, prediction, train_data, test_data, train_predictions, test_predic
 	plt.figure(figsize=(15,8))
 	plt.plot(mse, 'y-', label='mse')
 	plt.ylabel('mean squared error', fontsize=12)
-	plt.savefig(path_plots+'/mse_test.svg', format='svg')
-	plt.show()
+	plt.savefig(path_plots+'/mse_test_'+str(column)+'.svg', format='svg')
+	plt.ylim(0, 3)
+	# plt.show()
+
+
 
 	## PREDICTION TEST ##
 	plt.figure(figsize=(15,8))
+
+	plt.xlim([-(test_data.shape[0]*0.02), test_data.shape[0]+(test_data.shape[0]*0.02)])
+	
+	xticks = np.arange(0, test_data.shape[0], 20)
+	xticks = np.append(xticks, test_data.shape[0])
+	plt.xticks(xticks, fontsize=13)
+
 	plt.plot(test_data, "b-", label="verdadeiro")
 	plt.plot(test_predictions, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Média da quantidade de pares", fontsize=15)
-	plt.ylim(0, 60)
+	plt.ylim(0, 90)
 	plt.legend(loc="best", fontsize=15)
 	plt.title('Predição ARIMA - Teste')
-	plt.savefig(path_plots+'/prediction_test.svg', format='svg')
-	plt.show()
+	plt.savefig(path_plots+'/prediction_test_'+str(column)+'.svg', format='svg')
+	# plt.show()
 
-	## PREDICTION FULL ##
-	plt.figure(figsize=(15,8))
-	plt.plot(data, 'y-', label='data')
-	plt.plot(train_data, "b-", label="treino")
-	plt.plot(prediction, "r-", label="predição total")
-	plt.xlabel("Snapshots", fontsize=15)
-	plt.ylabel("Quantidade de pares", fontsize=15)
-	plt.ylim(0, 100)
-	plt.legend(loc="best", fontsize=15)
-	plt.savefig(path_plots+'/prediction_full.svg', format='svg')
-	plt.show()
 
-	## MSE FULL ##
-	mse_full = mean_squared_error(data, prediction)	
+
+
+
+	# ## PREDICTION FULL ##
+	# plt.figure(figsize=(15,8))
+	# plt.plot(data, 'y-', label='data')
+	# plt.plot(train_data, "b-", label="treino")
+	# plt.plot(prediction, "r-", label="predição total")
+	# plt.xlabel("Snapshots", fontsize=15)
+	# plt.ylabel("Quantidade de pares", fontsize=15)
+	# plt.ylim(0, 100)
+	# plt.legend(loc="best", fontsize=15)
+	# plt.savefig(path_plots+'/prediction_full.svg', format='svg')
+	# plt.show()
+
+	# ## MSE FULL ##
+	# mse_full = mean_squared_error(data, prediction)	
 	
-	plt.figure(figsize=(15,8))
-	plt.plot(mse_full, 'y-', label='mse')
-	plt.ylabel('full - mean squared error', fontsize=12)
-	plt.savefig(path_plots+'/mse_full.svg', format='svg')
-	plt.show()
+	# plt.figure(figsize=(15,8))
+	# plt.plot(mse_full, 'y-', label='mse')
+	# plt.ylabel('full - mean squared error', fontsize=12)
+	# plt.savefig(path_plots+'/mse_full.svg', format='svg')
+	# plt.show()
 
 
 def main():
@@ -162,6 +176,45 @@ def main():
 		print('adf %d' % ndiffs(df['mean'], test='adf'))
 		print('kpss %d' % ndiffs(df['mean'], test='kpss'))
 		print('pp %d' % ndiffs(df['mean'], test='pp'))
+
+
+		for column in df:
+			data = df[column].to_numpy()
+			train_data, test_data = train_test_split(data)
+			print("Train data: ", train_data.shape)
+			print("Test data: ", test_data.shape)
+		
+			prediction = []
+			history = [x for x in train_data]
+
+			# inicia Walk-Forward
+			for t in range(test_data.shape[0]):
+		  
+				model = ARIMA(history, order=(1,0,1))
+				
+				model_fit = model.fit()
+
+				valor_predito = model_fit.forecast()[0]
+
+				prediction.append(valor_predito)
+
+				valor_real = test_data[t]
+
+				# history.append(prediction[t])
+				history.append(valor_real)
+
+
+				print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
+
+			predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
+
+			train_predictions, test_predictions = train_test_split(predictions)	
+
+
+			plot(column, data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
+		
+		exit()
+
 
 		# SPLIT DATA
 		data = df['mean'].to_numpy()
