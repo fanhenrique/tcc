@@ -51,8 +51,8 @@ def mean_squared_error(data, prediction):
 	
 	return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
-def plot(column, data, prediction, train_data, test_data, train_predictions, test_predictions, path_plots):
 
+def plot_autocorrelation(column, data, path_plots):
 
 	## AUTOCORRELATION ##
 	plt.rcParams.update({'figure.figsize':(9,7), 'figure.dpi':120})
@@ -65,36 +65,37 @@ def plot(column, data, prediction, train_data, test_data, train_predictions, tes
 	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.svg', format='svg')
 	# plt.show()
 
+
+def plot_mse(column, mse, path_plots):
 	
 	## MSE TEST ##
-	mse = mean_squared_error(test_data, test_predictions)
-
 	plt.figure(figsize=(15,8))
 	plt.plot(mse, 'y-', label='mse')
 	plt.ylim(0, 3.0)
 	plt.ylabel('mean squared error', fontsize=12)
-	plt.savefig(path_plots+'/mse_test_'+str(column)+'.svg', format='svg')
+	plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
 	# plt.show()
 
 
+def plot_prediction(column, true, prediction, path_plots):
 
 	## PREDICTION TEST ##
 	plt.figure(figsize=(15,8))
 
-	plt.xlim([-(test_data.shape[0]*0.02), test_data.shape[0]+(test_data.shape[0]*0.02)])
+	plt.xlim([-(true.shape[0]*0.02), true.shape[0]+(true.shape[0]*0.02)])
 	
-	xticks = np.arange(0, test_data.shape[0], 20)
-	xticks = np.append(xticks, test_data.shape[0])
+	xticks = np.arange(0, true.shape[0], 20)
+	xticks = np.append(xticks, true.shape[0])
 	plt.xticks(xticks, fontsize=13)
 
-	plt.plot(test_data, "b-", label="verdadeiro")
-	plt.plot(test_predictions, "r-", label="predição")
+	plt.plot(true, "b-", label="verdadeiro")
+	plt.plot(prediction, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Média da quantidade de pares", fontsize=15)
 	plt.ylim(0, 90)
 	plt.legend(loc="best", fontsize=15)
 	plt.title('Predição ARIMA - Teste')
-	plt.savefig(path_plots+'/prediction_test_'+str(column)+'.svg', format='svg')
+	plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
 	# plt.show()
 
 
@@ -211,8 +212,25 @@ def main():
 			train_predictions, test_predictions = train_test_split(predictions)	
 
 
-			plot(column, data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
-		
+			plot_autocorrelation(column, data, path_plots)
+
+			mse = mean_squared_error(test_data, test_predictions)
+
+			mean_mse = []
+			mean_mse.append(np.mean(mse))
+
+			plot_mse(column, mse, path_plots)
+
+			plot_prediction(column, test_data, test_predictions)
+			
+			df.to_csv(path_outs+'/data_'+str(column)+'.csv', index=False, header=False)	
+			np.savetxt(path_outs+'/prediction_'+str(column)+'.cvs', predictions)
+
+
+		np.savetxt(path_outs+'/mse.cvs', mean_mse)
+
+
+
 		exit()
 
 
