@@ -221,7 +221,7 @@ def main():
 
 			plot_mse(column, mse, path_plots)
 
-			plot_prediction(column, test_data, test_predictions)
+			plot_prediction(column, test_data, test_predictions, path_plots)
 			
 			df.to_csv(path_outs+'/data_'+str(column)+'.csv', index=False, header=False)	
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.cvs', predictions)
