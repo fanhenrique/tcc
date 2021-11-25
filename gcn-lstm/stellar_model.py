@@ -104,7 +104,7 @@ def plot_mse(column, mse, path_plots):
     
     plt.xlim([-(mse.shape[0]*0.02), mse.shape[0]+(mse.shape[0]*0.02)])
 
-    xticks = np.arange(0, true.shape[0], 20)
+    xticks = np.arange(0, mse.shape[0], 20)
     xticks = np.append(xticks, mse.shape[0])
     plt.xticks(xticks, fontsize=13)
     
