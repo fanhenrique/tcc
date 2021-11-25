@@ -86,22 +86,56 @@ def init():
     path_outs = path + '/outs'
     if not os.path.exists(path_outs):
         os.makedirs(path_outs)
+    else:
+        os.rmdir(path_outs)
+        os.makedirs(path_outs)
     
     return path_outs, path_plots
 
+def mean_squared_error(data, prediction):
+    
+    return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
-def plot(test_true, test_pred, loss, val_loss, mse, val_mse, path_plots):
 
-    colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
-
+def plot_mse(column, mse, path_plots):
+    
+    ## MSE TEST ##
     plt.figure(figsize=(15,8))
-    plt.plot(loss, color=colors[0], linestyle='-', label='treino')
-    plt.plot(val_loss, color=colors[1], linestyle='-', label='validação')
-    plt.xlabel("Épocas", fontsize=12)
-    plt.ylabel("Erro médio absoluto", fontsize=12)
+    
+    plt.xlim([-(mse.shape[0]*0.02), mse.shape[0]+(mse.shape[0]*0.02)])
+
+    plt.plot(mse, 'y-', label='mse')
+    plt.ylim(0, 3.0)
+    plt.ylabel('mean squared error', fontsize=12)
+    plt.title('RNA')
+    plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
+    # plt.show()
+
+
+def plot_prediction(column, true, prediction, path_plots):
+
+    ## PREDICTION TEST ##
+    plt.figure(figsize=(15,8))
+
+    plt.xlim([-(true.shape[0]*0.02), true.shape[0]+(true.shape[0]*0.02)])
+    
+    xticks = np.arange(0, true.shape[0], 20)
+    xticks = np.append(xticks, true.shape[0])
+    plt.xticks(xticks, fontsize=13)
+
+    plt.plot(true, "b-", label="verdadeiro")
+    plt.plot(prediction, "r-", label="predição")
+    plt.xlabel("Snapshots", fontsize=15)
+    plt.ylabel("Média da quantidade de pares", fontsize=15)
+    plt.ylim(0, 90)
     plt.legend(loc="best", fontsize=15)
-    plt.savefig(path_plots+'/mae.svg', format='svg')
-    plt.show()
+    plt.title('Predição RNA - Teste')
+    plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
+    # plt.show()
+
+def plot_mse_validation(mse, val_mse, path_plots):
+    
+    colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
     plt.figure(figsize=(15,8))
     plt.plot(mse, color=colors[0], linestyle='-', label='treino')
@@ -109,88 +143,112 @@ def plot(test_true, test_pred, loss, val_loss, mse, val_mse, path_plots):
     plt.xlabel("Épocas", fontsize=12)
     plt.ylabel("Erro quadrático médio", fontsize=12)
     plt.legend(loc="best", fontsize=15)
-    plt.savefig(path_plots+'/mse.svg', format='svg')
-    plt.show()
-
-
-    # plt.figure(figsize=(15,8))
-    # plt.xlim([-(a_pred.shape[0]*0.02), a_pred.shape[0]+(a_pred.shape[0]*0.02)])
-
-    # xticks = np.arange(0, a_pred.shape[0], 20)
-    # xticks = np.append(xticks, a_pred.shape[0])
-    # plt.xticks(xticks, fontsize=13)
-
-    # # ylim = np.max(a_true)
-    # # yticks = np.arange(0, ylim, 10)
-    # # yticks = np.append(yticks, ylim)
-    # # plt.yticks(yticks, fontsize=13)
-
-    # plt.plot(a_true, "b-", label="verdadeiro")
-    # plt.plot(a_pred, "r-", label="predição")
-    # plt.xlabel("Snapshots", fontsize=15)
-    # plt.ylabel("Quantidade de pares", fontsize=15)
-    # plt.legend(loc="best", fontsize=15)
-    # plt.ylim(0, 60)
-    # plt.savefig(path_plots+'/test_all.svg', format='svg')
+    plt.savefig(path_plots+'/mse_validation.svg', format='svg')
     # plt.show()
 
 
 
-    df_test_true = pd.DataFrame(test_true)
-    df_test_pred = pd.DataFrame(test_pred)    
+# def plot(test_true, test_pred, loss, val_loss, mse, val_mse, path_plots):
+
+#     colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+
+#     plt.figure(figsize=(15,8))
+#     plt.plot(loss, color=colors[0], linestyle='-', label='treino')
+#     plt.plot(val_loss, color=colors[1], linestyle='-', label='validação')
+#     plt.xlabel("Épocas", fontsize=12)
+#     plt.ylabel("Erro médio absoluto", fontsize=12)
+#     plt.legend(loc="best", fontsize=15)
+#     plt.savefig(path_plots+'/mae.svg', format='svg')
+#     plt.show()
+
+#     plt.figure(figsize=(15,8))
+#     plt.plot(mse, color=colors[0], linestyle='-', label='treino')
+#     plt.plot(val_mse, color=colors[1], linestyle='-', label='validação')
+#     plt.xlabel("Épocas", fontsize=12)
+#     plt.ylabel("Erro quadrático médio", fontsize=12)
+#     plt.legend(loc="best", fontsize=15)
+#     plt.savefig(path_plots+'/mse.svg', format='svg')
+#     plt.show()
+
+
+#     # plt.figure(figsize=(15,8))
+#     # plt.xlim([-(a_pred.shape[0]*0.02), a_pred.shape[0]+(a_pred.shape[0]*0.02)])
+
+#     # xticks = np.arange(0, a_pred.shape[0], 20)
+#     # xticks = np.append(xticks, a_pred.shape[0])
+#     # plt.xticks(xticks, fontsize=13)
+
+#     # # ylim = np.max(a_true)
+#     # # yticks = np.arange(0, ylim, 10)
+#     # # yticks = np.append(yticks, ylim)
+#     # # plt.yticks(yticks, fontsize=13)
+
+#     # plt.plot(a_true, "b-", label="verdadeiro")
+#     # plt.plot(a_pred, "r-", label="predição")
+#     # plt.xlabel("Snapshots", fontsize=15)
+#     # plt.ylabel("Quantidade de pares", fontsize=15)
+#     # plt.legend(loc="best", fontsize=15)
+#     # plt.ylim(0, 60)
+#     # plt.savefig(path_plots+'/test_all.svg', format='svg')
+#     # plt.show()
+
+
+
+#     df_test_true = pd.DataFrame(test_true)
+#     df_test_pred = pd.DataFrame(test_pred)    
         
-    df_test_true['mean'] = test_true.mean(axis=1)
-    df_test_pred['mean'] = test_pred.mean(axis=1)
+#     df_test_true['mean'] = test_true.mean(axis=1)
+#     df_test_pred['mean'] = test_pred.mean(axis=1)
 
-    mean_true = df_test_true['mean'].to_numpy()
-    mean_pred = df_test_pred['mean'].to_numpy()
-
-
-
-    ## PREDICTION TEST ##
-    plt.figure(figsize=(15,8))
-
-    plt.xlim([-(mean_true.shape[0]*0.02), mean_true.shape[0]+(mean_true.shape[0]*0.02)])
-
-    xticks = np.arange(0, mean_true.shape[0], 20)
-    xticks = np.append(xticks, mean_true.shape[0])
-    plt.xticks(xticks, fontsize=13)
-
-    plt.plot(mean_true, 'b-', label='verdadeiro')
-    plt.plot(mean_pred, 'r-', label='predição')
-    plt.xlabel("Snapshots", fontsize=15)
-    plt.ylabel("Média dos resultados das predições", fontsize=15)
-    plt.ylim(0, 60)    
-    plt.legend(loc="best", fontsize=15)
-    plt.title('Predição RNA - Teste')
-    plt.savefig(path_plots+'/prediction_test.svg', format='svg')
-    plt.show()
+#     mean_true = df_test_true['mean'].to_numpy()
+#     mean_pred = df_test_pred['mean'].to_numpy()
 
 
 
+#     ## PREDICTION TEST ##
+#     plt.figure(figsize=(15,8))
+
+#     plt.xlim([-(mean_true.shape[0]*0.02), mean_true.shape[0]+(mean_true.shape[0]*0.02)])
+
+#     xticks = np.arange(0, mean_true.shape[0], 20)
+#     xticks = np.append(xticks, mean_true.shape[0])
+#     plt.xticks(xticks, fontsize=13)
+
+#     plt.plot(mean_true, 'b-', label='verdadeiro')
+#     plt.plot(mean_pred, 'r-', label='predição')
+#     plt.xlabel("Snapshots", fontsize=15)
+#     plt.ylabel("Média dos resultados das predições", fontsize=15)
+#     plt.ylim(0, 60)    
+#     plt.legend(loc="best", fontsize=15)
+#     plt.title('Predição RNA - Teste')
+#     plt.savefig(path_plots+'/prediction_test.svg', format='svg')
+#     plt.show()
 
 
-    for i in range(test_true.shape[1]):
-        plt.figure(figsize=(15,8))
-        plt.xlim([-(test_pred[:, i].shape[0]*0.02), test_pred[:, i].shape[0]+(test_pred[:, i].shape[0]*0.02)])
 
-        xticks = np.arange(0, test_pred[:, i].shape[0], 20)
-        xticks = np.append(xticks, test_pred[:, i].shape[0])
-        plt.xticks(xticks, fontsize=13)
 
-        # ylim = np.max(a_true)
-        # yticks = np.arange(0, ylim, 10)
-        # yticks = np.append(yticks, ylim)
-        # plt.yticks(yticks, fontsize=13)
 
-        plt.plot(test_true[:, i], "b-", label="verdadeiro")
-        plt.plot(test_pred[:, i], "r-", label="predição")
-        plt.xlabel("Snapshots", fontsize=15)
-        plt.ylabel("Quantidade de pares", fontsize=15)
-        plt.legend(loc="best", fontsize=15)
-        plt.title('Predição RNA - Teste Tracker '+str(i))
-        plt.savefig(path_plots+'/prediction_test'+str(i)+'.svg', format='svg')
-        plt.show()
+#     for i in range(test_true.shape[1]):
+#         plt.figure(figsize=(15,8))
+#         plt.xlim([-(test_pred[:, i].shape[0]*0.02), test_pred[:, i].shape[0]+(test_pred[:, i].shape[0]*0.02)])
+
+#         xticks = np.arange(0, test_pred[:, i].shape[0], 20)
+#         xticks = np.append(xticks, test_pred[:, i].shape[0])
+#         plt.xticks(xticks, fontsize=13)
+
+#         # ylim = np.max(a_true)
+#         # yticks = np.arange(0, ylim, 10)
+#         # yticks = np.append(yticks, ylim)
+#         # plt.yticks(yticks, fontsize=13)
+
+#         plt.plot(test_true[:, i], "b-", label="verdadeiro")
+#         plt.plot(test_pred[:, i], "r-", label="predição")
+#         plt.xlabel("Snapshots", fontsize=15)
+#         plt.ylabel("Quantidade de pares", fontsize=15)
+#         plt.legend(loc="best", fontsize=15)
+#         plt.title('Predição RNA - Teste Tracker '+str(i))
+#         plt.savefig(path_plots+'/prediction_test'+str(i)+'.svg', format='svg')
+#         plt.show()
 
 
 
@@ -305,6 +363,10 @@ def main():
             history.history["loss"][-1],
             "\nTest loss:",
             history.history["val_loss"][-1],
+            "Train mse: ",
+            history.history["mse"][-1],
+            "\nTest mse:",
+            history.history["val_mse"][-1],
         )
 
         # print(history.history.keys())
@@ -412,7 +474,47 @@ def main():
         val_mse = history.history['val_mse']
         
 
-        plot(test_rescref, test_rescpred, loss, val_loss, mse, val_mse, path_plots)
+        plot_mse_validation(mse, val_mse, path_plots)    
+
+        # plot(test_rescref, test_rescpred, loss, val_loss, mse, val_mse, path_plots)
+
+        for i in range(test_rescref.shape[1]):
+            plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots)
+
+
+        df_test_true = pd.DataFrame(test_rescref)
+        df_test_pred = pd.DataFrame(test_rescpred)    
+            
+        df_test_true['mean'] = test_rescref.mean(axis=1)
+        df_test_pred['mean'] = test_rescpred.mean(axis=1)
+
+        mean_true = df_test_true['mean'].to_numpy()
+        mean_pred = df_test_pred['mean'].to_numpy()    
+
+
+        plot_prediction('mean', mean_true, mean_pred, path_plots)
+
+
+
+        mean_mse = []
+
+        for i in range(test_rescref.shape[1]):
+            mse = mean_squared_error(test_rescref[:, i], test_rescpred[:, i])
+            plot_mse(i, mse, path_plots)
+            
+            mean_mse.append(np.mean(mse))
+
+        mse = mean_squared_error(mean_true, mean_pred)
+
+        plot_mse('mean', mse, path_plots)
+
+        mean_mse.append(np.mean(mse))
+
+
+        np.savetxt(path_outs+'/mean_mse.cvs', mean_mse)
+
+            
+
 
 
         np.savetxt(path_outs+'/loss.csv', loss)

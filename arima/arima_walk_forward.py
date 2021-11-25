@@ -5,6 +5,7 @@
 import inspect
 import os
 from datetime import datetime
+import shutil
 
 import argparse
 import logging
@@ -44,6 +45,10 @@ def init():
 	path_outs = path + '/outs'
 	if not os.path.exists(path_outs):
 	    os.makedirs(path_outs)
+	else:
+		# os.rmdir(path_outs)
+		shutil.rmtree(path_outs)
+		os.makedirs(path_outs)
 	
 	return path_outs, path_plots
 
@@ -68,16 +73,27 @@ def plot_autocorrelation(column, data, path_plots):
 
 def plot_mse(column, mse, path_plots):
 	
+
+	mse = mse[8:]
+
 	## MSE TEST ##
 	plt.figure(figsize=(15,8))
+
+	plt.xlim([-(mse.shape[0]*0.02), mse.shape[0]+(mse.shape[0]*0.02)])
+
 	plt.plot(mse, 'y-', label='mse')
 	plt.ylim(0, 3.0)
 	plt.ylabel('mean squared error', fontsize=12)
+	plt.title('ARIMA')
 	plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
 	# plt.show()
 
 
 def plot_prediction(column, true, prediction, path_plots):
+
+
+	true = true[8:]
+	prediction = prediction[8:]
 
 	## PREDICTION TEST ##
 	plt.figure(figsize=(15,8))
@@ -222,7 +238,7 @@ def main():
 
 			plot_prediction(column, test_data, test_predictions, path_plots)
 			
-			df.to_csv(path_outs+'/data_'+str(column)+'.csv', index=False, header=False)	
+			# df.to_csv(path_outs+'/data_'+str(column)+'.csv', index=False, header=False)	
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.cvs', predictions)
 
 
@@ -230,59 +246,59 @@ def main():
 
 
 
-		exit()
+		# exit()
 
 
-		# SPLIT DATA
-		data = df['mean'].to_numpy()
-		train_data, test_data = train_test_split(data)
-		print("Train data: ", train_data.shape)
-		print("Test data: ", test_data.shape)
+		# # SPLIT DATA
+		# data = df['mean'].to_numpy()
+		# train_data, test_data = train_test_split(data)
+		# print("Train data: ", train_data.shape)
+		# print("Test data: ", test_data.shape)
 
-		prediction = []
-		history = [x for x in train_data]
+		# prediction = []
+		# history = [x for x in train_data]
 
-		# inicia Walk-Forward
-		for t in range(test_data.shape[0]):
+		# # inicia Walk-Forward
+		# for t in range(test_data.shape[0]):
 		  
-			model = ARIMA(history, order=(1,0,1))
+		# 	model = ARIMA(history, order=(1,0,1))
 			
-			model_fit = model.fit()
+		# 	model_fit = model.fit()
 
-			valor_predito = model_fit.forecast()[0]
+		# 	valor_predito = model_fit.forecast()[0]
 
-			prediction.append(valor_predito)
+		# 	prediction.append(valor_predito)
 
-			valor_real = test_data[t]
+		# 	valor_real = test_data[t]
 
-			# history.append(prediction[t])
-			history.append(valor_real)
-
-
-			print('%d predito=%.3f, esperado=%3.f' % (t, valor_predito, valor_real))
+		# 	# history.append(prediction[t])
+		# 	history.append(valor_real)
 
 
-		print(model_fit.summary())
+		# 	print('%d predito=%.3f, esperado=%3.f' % (t, valor_predito, valor_real))
 
-		model_fit.plot_diagnostics(figsize=(15,8))
-		plt.show()
 
-		# train_predictions = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
+		# print(model_fit.summary())
+
+		# model_fit.plot_diagnostics(figsize=(15,8))
+		# plt.show()
+
+		# # train_predictions = model_fit.predict(start=train_data.size, end=data.size-1, dynamic=False)
 		
-		predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
+		# predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
 
-		train_predictions, test_predictions = train_test_split(predictions)
+		# train_predictions, test_predictions = train_test_split(predictions)
 
-		print('data', data.size)
-		print('train', train_data.size)
-		print('test', test_data.size)
-		print('train predictions', train_predictions.size)
-		print('test predictions', test_predictions.size)
+		# print('data', data.size)
+		# print('train', train_data.size)
+		# print('test', test_data.size)
+		# print('train predictions', train_predictions.size)
+		# print('test predictions', test_predictions.size)
 
-		plot(data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
+		# plot(data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
 
-		df.to_csv(path_outs+'/data.csv', index=False, header=False)	
-		np.savetxt(path_outs+'/prediction.cvs', predictions)
+		# df.to_csv(path_outs+'/data.csv', index=False, header=False)	
+		# np.savetxt(path_outs+'/prediction.cvs', predictions)
 
 
 if __name__ == '__main__':
