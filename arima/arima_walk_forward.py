@@ -178,7 +178,7 @@ def main():
 		print('kpss %d' % ndiffs(df['mean'], test='kpss'))
 		print('pp %d' % ndiffs(df['mean'], test='pp'))
 
-
+		mean_mse = []
 		for column in df:
 			data = df[column].to_numpy()
 			train_data, test_data = train_test_split(data)
@@ -216,7 +216,6 @@ def main():
 
 			mse = mean_squared_error(test_data, test_predictions)
 
-			mean_mse = []
 			mean_mse.append(np.mean(mse))
 
 			plot_mse(column, mse, path_plots)
