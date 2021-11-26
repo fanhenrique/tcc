@@ -3,6 +3,7 @@ import sys
 import inspect
 import urllib.request
 from datetime import datetime
+import shutil
 
 import argparse
 import logging
@@ -87,7 +88,7 @@ def init():
     if not os.path.exists(path_outs):
         os.makedirs(path_outs)
     else:
-        os.rmdir(path_outs)
+        shutil.rmtree(path_outs)
         os.makedirs(path_outs)
     
     return path_outs, path_plots
@@ -484,6 +485,8 @@ def main():
 
         for i in range(test_rescref.shape[1]):
             plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots)
+            np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
+
 
 
         df_test_true = pd.DataFrame(test_rescref)
@@ -498,38 +501,41 @@ def main():
 
         plot_prediction('mean', mean_true, mean_pred, path_plots)
 
-
+        np.savetxt(path_outs+'/prediction_mean.csv', mean_pred)
 
         mean_mse = []
 
         for i in range(test_rescref.shape[1]):
-            mse = mean_squared_error(test_rescref[:, i], test_rescpred[:, i])
-            plot_mse(i, mse, path_plots)
+            mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
             
+            np.savetxt(path_outs+'/mse_'+str(i)+'.csv', mse)
+
+            plot_mse(i, mse, path_plots)
+                        
             mean_mse.append(np.mean(mse))
 
-        mse = mean_squared_error(mean_true, mean_pred)
+        mse = np.array(mean_squared_error(mean_true, mean_pred))
 
         plot_mse('mean', mse, path_plots)
 
         mean_mse.append(np.mean(mse))
 
 
-        np.savetxt(path_outs+'/mean_mse.cvs', mean_mse)
+        np.savetxt(path_outs+'/mse_mean.csv', mean_mse)
 
             
 
 
 
-        np.savetxt(path_outs+'/loss.csv', loss)
-        np.savetxt(path_outs+'/val_loss.csv', val_loss)
+        # np.savetxt(path_outs+'/loss.csv', loss)
+        # np.savetxt(path_outs+'/val_loss.csv', val_loss)
 
-        np.savetxt(path_outs+'/mse.csv', mse)
-        np.savetxt(path_outs+'/val_mse.csv', val_mse)
+        # np.savetxt(path_outs+'/mse.csv', mse)
+        # np.savetxt(path_outs+'/val_mse.csv', val_mse)
 
 
-        np.savetxt(path_outs+'/true.csv', a_true)
-        np.savetxt(path_outs+'/prediction.csv', a_pred)
+        # np.savetxt(path_outs+'/true.csv', a_true)
+        # np.savetxt(path_outs+'/prediction.csv', a_pred)
 
     
 

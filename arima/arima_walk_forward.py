@@ -46,7 +46,6 @@ def init():
 	if not os.path.exists(path_outs):
 	    os.makedirs(path_outs)
 	else:
-		# os.rmdir(path_outs)
 		shutil.rmtree(path_outs)
 		os.makedirs(path_outs)
 	
@@ -171,7 +170,7 @@ def main():
 		data = pd.read_csv(path_outs+'/data.csv', header=None)
 		data = data[data.shape[1]-1].to_numpy()
 
-		predictions = pd.read_csv(path_outs+'/prediction.cvs', header=None).to_numpy()
+		predictions = pd.read_csv(path_outs+'/prediction.csv', header=None).to_numpy()
 
 
 		train_data, test_data = train_test_split(data)		
@@ -246,7 +245,7 @@ def main():
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
 			np.savetxt(path_outs+'/mse_'+str(column)+'.csv', mse)
 
-		np.savetxt(path_outs+'/mean_mse.cvs', mean_mse)
+		np.savetxt(path_outs+'/mean_mse.csv', mean_mse)
 
 
 
@@ -302,7 +301,7 @@ def main():
 		# plot(data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
 
 		# df.to_csv(path_outs+'/data.csv', index=False, header=False)	
-		# np.savetxt(path_outs+'/prediction.cvs', predictions)
+		# np.savetxt(path_outs+'/prediction.csv', predictions)
 
 
 if __name__ == '__main__':
