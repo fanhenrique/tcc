@@ -367,7 +367,7 @@ def main():
             history.history["loss"][-1],
             "\nTest loss:",
             history.history["val_loss"][-1],
-            "Train mse: ",
+            "\nTrain mse: ",
             history.history["mse"][-1],
             "\nTest mse:",
             history.history["val_mse"][-1],
