@@ -104,7 +104,6 @@ tensorflow-estimator==2.7.0
 termcolor==1.1.0
 threadpoolctl==3.0.0
 typing-extensions==3.7.4.3
-ubuntu-advantage-tools==27.3
 ubuntu-drivers-common==0.0.0
 ufw==0.36
 unattended-upgrades==0.1
