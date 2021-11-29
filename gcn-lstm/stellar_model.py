@@ -521,7 +521,7 @@ def main():
         mean_mse.append(np.mean(mse))
 
 
-        np.savetxt(path_outs+'/mse_mean.csv', mean_mse)
+        np.savetxt(path_outs+'/mean_mse.csv', mean_mse)
 
             
 
