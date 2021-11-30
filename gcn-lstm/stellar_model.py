@@ -503,6 +503,8 @@ def main():
 
         np.savetxt(path_outs+'/prediction_mean.csv', mean_pred)
 
+
+
         mean_mse = []
 
         for i in range(test_rescref.shape[1]):
@@ -515,6 +517,8 @@ def main():
             mean_mse.append(np.mean(mse))
 
         mse = np.array(mean_squared_error(mean_true, mean_pred))
+
+        np.savetxt(path_outs+'/mse_mean.csv', mse)
 
         plot_mse('mean', mse, path_plots)
 
