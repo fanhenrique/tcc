@@ -93,7 +93,7 @@ def plot_mse(column, mse, path_plots):
 	# plt.show()
 
 
-def plot_prediction(column, true, prediction, path_plots):
+def plot_prediction(column, true, prediction, path_plots, max_y):
 
 
 	true = true[8:]
@@ -112,7 +112,7 @@ def plot_prediction(column, true, prediction, path_plots):
 	plt.plot(prediction, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Média da quantidade de pares", fontsize=15)
-	plt.ylim(0, MAX_Y)
+	plt.ylim(0, max_y)
 	plt.legend(loc="best", fontsize=15)
 	plt.title('Predição ARIMA - Teste')
 	plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
@@ -200,8 +200,7 @@ def main():
 
 
 		maxdf = df.max()
-		MAX_Y = np.max(maxdf)
-		print(MAX_Y)
+		max_y = np.max(maxdf)
 
 
 		mean_mse = []
@@ -246,7 +245,7 @@ def main():
 
 			plot_mse(column, mse, path_plots)
 
-			plot_prediction(column, test_data, test_predictions, path_plots)
+			plot_prediction(column, test_data, test_predictions, path_plots, max_y)
 			
 			# df.to_csv(path_outs+'/data_'+str(column)+'.csv', index=False, header=False)	
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
