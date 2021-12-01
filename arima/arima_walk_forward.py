@@ -23,6 +23,7 @@ TRAIN_RATE = 0.8
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
+MAX_Y = 70
 
 def train_test_split(data):
     time_len = data.size
@@ -103,7 +104,7 @@ def plot_prediction(column, true, prediction, path_plots):
 
 	plt.xlim([-(true.shape[0]*0.02), true.shape[0]+(true.shape[0]*0.02)])
 	
-	xticks = np.arange(0, true.shape[0], 20)
+	xticks = np.arange(0, true.shape[0], true.shape[0]*0.2)
 	xticks = np.append(xticks, true.shape[0])
 	plt.xticks(xticks, fontsize=13)
 
@@ -111,7 +112,7 @@ def plot_prediction(column, true, prediction, path_plots):
 	plt.plot(prediction, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Média da quantidade de pares", fontsize=15)
-	plt.ylim(0, 90)
+	plt.ylim(0, MAX_Y)
 	plt.legend(loc="best", fontsize=15)
 	plt.title('Predição ARIMA - Teste')
 	plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
@@ -189,13 +190,19 @@ def main():
 
 		print(df)
 
-		result = adfuller(df['mean'].dropna())
-		print('ADF Statistic: %f' % result[0])
-		print('p-value: %f' % result[1])
+		# result = adfuller(df['mean'].dropna())
+		# print('ADF Statistic: %f' % result[0])
+		# print('p-value: %f' % result[1])
 
-		print('adf %d' % ndiffs(df['mean'], test='adf'))
-		print('kpss %d' % ndiffs(df['mean'], test='kpss'))
-		print('pp %d' % ndiffs(df['mean'], test='pp'))
+		# print('adf %d' % ndiffs(df['mean'], test='adf'))
+		# print('kpss %d' % ndiffs(df['mean'], test='kpss'))
+		# print('pp %d' % ndiffs(df['mean'], test='pp'))
+
+
+		maxdf = df.max()
+		MAX_Y = np.max(maxdf)
+		print(MAX_Y)
+
 
 		mean_mse = []
 		for column in df:
