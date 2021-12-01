@@ -65,8 +65,8 @@ def plot_autocorrelation(column, data, path_plots):
 	fig, axes = plt.subplots(2, sharex=True)
 
 	axes[0].plot(data)
-	axes[0].set_title('Mean')
-	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation mean')
+	axes[0].set_title()
+	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation')
 	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.svg', format='svg')
 	# plt.show()
 
@@ -108,11 +108,15 @@ def plot_prediction(column, true, prediction, path_plots, max_y):
 	xticks = np.append(xticks, true.shape[0])
 	plt.xticks(xticks, fontsize=13)
 
+	plt.ylim(0, max_y+max_y*0.02)
+
+	yticks = np.arange(0, max_y, max_y*0.1)
+	yticks = np.append(yticks, max_y)		
+
 	plt.plot(true, "b-", label="verdadeiro")
 	plt.plot(prediction, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Média da quantidade de pares", fontsize=15)
-	plt.ylim(0, max_y)
 	plt.legend(loc="best", fontsize=15)
 	plt.title('Predição ARIMA - Teste')
 	plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
