@@ -65,7 +65,7 @@ def plot_autocorrelation(column, data, path_plots):
 	fig, axes = plt.subplots(2, sharex=True)
 
 	axes[0].plot(data)
-	axes[0].set_title()
+	axes[0].set_title('tracker')
 	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation')
 	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.svg', format='svg')
 	# plt.show()
