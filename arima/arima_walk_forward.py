@@ -100,7 +100,7 @@ def plot_mse(column, mse, path_plots, max_y):
 	# plt.show()
 
 
-def plot_prediction(column, true, prediction, path_plots, max_y):
+def plot_prediction(column, true, prediction, path_plots, name, max_y):
 
 
 	true = true[8:]
@@ -129,7 +129,7 @@ def plot_prediction(column, true, prediction, path_plots, max_y):
 	plt.ylabel("Quantidade de pares", fontsize=15)
 	plt.legend(loc="best", fontsize=15)
 	plt.title('Predição ARIMA - Teste')
-	plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
+	plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
 	# plt.show()
 
 
@@ -261,11 +261,11 @@ def main():
 			# plot_autocorrelation(column, data, path_plots)
 
 
-			plot_prediction(column, test_data, test_predictions, path_plots, max_y)
+			plot_prediction(column, test_data, test_predictions, path_plots, 'prediction_test', max_y)
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
 
 
-			plot_prediction(column, data, predictions, path_plots, max_y)
+			plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y)
 
 
 
