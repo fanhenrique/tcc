@@ -120,7 +120,7 @@ def plot_prediction(column, true, prediction, path_plots, max_y):
 	plt.xticks(xticks, fontsize=13)
 
 
-	plt.ylim(0, max_y+max_y*0.02)
+	plt.ylim([0, max_y+max_y*0.02])
 
 	yticks = np.arange(0, max_y, max_y*0.1)
 	yticks = np.append(yticks, max_y)		
@@ -290,7 +290,7 @@ def main():
 
 		np.savetxt(path_outs+'/mean.csv', mean_mse)
 
-
+		logging.info('end ARIMA')
 
 		# exit()
 
