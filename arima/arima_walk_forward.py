@@ -71,7 +71,7 @@ def plot_autocorrelation(column, data, path_plots):
 	# plt.show()
 
 
-def plot_mse(column, mse, path_plots):
+def plot_mse(column, mse, path_plots, max_y):
 	
 
 	mse = mse[8:]
@@ -81,12 +81,19 @@ def plot_mse(column, mse, path_plots):
 
 	plt.xlim([-(mse.shape[0]*0.02), mse.shape[0]+(mse.shape[0]*0.02)])
 
-	xticks = np.arange(0, mse.shape[0], 20)
+	xticks = np.arange(0, mse.shape[0], mse.shape[0]*0.1)
 	xticks = np.append(xticks, mse.shape[0])
 	plt.xticks(xticks, fontsize=13)
 
+
+	plt.ylim(0, max_y+max_y*0.02)
+
+	yticks = np.arange(0, max_y, max_y*0.1)
+	yticks = np.append(yticks, max_y)		
+	plt.yticks(yticks, fontsize=13)
+
+
 	plt.plot(mse, 'y-', label='mse')
-	plt.ylim(0, 3.0)
 	plt.ylabel('mean squared error', fontsize=12)
 	plt.title('ARIMA')
 	plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
@@ -104,19 +111,21 @@ def plot_prediction(column, true, prediction, path_plots, max_y):
 
 	plt.xlim([-(true.shape[0]*0.02), true.shape[0]+(true.shape[0]*0.02)])
 	
-	xticks = np.arange(0, true.shape[0], true.shape[0]*0.2)
+	xticks = np.arange(0, true.shape[0], true.shape[0]*0.1)
 	xticks = np.append(xticks, true.shape[0])
 	plt.xticks(xticks, fontsize=13)
+
 
 	plt.ylim(0, max_y+max_y*0.02)
 
 	yticks = np.arange(0, max_y, max_y*0.1)
 	yticks = np.append(yticks, max_y)		
+	plt.yticks(yticks, fontsize=13)
 
 	plt.plot(true, "b-", label="verdadeiro")
 	plt.plot(prediction, "r-", label="predição")
 	plt.xlabel("Snapshots", fontsize=15)
-	plt.ylabel("Média da quantidade de pares", fontsize=15)
+	plt.ylabel("Quantidade de pares", fontsize=15)
 	plt.legend(loc="best", fontsize=15)
 	plt.title('Predição ARIMA - Teste')
 	plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
@@ -186,13 +195,12 @@ def main():
 		
 	else:
 
+		logging.info('reading file ...')
 		df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 
-		print(df)
-
-		df['mean'] = df.mean(axis=1)
-
-		print(df)
+		# print(df)
+		df[df.shape[1]] = df.mean(axis=1)
+		# print(df)
 
 		# result = adfuller(df['mean'].dropna())
 		# print('ADF Statistic: %f' % result[0])
@@ -203,59 +211,80 @@ def main():
 		# print('pp %d' % ndiffs(df['mean'], test='pp'))
 
 
-		maxdf = df.max()
-		max_y = np.max(maxdf)
+		max_y = np.max(df.max())
 
 
 		mean_mse = []
+		df_mse = pd.DataFrame()
+		logging.info('start ARIMA ...')
 		for column in df:
+			logging.info('tracker %s ...' % column)
 			data = df[column].to_numpy()
 			train_data, test_data = train_test_split(data)
-			print("Train data: ", train_data.shape)
-			print("Test data: ", test_data.shape)
-		
-			prediction = []
+			# print("Train data: ", train_data.shape)
+			# print("Test data: ", test_data.shape)
+			
+			logging.info('Train data: %s' % train_data.shape)
+			logging.info('Test data: %s' % test_data.shape)	
+
+
+			# prediction = []
 			history = [x for x in train_data]
 
 			# inicia Walk-Forward
+			logging.info('walk-forward ...')
 			for t in range(test_data.shape[0]):
 		  
 				model = ARIMA(history, order=(1,0,1))
 				
 				model_fit = model.fit()
 
-				valor_predito = model_fit.forecast()[0]
+				# predict_value = model_fit.forecast()[0]
 
-				prediction.append(valor_predito)
+				# prediction.append(predict_value)
 
-				valor_real = test_data[t]
+				real_value = test_data[t]
 
 				# history.append(prediction[t])
-				history.append(valor_real)
+				history.append(real_value)
 
 
-				print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
+				# print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
 
+			logging.info('predictions ...')
 			predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
 
 			train_predictions, test_predictions = train_test_split(predictions)	
 
 
-			plot_autocorrelation(column, data, path_plots)
+			# plot_autocorrelation(column, data, path_plots)
 
-			mse = np.array(mean_squared_error(test_data, test_predictions))
-
-			mean_mse.append(np.mean(mse))
-
-			plot_mse(column, mse, path_plots)
 
 			plot_prediction(column, test_data, test_predictions, path_plots, max_y)
-			
-			# df.to_csv(path_outs+'/data_'+str(column)+'.csv', index=False, header=False)	
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
-			np.savetxt(path_outs+'/mse_'+str(column)+'.csv', mse)
 
-		np.savetxt(path_outs+'/mean_mse.csv', mean_mse)
+
+
+			mse = np.array(mean_squared_error(test_data, test_predictions))
+			df_mse[column] = mse
+
+
+			
+		print(df_mse)		
+		
+		max_y = np.max(df_mse.max())
+
+		print(max_y)
+
+
+		for column in df_mse:
+			plot_mse(column, df_mse[column], path_plots, max_y)
+			np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
+
+			mean_mse.append(np.mean(df_mse[column]))
+	
+
+		np.savetxt(path_outs+'/mean.csv', mean_mse)
 
 
 
