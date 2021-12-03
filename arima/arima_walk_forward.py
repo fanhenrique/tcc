@@ -74,9 +74,7 @@ def plot_autocorrelation(column, data, path_plots):
 def plot_mse(column, mse, path_plots, max_y):
 	
 
-	mse = mse[8:]
-
-	plt.figure().clear()
+	# mse = mse[8:]
 	
 	## MSE TEST ##
 	plt.figure(figsize=(15,8))
@@ -108,7 +106,6 @@ def plot_prediction(column, true, prediction, path_plots, max_y):
 	true = true[8:]
 	prediction = prediction[8:]
 
-	plt.figure().clear()
 
 	## PREDICTION TEST ##
 	plt.figure(figsize=(15,8))
