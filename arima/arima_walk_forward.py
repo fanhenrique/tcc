@@ -265,6 +265,9 @@ def main():
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
 
 
+			plot_prediction(column, data, predictions, path_plots, max_y)
+
+
 
 			mse = np.array(mean_squared_error(test_data, test_predictions))
 			df_mse[column] = mse
