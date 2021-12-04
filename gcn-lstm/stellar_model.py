@@ -285,6 +285,8 @@ def main():
 
     path_outs, path_plots = init()    
 
+    print(path_plots)
+
     if args.plot:
 
         # print(path_outs, path_plots)
@@ -494,7 +496,7 @@ def main():
         # plot(test_rescref, test_rescpred, loss, val_loss, mse, val_mse, path_plots)
 
         for i in range(test_rescref.shape[1]):
-            plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], 'prediction_test', path_plots, max_y)
+            plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', max_y)
             np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
 
@@ -509,7 +511,7 @@ def main():
         mean_pred = df_test_pred['mean'].to_numpy()    
 
 
-        plot_prediction('mean', mean_true, mean_pred, 'prediction_mean', path_plots, max_y)
+        plot_prediction('mean', mean_true, mean_pred, path_plots, 'prediction_mean', max_y)
 
         np.savetxt(path_outs+'/prediction_mean.csv', mean_pred)
 
