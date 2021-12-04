@@ -23,7 +23,6 @@ TRAIN_RATE = 0.8
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
-MAX_Y = 70
 
 def train_test_split(data):
     time_len = data.size

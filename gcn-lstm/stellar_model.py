@@ -117,25 +117,32 @@ def plot_mse(column, mse, path_plots):
     # plt.show()
 
 
-def plot_prediction(column, true, prediction, path_plots):
+def plot_prediction(column, true, prediction, path_plots, name, max_y):
 
     ## PREDICTION TEST ##
     plt.figure(figsize=(15,8))
 
     plt.xlim([-(true.shape[0]*0.02), true.shape[0]+(true.shape[0]*0.02)])
     
-    xticks = np.arange(0, true.shape[0], 20)
+    xticks = np.arange(0, true.shape[0], true.shape[0]*0.1)
     xticks = np.append(xticks, true.shape[0])
     plt.xticks(xticks, fontsize=13)
+
+
+    plt.ylim([-(max_y*0.02), max_y+max_y*0.02])
+
+    yticks = np.arange(0, max_y, max_y*0.1)
+    yticks = np.append(yticks, max_y)       
+    plt.yticks(yticks, fontsize=13)
+
 
     plt.plot(true, "b-", label="verdadeiro")
     plt.plot(prediction, "r-", label="predição")
     plt.xlabel("Snapshots", fontsize=15)
     plt.ylabel("Média da quantidade de pares", fontsize=15)
-    plt.ylim(0, 90)
     plt.legend(loc="best", fontsize=15)
     plt.title('Predição RNA - Teste')
-    plt.savefig(path_plots+'/prediction_'+str(column)+'.svg', format='svg')
+    plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
     # plt.show()
 
 def plot_mse_validation(mse, val_mse, path_plots):
@@ -316,7 +323,10 @@ def main():
         num_nodes, time_len = speed_data.shape
         print("No. of sensors:", num_nodes, "\nNo of timesteps:", time_len)
 
+    
+        max_y = np.max(speed_data.max())
 
+        # print(max_y)
 
         train_data, test_data = train_test_split(speed_data)
         print("Train data: ", train_data.shape)
@@ -484,7 +494,7 @@ def main():
         # plot(test_rescref, test_rescpred, loss, val_loss, mse, val_mse, path_plots)
 
         for i in range(test_rescref.shape[1]):
-            plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots)
+            plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], 'prediction_test', path_plots, max_y)
             np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
 
@@ -499,7 +509,7 @@ def main():
         mean_pred = df_test_pred['mean'].to_numpy()    
 
 
-        plot_prediction('mean', mean_true, mean_pred, path_plots)
+        plot_prediction('mean', mean_true, mean_pred, 'prediction_mean', path_plots, max_y)
 
         np.savetxt(path_outs+'/prediction_mean.csv', mean_pred)
 
