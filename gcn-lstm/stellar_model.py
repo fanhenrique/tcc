@@ -373,7 +373,7 @@ def main():
         history = model.fit(
             trainX,
             trainY,
-            epochs=1000,
+            epochs=500,
             batch_size=32,
             shuffle=True,
             verbose=0,
