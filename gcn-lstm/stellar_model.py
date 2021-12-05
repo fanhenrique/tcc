@@ -98,19 +98,27 @@ def mean_squared_error(data, prediction):
     return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
 
-def plot_mse(column, mse, path_plots):
+def plot_mse(column, mse, path_plots, max_y):
     
     ## MSE TEST ##
-    plt.figure(figsize=(15,8))
     
+    plt.figure(figsize=(15,8))
+
     plt.xlim([-(mse.shape[0]*0.02), mse.shape[0]+(mse.shape[0]*0.02)])
 
-    xticks = np.arange(0, mse.shape[0], 20)
+    xticks = np.arange(0, mse.shape[0], mse.shape[0]*0.1)
     xticks = np.append(xticks, mse.shape[0])
     plt.xticks(xticks, fontsize=13)
-    
+
+
+    plt.ylim(0, max_y+max_y*0.02)
+
+    yticks = np.arange(0, max_y, max_y*0.1)
+    yticks = np.append(yticks, max_y)       
+    plt.yticks(yticks, fontsize=13)
+
+
     plt.plot(mse, 'y-', label='mse')
-    plt.ylim(0, 3.0)
     plt.ylabel('mean squared error', fontsize=12)
     plt.title('RNA')
     plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
@@ -517,19 +525,40 @@ def main():
 
 
 
-        mean_mse = []
 
+        df_mse = pd.DataFrame()
         for i in range(test_rescref.shape[1]):
             mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
             
             np.savetxt(path_outs+'/mse_'+str(i)+'.csv', mse)
 
-            plot_mse(i, mse, path_plots)
-                        
-            mean_mse.append(np.mean(mse))
+            df_mse[i] = mse
 
-        mse = np.array(mean_squared_error(mean_true, mean_pred))
 
+        df_msen[df_mse.shape[0]] = p.array(mean_squared_error(mean_true, mean_pred))
+
+
+
+        max_y = np.max(df_mse.max())
+
+        print(max_y)
+
+
+        exit()
+
+        mean_mse = []
+        for column in df_mse:
+
+            plot_mse(column, df_mse[column], path_plots, max_y)
+            
+            mean_mse.append(np.mean(df_mse[column]))                
+        
+            # mean_mse.append(np.mean(mse))
+
+        
+
+        # mse = 
+ 
         np.savetxt(path_outs+'/mse_mean.csv', mse)
 
         plot_mse('mean', mse, path_plots)
