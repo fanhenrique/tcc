@@ -512,16 +512,16 @@ def main():
         df_test_true = pd.DataFrame(test_rescref)
         df_test_pred = pd.DataFrame(test_rescpred)    
             
-        df_test_true['mean'] = test_rescref.mean(axis=1)
-        df_test_pred['mean'] = test_rescpred.mean(axis=1)
+        df_test_true[speed_data.shape[1]] = test_rescref.mean(axis=1)
+        df_test_pred[speed_data.shape[1]] = test_rescpred.mean(axis=1)
 
-        mean_true = df_test_true['mean'].to_numpy()
-        mean_pred = df_test_pred['mean'].to_numpy()    
+        mean_true = df_test_true[speed_data.shape[1]].to_numpy()
+        mean_pred = df_test_pred[speed_data.shape[1]].to_numpy()    
 
 
-        plot_prediction('mean', mean_true, mean_pred, path_plots, 'prediction_mean', max_y)
+        plot_prediction(speed_data.shape[1], mean_true, mean_pred, path_plots, 'prediction_test', max_y)
 
-        np.savetxt(path_outs+'/prediction_mean.csv', mean_pred)
+        np.savetxt(path_outs+'/prediction_'+str(speed_data.shape[1])+'.csv', mean_pred)
 
 
 
