@@ -525,7 +525,7 @@ def main():
         mean_pred = df_test_pred[speed_data.shape[0]].to_numpy()    
 
 
-        plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test_all', max_y)
+        plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test', max_y)
         np.savetxt(path_outs+'/prediction_'+str(speed_data.shape[0])+'.csv', mean_pred)
 
 

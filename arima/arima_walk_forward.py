@@ -195,7 +195,7 @@ def main():
 		
 	else:
 
-		logging.info('reading file ...')
+		logging.info('Reading file ...')
 		df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 
 		# print(df)
@@ -216,23 +216,24 @@ def main():
 
 		mean_mse = []
 		df_mse = pd.DataFrame()
-		logging.info('start ARIMA ...')
+		
+		logging.info('Start prediction ARIMA\n\
+			  Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
+	
+
 		for column in df:
-			logging.info('tracker %s ...' % column)
+			
 			data = df[column].to_numpy()
 			train_data, test_data = train_test_split(data)
 			# print("Train data: ", train_data.shape)
 			# print("Test data: ", test_data.shape)
 			
-			logging.info('Train data: %s' % train_data.shape)
-			logging.info('Test data: %s' % test_data.shape)	
-
 
 			# prediction = []
 			history = [x for x in train_data]
 
 			# inicia Walk-Forward
-			logging.info('walk-forward ...')
+			logging.info('Tracker %s walk-forward ...' % column)
 			for t in range(test_data.shape[0]):
 		  
 				model = ARIMA(history, order=(1,0,1))
@@ -251,7 +252,7 @@ def main():
 
 				# print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
 
-			logging.info('predictions ...')
+			# logging.info('predictions ...')
 			predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
 
 			train_predictions, test_predictions = train_test_split(predictions)	
@@ -264,24 +265,21 @@ def main():
 			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
 
 
-			plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y)
-
+			# plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y)
 
 
 			mse = np.array(mean_squared_error(test_data, test_predictions))
 			df_mse[column] = mse
 
-
+		logging.info('End prediction ARIMA')
 			
-		print(df_mse)		
 		
-		max_y = np.max(df_mse.max())
-
-		print(max_y)
+	
 
 
+		max_y_mse = np.max(df_mse.max())
 		for column in df_mse:
-			plot_mse(column, df_mse[column], path_plots, max_y)
+			plot_mse(column, df_mse[column], path_plots, max_y_mse)
 			np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
 
 			mean_mse.append(np.mean(df_mse[column]))
@@ -289,7 +287,7 @@ def main():
 
 		np.savetxt(path_outs+'/mean.csv', mean_mse)
 
-		logging.info('end ARIMA')
+		
 
 		# exit()
 
