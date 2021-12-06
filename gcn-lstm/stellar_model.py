@@ -503,7 +503,7 @@ def main():
 
 
         ### Respostas da RNA ###
-        for i in range(test_rescref.shape[1]):
+        for i in range(test_rescref.shape[1]):  
             plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', max_y)
             np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
@@ -513,15 +513,19 @@ def main():
         ### Média de todas as respostas da RNA ###   
         df_test_true = pd.DataFrame(test_rescref)
         df_test_pred = pd.DataFrame(test_rescpred)    
+
             
         df_test_true[speed_data.shape[0]] = test_rescref.mean(axis=1)
         df_test_pred[speed_data.shape[0]] = test_rescpred.mean(axis=1)
+
+
+
 
         mean_true = df_test_true[speed_data.shape[0]].to_numpy()
         mean_pred = df_test_pred[speed_data.shape[0]].to_numpy()    
 
 
-        plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test', max_y)
+        plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test_all', max_y)
         np.savetxt(path_outs+'/prediction_'+str(speed_data.shape[0])+'.csv', mean_pred)
 
 
@@ -532,8 +536,8 @@ def main():
             mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
             
             df_mse[i] = mse
-        df_mse[df_mse.shape[0]] = np.array(mean_squared_error(mean_true, mean_pred))
 
+        df_mse[df_mse.shape[1]] = np.array(mean_squared_error(mean_true, mean_pred))
 
 
 
@@ -548,9 +552,10 @@ def main():
         for column in df_mse:
 
             plot_mse(column, df_mse[column], path_plots, max_y)
-            np.savetxt(path_outs+'/mse_'+str(i)+'.csv', mse)
+           
+            np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
 
-            # mean_mse.append(np.mean(df_mse[column]))                
+            mean_mse.append(np.mean(df_mse[column]))                
         
             # mean_mse.append(np.mean(mse))
 
@@ -562,7 +567,7 @@ def main():
 
         # plot_mse('mean', mse, path_plots)
 
-        mean_mse.append(np.mean(mse))
+        # mean_mse.append(np.mean(mse))
 
 
         np.savetxt(path_outs+'/mean_mse.csv', mean_mse)
