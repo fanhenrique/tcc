@@ -532,7 +532,7 @@ def main():
             mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
             
             df_mse[i] = mse
-        df_msen[df_mse.shape[0]] = p.array(mean_squared_error(mean_true, mean_pred))
+        df_mse[df_mse.shape[0]] = np.array(mean_squared_error(mean_true, mean_pred))
 
 
 
@@ -542,14 +542,14 @@ def main():
 
         print(max_y)
 
-        
+
 
         mean_mse = []
         for column in df_mse:
 
             plot_mse(column, df_mse[column], path_plots, max_y)
             np.savetxt(path_outs+'/mse_'+str(i)+'.csv', mse)
-            
+
             # mean_mse.append(np.mean(df_mse[column]))                
         
             # mean_mse.append(np.mean(mse))
