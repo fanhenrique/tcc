@@ -85,7 +85,7 @@ def plot_mse(column, mse, path_plots, max_y):
 	plt.xticks(xticks, fontsize=13)
 
 
-	plt.ylim(0, max_y+max_y*0.02)
+	plt.ylim([-(max_y*0.02), max_y+max_y*0.02])
 
 	yticks = np.arange(0, max_y, max_y*0.1)
 	yticks = np.append(yticks, max_y)		

@@ -315,6 +315,8 @@ def main():
         # los_adj = pd.read_csv(r'../T-GCN/data/los_adj.csv', header=None)
         # los_adj = pd.read_csv(r'../T-GCN/data/sz_adj.csv', header=None)
 
+        logging.info('Reading file ...')
+        
         los_adj = pd.read_csv('../out/out-matrices/monitoring-adj.csv', header=None)
         sensor_dist_adj = np.mat(los_adj)
 
@@ -331,7 +333,7 @@ def main():
 
 
         num_nodes, time_len = speed_data.shape
-        print("No. of sensors:", num_nodes, "\nNo of timesteps:", time_len)
+        # print("No. of sensors:", num_nodes, "\nNo of timesteps:", time_len)
 
     
         max_y = np.max(speed_data.max())
@@ -339,22 +341,23 @@ def main():
         # print(max_y)
 
         train_data, test_data = train_test_split(speed_data)
-        print("Train data: ", train_data.shape)
-        print("Test data: ", test_data.shape)
+        logging.info('Train data: %s' % str(train_data.shape))
+        logging.info('Test data: %s' % str(test_data.shape))
 
         
-
+        logging.info('Normalization ...')
         train_scaled, test_scaled = scale_data(train_data, test_data)
 
 
+        logging.info('Sequence preparation ...')
         trainX, trainY, testX, testY = sequence_data_preparation(train_scaled, test_scaled)
-        print('TrainX', trainX.shape)
-        print('TrainY', trainY.shape)
-        print('TestX', testX.shape)
-        print('TestY', testY.shape)
+        # print('TrainX', trainX.shape)
+        # print('TrainY', trainY.shape)
+        # print('TestX', testX.shape)
+        # print('TestY', testY.shape)
 
 
-
+        logging.info('Create RNA GCN_LSTM ...')
         gcn_lstm = GCN_LSTM(
             seq_len=SEQ_LEN,
             adj=sensor_dist_adj,
@@ -370,6 +373,8 @@ def main():
 
         model.compile(optimizer="adam", loss="mae", metrics=["mse"])
 
+
+        logging.info('Fit ...')
         history = model.fit(
             trainX,
             trainY,
@@ -380,19 +385,19 @@ def main():
             validation_data=(testX, testY),
         )
 
-        model.summary()
+        logging.info(model.summary())
 
 
-        print(
-            "Train loss: ",
-            history.history["loss"][-1],
-            "\nTest loss:",
-            history.history["val_loss"][-1],
-            "\nTrain mse: ",
-            history.history["mse"][-1],
-            "\nTest mse:",
-            history.history["val_mse"][-1],
-        )
+        # print(
+        #     "Train loss: ",
+        #     history.history["loss"][-1],
+        #     "\nTest loss:",
+        #     history.history["val_loss"][-1],
+        #     "\nTrain mse: ",
+        #     history.history["mse"][-1],
+        #     "\nTest mse:",
+        #     history.history["val_mse"][-1],
+        # )
 
         # print(history.history.keys())
 
