@@ -74,22 +74,24 @@ def sequence_data_preparation(train_data, test_data):
 
 
 def init():
-    
     filename = inspect.getframeinfo(inspect.currentframe()).filename
     path = os.path.dirname(os.path.abspath(filename))
 
+
+    path_date = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
+
     path_plots = path + '/plots'
-    path_data = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
-    path_plots = os.path.join(path_plots, path_data)
+    path_plots = os.path.join(path_plots, path_date)
     if not os.path.exists(path_plots):
         os.makedirs(path_plots)
 
     path_outs = path + '/outs'
+    path_outs = os.path.join(path_outs, path_date)
     if not os.path.exists(path_outs):
         os.makedirs(path_outs)
-    else:
-        shutil.rmtree(path_outs)
-        os.makedirs(path_outs)
+    # else:
+    #   shutil.rmtree(path_outs)
+    #   os.makedirs(path_outs)
     
     return path_outs, path_plots
 
