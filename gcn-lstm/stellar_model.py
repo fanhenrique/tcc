@@ -147,7 +147,7 @@ def plot_prediction(column, true, prediction, path_plots, name, max_y):
     plt.plot(true, "b-", label="verdadeiro")
     plt.plot(prediction, "r-", label="predição")
     plt.xlabel("Snapshots", fontsize=15)
-    plt.ylabel("Média da quantidade de pares", fontsize=15)
+    plt.ylabel("Quantidade de pares", fontsize=15)
     plt.legend(loc="best", fontsize=15)
     plt.title('Predição RNA - Teste')
     plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
@@ -549,10 +549,6 @@ def main():
 
         max_y = np.max(df_mse.max())
 
-        print(max_y)
-
-
-
         mean_mse = []
         for column in df_mse:
 
@@ -562,18 +558,6 @@ def main():
 
             mean_mse.append(np.mean(df_mse[column]))                
         
-            # mean_mse.append(np.mean(mse))
-
-        
-
-        # mse = 
- 
-        # np.savetxt(path_outs+'/mse_mean.csv', mse)
-
-        # plot_mse('mean', mse, path_plots)
-
-        # mean_mse.append(np.mean(mse))
-
 
         np.savetxt(path_outs+'/mean_mse.csv', mean_mse)
 
