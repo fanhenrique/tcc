@@ -19,6 +19,8 @@ from statsmodels.tsa.arima.model import ARIMA
 
 TRAIN_RATE = 0.8
 
+CUT_AXIS = 8
+
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -36,18 +38,21 @@ def init():
 	filename = inspect.getframeinfo(inspect.currentframe()).filename
 	path = os.path.dirname(os.path.abspath(filename))
 
+
+	path_date = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
+
 	path_plots = path + '/plots'
-	path_data = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
-	path_plots = os.path.join(path_plots, path_data)
+	path_plots = os.path.join(path_plots, path_date)
 	if not os.path.exists(path_plots):
 	    os.makedirs(path_plots)
 
 	path_outs = path + '/outs'
+	path_outs = os.path.join(path_outs, path_date)
 	if not os.path.exists(path_outs):
 	    os.makedirs(path_outs)
-	else:
-		shutil.rmtree(path_outs)
-		os.makedirs(path_outs)
+	# else:
+	# 	shutil.rmtree(path_outs)
+	# 	os.makedirs(path_outs)
 	
 	return path_outs, path_plots
 
@@ -68,13 +73,15 @@ def plot_autocorrelation(column, data, path_plots):
 	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation')
 	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.svg', format='svg')
 	# plt.show()
+	plt.cla()
+	plt.clf()
+	plt.close('all')
 
 
 def plot_mse(column, mse, path_plots, max_y):
 	
+	# mse = mse[CUT_AXIS:]
 
-	# mse = mse[8:]
-	
 	## MSE TEST ##
 	plt.figure(figsize=(15,8))
 
@@ -97,13 +104,16 @@ def plot_mse(column, mse, path_plots, max_y):
 	plt.title('ARIMA')
 	plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
 	# plt.show()
+	plt.cla()
+	plt.clf()
+	plt.close('all')
 
 
 def plot_prediction(column, true, prediction, path_plots, name, max_y):
 
 
-	true = true[8:]
-	prediction = prediction[8:]
+	# true = true[CUT_AXIS:]
+	# prediction = prediction[CUT_AXIS:]
 
 
 	## PREDICTION TEST ##
@@ -130,31 +140,9 @@ def plot_prediction(column, true, prediction, path_plots, name, max_y):
 	plt.title('Predição ARIMA - Teste')
 	plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
 	# plt.show()
-
-
-
-
-
-	# ## PREDICTION FULL ##
-	# plt.figure(figsize=(15,8))
-	# plt.plot(data, 'y-', label='data')
-	# plt.plot(train_data, "b-", label="treino")
-	# plt.plot(prediction, "r-", label="predição total")
-	# plt.xlabel("Snapshots", fontsize=15)
-	# plt.ylabel("Quantidade de pares", fontsize=15)
-	# plt.ylim(0, 100)
-	# plt.legend(loc="best", fontsize=15)
-	# plt.savefig(path_plots+'/prediction_full.svg', format='svg')
-	# plt.show()
-
-	# ## MSE FULL ##
-	# mse_full = mean_squared_error(data, prediction)	
-	
-	# plt.figure(figsize=(15,8))
-	# plt.plot(mse_full, 'y-', label='mse')
-	# plt.ylabel('full - mean squared error', fontsize=12)
-	# plt.savefig(path_plots+'/mse_full.svg', format='svg')
-	# plt.show()
+	plt.cla()
+	plt.clf()
+	plt.close('all')
 
 
 def main():
@@ -162,7 +150,7 @@ def main():
 	parser = argparse.ArgumentParser(description='Arima')
 
 	parser.add_argument('--plot', '-p', help='plot mode', action='store_true')
-	parser.add_argument('--mean', '-m', help='main mode', action='store_true')
+	# parser.add_argument('--mean', '-m', help='main mode', action='store_true')
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -196,191 +184,188 @@ def main():
 		
 	# else:
 
-	if args.mean:
+	# if args.mean:
 
 
-		logging.info('Reading file ...')
-		df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
+	logging.info('Reading file ...')
+	df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
+
+	
+	df[df.shape[1]] = df.mean(axis=1)
+
+
+	# result = adfuller(df['mean'].dropna())
+	# print('ADF Statistic: %f' % result[0])
+	# print('p-value: %f' % result[1])
+
+	# print('adf %d' % ndiffs(df['mean'], test='adf'))
+	# print('kpss %d' % ndiffs(df['mean'], test='kpss'))
+	# print('pp %d' % ndiffs(df['mean'], test='pp'))
+
+
+	max_y_data = np.max(df.max())
+
+
+	
+	df_mse = pd.DataFrame()
+	
+	logging.info('Start prediction ARIMA\n\
+		          Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
+
+
+	for column in df:
+		
+		data = df[column].to_numpy()
+		train_data, test_data = train_test_split(data)
+		# print("Train data: ", train_data.shape)
+		# print("Test data: ", test_data.shape)
+		
+
+		# prediction = []
+		history = [x for x in train_data]
+
+		# inicia Walk-Forward
+		logging.info('Tracker %s walk-forward ...' % column)
+		for t in range(test_data.shape[0]):
+	  
+			model = ARIMA(history, order=(1,0,1))
+			
+			model_fit = model.fit()
+
+			# predict_value = model_fit.forecast()[0]
+
+			# prediction.append(predict_value)
+
+			real_value = test_data[t]
+
+			# history.append(prediction[t])
+			history.append(real_value)
+
+
+			# print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
+
+		logging.info('End tracker %d' % column)
+		predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
+		train_predictions, test_predictions = train_test_split(predictions)	
+
+
+		logging.info('Plot prediction tracker %d' % column)
+		plot_autocorrelation(column, data, path_plots)
+		plot_prediction(column, test_data[CUT_AXIS:], test_predictions[CUT_AXIS:], path_plots, 'prediction_test', max_y_data)
+		np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
+		plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y_data)
+
+
+		logging.info('Calculate MSE tracker %d' % column)
+		mse = np.array(mean_squared_error(test_data, test_predictions))[CUT_AXIS:]
+		df_mse[column] = mse
+
+
+	logging.info('End prediction ARIMA')
+		
+
+
+
+	logging.info('Plots MSE')
+	mean_mse = []
+	max_y_mse = np.max(df_mse.max())
+	for column in df_mse:
+		plot_mse(column, df_mse[column], path_plots, max_y_mse)
+		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
+
+		mean_mse.append(np.mean(df_mse[column]))
+	np.savetxt(path_outs+'/mean.csv', mean_mse)
+
+
+	logging.info('plots directory: %s' % path_plots)
+	logging.info('outputs directory: %s' % path_outs)
+
+	# else:
+
+	# 	logging.info('Reading file ...')
+	# 	df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 
 		
-		df[df.shape[1]] = df.mean(axis=1)
+	# 	# df[df.shape[1]] = df.mean(axis=1)
 	
 
-		# result = adfuller(df['mean'].dropna())
-		# print('ADF Statistic: %f' % result[0])
-		# print('p-value: %f' % result[1])
+	# 	# result = adfuller(df['mean'].dropna())
+	# 	# print('ADF Statistic: %f' % result[0])
+	# 	# print('p-value: %f' % result[1])
 
-		# print('adf %d' % ndiffs(df['mean'], test='adf'))
-		# print('kpss %d' % ndiffs(df['mean'], test='kpss'))
-		# print('pp %d' % ndiffs(df['mean'], test='pp'))
-
-
-		max_y = np.max(df.max())
+	# 	# print('adf %d' % ndiffs(df['mean'], test='adf'))
+	# 	# print('kpss %d' % ndiffs(df['mean'], test='kpss'))
+	# 	# print('pp %d' % ndiffs(df['mean'], test='pp'))
 
 
-		mean_mse = []
-		df_mse = pd.DataFrame()
+	# 	max_y = np.max(df.max())
+
+
+	# 	mean_mse = []
+	# 	df_mse = pd.DataFrame()
 		
-		logging.info('Start prediction ARIMA\n\
-			  Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
+	# 	logging.info('Start prediction ARIMA\n\
+	# 		  Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
 	
 
-		for column in df:
+
+	# 	df_test_true = pd.DataFrame()
+	# 	df_test_pred = pd.DataFrame()
+
+	# 	for column in df:
 			
-			data = df[column].to_numpy()
-			train_data, test_data = train_test_split(data)
-			# print("Train data: ", train_data.shape)
-			# print("Test data: ", test_data.shape)
+	# 		data = df[column].to_numpy()
+	# 		train_data, test_data = train_test_split(data)
+	# 		# print("Train data: ", train_data.shape)
+	# 		# print("Test data: ", test_data.shape)
 			
 
-			# prediction = []
-			history = [x for x in train_data]
+	# 		# prediction = []
+	# 		history = [x for x in train_data]
 
-			# inicia Walk-Forward
-			logging.info('Tracker %s walk-forward ...' % column)
-			for t in range(test_data.shape[0]):
+	# 		# inicia Walk-Forward
+	# 		logging.info('Tracker %s walk-forward ...' % column)
+	# 		for t in range(test_data.shape[0]):
 		  
-				model = ARIMA(history, order=(1,0,1))
+	# 			model = ARIMA(history, order=(1,0,1))
 				
-				model_fit = model.fit()
+	# 			model_fit = model.fit()
 
-				# predict_value = model_fit.forecast()[0]
+	# 			# predict_value = model_fit.forecast()[0]
 
-				# prediction.append(predict_value)
+	# 			# prediction.append(predict_value)
 
-				real_value = test_data[t]
+	# 			real_value = test_data[t]
 
-				# history.append(prediction[t])
-				history.append(real_value)
-
-
-				# print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
-
-			logging.info('End tracker %d' % column)
-			predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
-			train_predictions, test_predictions = train_test_split(predictions)	
+	# 			# history.append(prediction[t])
+	# 			history.append(real_value)
 
 
-			logging.info('Plot prediction tracker %d' % column)
-			# plot_autocorrelation(column, data, path_plots)
-			plot_prediction(column, test_data, test_predictions, path_plots, 'prediction_test', max_y)
-			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
-			# plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y)
+	# 			# print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
+
+	# 		logging.info('End tracker %d' % column)
+	# 		predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
+	# 		train_predictions, test_predictions = train_test_split(predictions)	
+
+
+	# 		logging.info('Plot prediction tracker %d' % column)
+	# 		# plot_autocorrelation(column, data, path_plots)
+	# 		plot_prediction(column, test_data, test_predictions, path_plots, 'prediction_test', max_y)
+	# 		np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
+	# 		# plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y)
+
+
+	# 		logging.info('Calculate MSE tracker %d' % column)
+	# 		mse = np.array(mean_squared_error(test_data, test_predictions))
+	# 		df_mse[column] = mse
 
 
 
-
-			logging.info('Calculate MSE tracker %d' % column)
-			mse = np.array(mean_squared_error(test_data, test_predictions))
-			df_mse[column] = mse
-
-
-		logging.info('End prediction ARIMA')
-			
-		
-	
-
-		logging.info('Plots MSE')
-		max_y_mse = np.max(df_mse.max())
-		for column in df_mse:
-			plot_mse(column, df_mse[column], path_plots, max_y_mse)
-			np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
-
-			mean_mse.append(np.mean(df_mse[column]))
-		np.savetxt(path_outs+'/mean.csv', mean_mse)
-
-		
-
-
-		logging.info('plots directory: %s' % path_plots)
-		logging.info('outputs directory: %s' % path_outs)
-
-	else:
-
-		logging.info('Reading file ...')
-		df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
-
-		
-		# df[df.shape[1]] = df.mean(axis=1)
-	
-
-		# result = adfuller(df['mean'].dropna())
-		# print('ADF Statistic: %f' % result[0])
-		# print('p-value: %f' % result[1])
-
-		# print('adf %d' % ndiffs(df['mean'], test='adf'))
-		# print('kpss %d' % ndiffs(df['mean'], test='kpss'))
-		# print('pp %d' % ndiffs(df['mean'], test='pp'))
-
-
-		max_y = np.max(df.max())
-
-
-		mean_mse = []
-		df_mse = pd.DataFrame()
-		
-		logging.info('Start prediction ARIMA\n\
-			  Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
-	
-
-
-		df_test_true = pd.DataFrame()
-		df_test_pred = pd.DataFrame()
-
-		for column in df:
-			
-			data = df[column].to_numpy()
-			train_data, test_data = train_test_split(data)
-			# print("Train data: ", train_data.shape)
-			# print("Test data: ", test_data.shape)
+	# 		df_test_true[column] = test_data	
+	# 		df_test_pred[column] = test_predictions
 			
 
-			# prediction = []
-			history = [x for x in train_data]
-
-			# inicia Walk-Forward
-			logging.info('Tracker %s walk-forward ...' % column)
-			for t in range(test_data.shape[0]):
-		  
-				model = ARIMA(history, order=(1,0,1))
-				
-				model_fit = model.fit()
-
-				# predict_value = model_fit.forecast()[0]
-
-				# prediction.append(predict_value)
-
-				real_value = test_data[t]
-
-				# history.append(prediction[t])
-				history.append(real_value)
-
-
-				# print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
-
-			logging.info('End tracker %d' % column)
-			predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
-			train_predictions, test_predictions = train_test_split(predictions)	
-
-
-			logging.info('Plot prediction tracker %d' % column)
-			# plot_autocorrelation(column, data, path_plots)
-			plot_prediction(column, test_data, test_predictions, path_plots, 'prediction_test', max_y)
-			np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
-			# plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y)
-
-
-			logging.info('Calculate MSE tracker %d' % column)
-			mse = np.array(mean_squared_error(test_data, test_predictions))
-			df_mse[column] = mse
-
-
-
-			df_test_true[column] = test_data	
-			df_test_pred[column] = test_predictions
-			
-
-		logging.info('End prediction ARIMA')
+	# 	logging.info('End prediction ARIMA')
 			
 		
 
@@ -388,43 +373,56 @@ def main():
 
 		
 
-		# df_test_true = df
-		column_mean = df.shape[1]
-		df_test_true[column_mean] = df_test_true.mean(axis=1)
-		df_test_pred[column_mean] = df_test_pred.mean(axis=1)
+	# 	# df_test_true = df
+	# 	column_mean = df.shape[1]
+	# 	df_test_true[column_mean] = df_test_true.mean(axis=1)
+	# 	df_test_pred[column_mean] = df_test_pred.mean(axis=1)
 
-		print(df_test_true)
-		print(df_test_pred)
-
-
-		mean_true = df_test_true[column_mean].to_numpy()
-		mean_pred = df_test_pred[column_mean].to_numpy()
-
-		plot_prediction(column_mean, mean_true, mean_pred, path_plots, 'prediction_test', max_y)
-		np.savetxt(path_outs+'/prediction_'+str(column_mean)+'.csv', mean_pred)
+	# 	print(df_test_true)
+	# 	print(df_test_pred)
 
 
-		mse = np.array(mean_squared_error(mean_true, mean_pred))
-		df_mse[column_mean] = mse
+	# 	mean_true = df_test_true[column_mean].to_numpy()
+	# 	mean_pred = df_test_pred[column_mean].to_numpy()
+
+	# 	plot_prediction(column_mean, mean_true, mean_pred, path_plots, 'prediction_test', max_y)
+	# 	np.savetxt(path_outs+'/prediction_'+str(column_mean)+'.csv', mean_pred)
 
 
+	# 	mse = np.array(mean_squared_error(mean_true, mean_pred))
+	# 	df_mse[column_mean] = mse
 
 
 
-		logging.info('Plots MSE')
-		max_y_mse = np.max(df_mse.max())
-		for column in df_mse:
-			plot_mse(column, df_mse[column], path_plots, max_y_mse)
-			np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
 
-			mean_mse.append(np.mean(df_mse[column]))
-		np.savetxt(path_outs+'/mean.csv', mean_mse)
+
+	# 	logging.info('Plots MSE')
+	# 	max_y_mse = np.max(df_mse.max())
+	# 	for column in df_mse:
+	# 		plot_mse(column, df_mse[column], path_plots, max_y_mse)
+	# 		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
+
+	# 		mean_mse.append(np.mean(df_mse[column]))
+	# 	np.savetxt(path_outs+'/mean.csv', mean_mse)
 
 		
 
 
-		logging.info('plots directory: %s' % path_plots)
-		logging.info('outputs directory: %s' % path_outs)
+	# 	logging.info('plots directory: %s' % path_plots)
+	# 	logging.info('outputs directory: %s' % path_outs)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 		# exit()
