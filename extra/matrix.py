@@ -25,7 +25,7 @@ print(a)
 
 print(a.shape)
 
-with open('out/out_matrices/monitoring_adj.csv', 'w') as file:
+with open('../out/out-matrices/monitoring-adj.csv', 'w') as file:
 	for i in range(a.shape[0]):
 		for j in range(a.shape[1]-1):
 			file.write(str(a[i,j])+',')				
@@ -41,7 +41,7 @@ with open('out/out_matrices/monitoring_adj.csv', 'w') as file:
 
 
 
-with open('out/out_matrices/monitoring_weigths.csv', 'w') as file:
+with open('../out/out-matrices/monitoring-weigths.csv', 'w') as file:
 	for i in range(int(int(sys.argv[2]))):
 		for j in range(int(sys.argv[1])-1):
 			file.write(str(random.randint(98,100))+',')
@@ -83,5 +83,5 @@ with open('out/out_matrices/monitoring_weigths.csv', 'w') as file:
 # 		file.write(str(random.randint(2900,3000))+'\n')
 
 
-print('update: out/out_matrices/monitoring_adj.csv')
-print('update: out/out_matrices/monitoring_weigths.csv')
+print('update: out/out_matrices/monitoring-adj.csv')
+print('update: out/out_matrices/monitoring-weigths.csv')
