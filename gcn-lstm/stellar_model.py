@@ -281,9 +281,10 @@ def main():
 
     model.compile(optimizer="adam", loss="mae", metrics=["mse"])
 
+
+    logging.info('Fit ...')
     times = []
     start_time = time.time()
-    logging.info('Fit ...')
     history = model.fit(
         trainX,
         trainY,
@@ -296,7 +297,9 @@ def main():
 
     end_time = time.time()
 
-    np.savetxt(path_outs+'/times.csv', times)
+    times.append(end_time-start_time)
+
+    np.savetxt(path_outs+'/times.csv', times, fmt='%.5f')
 
     # print(model.summary())
 
