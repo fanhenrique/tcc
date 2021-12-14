@@ -132,6 +132,8 @@ def plot_mse(column, mse, path_plots, max_y):
 
 def plot_prediction(column, true, prediction, path_plots, name, max_y):
 
+    max_y = 216.0
+
     ## PREDICTION TEST ##
     plt.figure(figsize=(15,8))
 
