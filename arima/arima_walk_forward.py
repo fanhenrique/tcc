@@ -6,6 +6,7 @@ import inspect
 import os
 from datetime import datetime
 import shutil
+import time
 
 import argparse
 import logging
@@ -212,8 +213,11 @@ def main():
 	logging.info('Start prediction ARIMA\n\
 		          Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
 
+	times = []
 
 	for column in df:
+
+		start_time = time.time()
 		
 		data = df[column].to_numpy()
 		train_data, test_data = train_test_split(data)
@@ -228,6 +232,8 @@ def main():
 		logging.info('Tracker %s walk-forward ...' % column)
 		for t in range(test_data.shape[0]):
 	  
+
+
 			model = ARIMA(history, order=(1,0,1))
 			
 			model_fit = model.fit()
@@ -241,8 +247,11 @@ def main():
 			# history.append(prediction[t])
 			history.append(real_value)
 
-
 			# print('%s %d predito=%.3f, esperado=%3.f' % (column, t, valor_predito, valor_real))
+
+		end_time = time.time()
+
+		times.append(end_time-start_time)
 
 		logging.info('End tracker %d' % column)
 		predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
@@ -263,7 +272,7 @@ def main():
 
 	logging.info('End prediction ARIMA')
 		
-
+	np.savetxt(path_outs+'/times.csv', times, fmt='%.5f')
 
 
 	logging.info('Plots MSE')
