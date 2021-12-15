@@ -15,7 +15,7 @@ def main():
 	
 	adj = np.ones(shape=(len(sys.argv)-1, len(sys.argv)-1), dtype=int)
 
-	np.fill_diagonal(adj, 0)
+	np.fill_diagonal(np.flipud(adj), 0)
 
 	print(adj)
 
