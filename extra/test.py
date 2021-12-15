@@ -8,6 +8,10 @@ def main():
 
 	los_speed = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 
+
+	print(los_adj)
+	print(los_speed)
+
 	
 	adj = np.ones(shape=(len(sys.argv)-1, len(sys.argv)-1), dtype=int)
 
@@ -23,8 +27,8 @@ def main():
 	print(weigths)
 
 
-	np.savetxt('../out/out-matrices/monitoring-adj.csv', adj, fmt='%d')	
-	np.savetxt('../out/out-matrices/monitoring-weigths.csv', weigths, fmt='%d')	
+	np.savetxt('../out/out-matrices/monitoring-adj.csv', adj, delimiter=',', fmt='%d')	
+	np.savetxt('../out/out-matrices/monitoring-weigths.csv', weigths, delimiter=',', fmt='%d')	
 
 
 
