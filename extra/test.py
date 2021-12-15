@@ -9,9 +9,18 @@ def main():
 	los_speed = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
 
 	
-	adj = [int(sys.argv[1])]
+	adj = np.ones(shape=(len(sys.argv)-1, len(sys.argv)-1), dtype=int)
 
-	weigths = los_speed[int(sys.argv[2])]
+	np.fill_diagonal(adj, 0)
+
+	print(adj)
+
+
+	weigths = pd.DataFrame()
+	for i in range(1,len(sys.argv)):
+		weigths[i] = los_speed[int(sys.argv[i])]
+
+	print(weigths)
 
 
 	np.savetxt('../out/out-matrices/monitoring-adj.csv', adj, fmt='%d')	
