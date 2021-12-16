@@ -23,8 +23,8 @@ from stellargraph.layer import GCN_LSTM
 
 
 TRAIN_RATE = 0.8
-SEQ_LEN = 1
-PRE_LEN = 1
+SEQ_LEN = 7
+PRE_LEN = 2
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
