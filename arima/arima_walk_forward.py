@@ -272,7 +272,7 @@ def main():
 
 	logging.info('End prediction ARIMA')
 		
-	np.savetxt(path_outs+'/times.csv', times, fmt='%.5f')
+	np.savetxt(path_outs+'/times.csv', times, fmt='%.8f')
 
 
 	logging.info('Plots MSE')
@@ -280,10 +280,10 @@ def main():
 	max_y_mse = np.max(df_mse.max())
 	for column in df_mse:
 		plot_mse(column, df_mse[column], path_plots, max_y_mse)
-		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.5f')
+		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')
 
 		mean_mse.append(np.mean(df_mse[column]))
-	np.savetxt(path_outs+'/mean.csv', mean_mse)
+	np.savetxt(path_outs+'/mean.csv', mean_mse, fmt='%.8f')
 
 
 	logging.info('plots directory: %s' % path_plots)
