@@ -280,7 +280,7 @@ def main():
 	max_y_mse = np.max(df_mse.max())
 	for column in df_mse:
 		plot_mse(column, df_mse[column], path_plots, max_y_mse)
-		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column])
+		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.5f')
 
 		mean_mse.append(np.mean(df_mse[column]))
 	np.savetxt(path_outs+'/mean.csv', mean_mse)
