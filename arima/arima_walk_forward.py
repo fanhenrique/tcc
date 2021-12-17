@@ -20,7 +20,7 @@ from statsmodels.tsa.arima.model import ARIMA
 
 TRAIN_RATE = 0.8
 
-CUT_AXIS = 8
+CUT_AXIS = 0
 
 
 DEFAULT_LOG_LEVEL = logging.INFO
