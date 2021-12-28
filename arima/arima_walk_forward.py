@@ -80,7 +80,7 @@ def plot_autocorrelation(column, data, path_plots):
 	plt.close('all')
 
 
-def plot_mse(column, mse, path_plots, max_y):
+def plot_mse(column, mse, path_plots, title, max_y):
 	
 	# mse = mse[CUT_AXIS:]
 
@@ -103,7 +103,7 @@ def plot_mse(column, mse, path_plots, max_y):
 
 	plt.plot(mse, 'y-', label='mse')
 	plt.ylabel('mean squared error', fontsize=12)
-	plt.title('ARIMA')
+	plt.title(title)
 	plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
 	plt.savefig(path_plots+'/mse_'+str(column)+'.png', format='png')
 	# plt.show()
@@ -112,7 +112,7 @@ def plot_mse(column, mse, path_plots, max_y):
 	plt.close('all')
 
 
-def plot_prediction(column, true, prediction, path_plots, name, max_y):
+def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
 
 
 	# true = true[CUT_AXIS:]
@@ -140,7 +140,7 @@ def plot_prediction(column, true, prediction, path_plots, name, max_y):
 	plt.xlabel("Snapshots", fontsize=15)
 	plt.ylabel("Quantidade de pares", fontsize=15)
 	plt.legend(loc="best", fontsize=15)
-	plt.title('Predição ARIMA - Teste')
+	plt.title(title)
 	plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
 	plt.savefig(path_plots+'/'+name+'_'+str(column)+'.png', format='png')
 	# plt.show()
@@ -263,9 +263,9 @@ def main():
 
 		logging.info('Plot prediction tracker %d' % column)
 		plot_autocorrelation(column, data, path_plots)
-		plot_prediction(column, test_data[CUT_AXIS:], test_predictions[CUT_AXIS:], path_plots, 'prediction_test', max_y_data)
+		plot_prediction(column, test_data[CUT_AXIS:], test_predictions[CUT_AXIS:], path_plots, 'prediction_test', 'Predição RNA tracker '+str(column)+' - Teste', max_y_data)
 		np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
-		plot_prediction(column, data, predictions, path_plots, 'prediction_all', max_y_data)
+		plot_prediction(column, data, predictions, path_plots, 'prediction_all', 'Predição RNA tracker '+str(column)+' - S1', max_y_data)
 
 
 		logging.info('Calculate MSE tracker %d' % column)
@@ -282,7 +282,7 @@ def main():
 	mean_mse = []
 	max_y_mse = np.max(df_mse.max())
 	for column in df_mse:
-		plot_mse(column, df_mse[column], path_plots, max_y_mse)
+		plot_mse(column, df_mse[column], path_plots, 'Erro Médio Quadrático RNA tracker '+str(column)+' - Teste', max_y_mse)
 		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')
 
 		mean_mse.append(np.mean(df_mse[column]))

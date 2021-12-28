@@ -429,7 +429,7 @@ def main():
     ### Respostas da RNA ###
     for i in range(test_rescref.shape[1]):
         logging.info('Plot prediction tracker %d' % i)
-        plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', 'Predição RNA tracker '+i+' - Teste', max_y)
+        plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', 'Predição RNA tracker '+str(i)+' - Teste', max_y)
         np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
 
@@ -457,35 +457,32 @@ def main():
 
 
 
+    df_mse = pd.DataFrame()
+    for i in range(test_rescref.shape[1]):
+        logging.info('Calculate MSE tracker %d' % i)
+        mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
+        
+        df_mse[i] = mse
+
+    df_mse[df_mse.shape[1]] = np.array(mean_squared_error(mean_true, mean_pred))
+
+
+
     logging.info('Plots MSE')
 
     max_y = np.max(df_mse.max())
 
     mean_mse = []
-    # df_mse = pd.DataFrame()
-    for i in range(test_rescref.shape[1]):
-        logging.info('Calculate MSE tracker %d' % i)
-        mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
-        
-        plot_mse(i, mse, path_plots, 'Erro Médio Quadrático RNA tracker '+i+' - Teste', max_y)
+    for column in df_mse:
+
+        plot_mse(column, df_mse[column], path_plots, 'Erro Médio Quadrático RNA tracker '+str(column)+' - Teste', max_y)
        
-        np.savetxt(path_outs+'/mse_'+str(i)+'.csv', mse, fmt='%.8f')
+        np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')
 
-        mean_mse.append(np.mean(mse))               
+        mean_mse.append(np.mean(df_mse[column]))                
+    
 
-
-
-    mse = np.array(mean_squared_error(mean_true, mean_pred))
-    plot_mse(speed_data.shape[0], mse, path_plots, 'Erro Médio Quadrático RNA média dos trackers - Teste', max_y)
-    np.savetxt(path_outs+'/mse_'+str(speed_data.shape[0])+'.csv', mse, fmt='%.8f')
-
-
-    mean_mse.append(np.mean(mse))
     np.savetxt(path_outs+'/mean.csv', mean_mse, fmt='%.8f')
-
-
-
-
 
         
     logging.info('plots directory: %s' % path_plots)
