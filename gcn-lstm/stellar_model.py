@@ -302,7 +302,7 @@ def main():
 
     times.append(end_time-start_time)
 
-    np.savetxt(path_outs+'/times.csv', times, fmt='%.5f')
+    np.savetxt(path_outs+'/times.csv', times, fmt='%.8f')
 
     # print(model.summary())
 
@@ -477,12 +477,12 @@ def main():
 
         plot_mse(column, df_mse[column], path_plots, max_y)
        
-        np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.5f')
+        np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')
 
         mean_mse.append(np.mean(df_mse[column]))                
     
 
-    np.savetxt(path_outs+'/mean.csv', mean_mse)
+    np.savetxt(path_outs+'/mean.csv', mean_mse, fmt='%.8f')
 
         
     logging.info('plots directory: %s' % path_plots)
