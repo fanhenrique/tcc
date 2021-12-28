@@ -101,7 +101,7 @@ def mean_squared_error(data, prediction):
     return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
 
-def plot_mse(column, mse, path_plots, max_y):
+def plot_mse(column, mse, path_plots, title, max_y):
     
     ## MSE TEST ##
     
@@ -123,7 +123,7 @@ def plot_mse(column, mse, path_plots, max_y):
 
     plt.plot(mse, 'y-', label='mse')
     plt.ylabel('mean squared error', fontsize=12)
-    plt.title('RNA')
+    plt.title(title)
     plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
     plt.savefig(path_plots+'/mse_'+str(column)+'.png', format='png')
     # plt.show()
@@ -132,7 +132,7 @@ def plot_mse(column, mse, path_plots, max_y):
     plt.close('all')
 
 
-def plot_prediction(column, true, prediction, path_plots, name, max_y):
+def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
 
     max_y = 216.0
 
@@ -158,7 +158,7 @@ def plot_prediction(column, true, prediction, path_plots, name, max_y):
     plt.xlabel("Snapshots", fontsize=15)
     plt.ylabel("Quantidade de pares", fontsize=15)
     plt.legend(loc="best", fontsize=15)
-    plt.title('Predição RNA - Teste')
+    plt.title(title)
     plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
     plt.savefig(path_plots+'/'+name+'_'+str(column)+'.png', format='png')
     # plt.show()
@@ -429,7 +429,7 @@ def main():
     ### Respostas da RNA ###
     for i in range(test_rescref.shape[1]):
         logging.info('Plot prediction tracker %d' % i)
-        plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', max_y)
+        plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', 'Predição RNA tracker '+i+' - Teste', max_y)
         np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
 
@@ -449,22 +449,11 @@ def main():
 
 
     logging.info('Plot prediction mean')
-    plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test', max_y)
+    plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test', 'Predição RNA média dos trackers - Teste', max_y)
     np.savetxt(path_outs+'/prediction_'+str(speed_data.shape[0])+'.csv', mean_pred)
 
 
 
-
-
-
-    df_mse = pd.DataFrame()
-    for i in range(test_rescref.shape[1]):
-        logging.info('Calculate MSE tracker %d' % i)
-        mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
-        
-        df_mse[i] = mse
-
-    df_mse[df_mse.shape[1]] = np.array(mean_squared_error(mean_true, mean_pred))
 
 
 
@@ -473,16 +462,30 @@ def main():
     max_y = np.max(df_mse.max())
 
     mean_mse = []
-    for column in df_mse:
-
-        plot_mse(column, df_mse[column], path_plots, max_y)
+    # df_mse = pd.DataFrame()
+    for i in range(test_rescref.shape[1]):
+        logging.info('Calculate MSE tracker %d' % i)
+        mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
+        
+        plot_mse(i, mse, path_plots, 'Erro Médio Quadrático RNA tracker '+i+' - Teste', max_y)
        
-        np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')
+        np.savetxt(path_outs+'/mse_'+str(i)+'.csv', mse, fmt='%.8f')
 
-        mean_mse.append(np.mean(df_mse[column]))                
-    
+        mean_mse.append(np.mean(mse))               
 
+
+
+    mse = np.array(mean_squared_error(mean_true, mean_pred))
+    plot_mse(speed_data.shape[0], mse, path_plots, 'Erro Médio Quadrático RNA média dos trackers - Teste', max_y)
+    np.savetxt(path_outs+'/mse_'+str(speed_data.shape[0])+'.csv', mse, fmt='%.8f')
+
+
+    mean_mse.append(np.mean(mse))
     np.savetxt(path_outs+'/mean.csv', mean_mse, fmt='%.8f')
+
+
+
+
 
         
     logging.info('plots directory: %s' % path_plots)
