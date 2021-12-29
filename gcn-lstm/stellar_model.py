@@ -436,7 +436,9 @@ def main():
      ### Respostas da RNA ###
     for i in range(train_rescref.shape[1]):
         logging.info('Plot all prediction tracker %d' % i)
-        plot_prediction(i, train_rescref[:, i].extend(test_rescref[:, i]), train_rescpred[:, i].extend(test_rescpred[:, i]), path_plots, 'prediction_all', 'Predição RNA tracker '+str(i)+' - S1', max_y)
+        pred = np.concatenate((train_rescref[:, i], test_rescref[:, i]))
+        ref = np.concatenate((train_rescref[:, i], test_rescref[:, i]))
+        plot_prediction(i, ref, pred, path_plots, 'prediction_all', 'Predição RNA tracker '+str(i)+' - S1', max_y)
 
 
 
