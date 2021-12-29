@@ -433,6 +433,11 @@ def main():
         np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
 
+     ### Respostas da RNA ###
+    for i in range(train_rescref.shape[1]):
+        logging.info('Plot prediction tracker %d' % i)
+        plot_prediction(i, train_rescref[:, i], train_rescpred[:, i], path_plots, 'prediction_all', 'Predição RNA tracker '+str(i)+' - S1', max_y)
+
 
 
 
