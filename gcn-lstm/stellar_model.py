@@ -426,18 +426,18 @@ def main():
 
 
     
-    ### Respostas da RNA ###
+    ### PREDICTION TEST ###
     for i in range(test_rescref.shape[1]):
         logging.info('Plot test prediction tracker %d' % i)
         plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', 'Predição RNA tracker '+str(i)+' - Teste', max_y)
         np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
 
-     ### Respostas da RNA ###
+     ### PREDICTION ALL DATASET ###
     for i in range(train_rescref.shape[1]):
         logging.info('Plot all prediction tracker %d' % i)
-        pred = np.concatenate((train_rescref[:, i], test_rescref[:, i]))
         ref = np.concatenate((train_rescref[:, i], test_rescref[:, i]))
+        pred = np.concatenate((train_rescpred[:, i], test_rescpred[:, i]))
         plot_prediction(i, ref, pred, path_plots, 'prediction_all', 'Predição RNA tracker '+str(i)+' - S1', max_y)
 
 
