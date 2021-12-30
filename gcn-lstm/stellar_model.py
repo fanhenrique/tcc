@@ -85,6 +85,7 @@ def init():
     path_plots = os.path.join(path_plots, path_date)
     if not os.path.exists(path_plots):
         os.makedirs(path_plots)
+        os.makedirs(path_plots+'/png')
 
     path_outs = path + '/outs'
     path_outs = os.path.join(path_outs, path_date)
@@ -125,7 +126,7 @@ def plot_mse(column, mse, path_plots, title, max_y):
     plt.ylabel('mean squared error', fontsize=12)
     plt.title(title)
     plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
-    plt.savefig(path_plots+'/mse_'+str(column)+'.png', format='png')
+    plt.savefig(path_plots+'/png/mse_'+str(column)+'.png', format='png')
     # plt.show()
     plt.cla()
     plt.clf()
@@ -160,7 +161,7 @@ def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
     plt.legend(loc="best", fontsize=15)
     plt.title(title)
     plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
-    plt.savefig(path_plots+'/'+name+'_'+str(column)+'.png', format='png')
+    plt.savefig(path_plots+'/png/'+name+'_'+str(column)+'.png', format='png')
     # plt.show()
     plt.cla()
     plt.clf()
@@ -177,7 +178,7 @@ def plot_mse_validation(mse, val_mse, path_plots):
     plt.ylabel("Erro quadrático médio", fontsize=12)
     plt.legend(loc="best", fontsize=15)
     plt.savefig(path_plots+'/mse_validation.svg', format='svg')
-    plt.savefig(path_plots+'/mse_validation.png', format='png')
+    plt.savefig(path_plots+'/png/mse_validation.png', format='png')
     # plt.show()
     plt.cla()
     plt.clf()
