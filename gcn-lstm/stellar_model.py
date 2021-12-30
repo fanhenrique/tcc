@@ -456,7 +456,7 @@ def main():
 
 
     logging.info('Plot prediction mean')
-    plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test', 'Predição RNA média dos trackers - Teste', max_y)
+    plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test', 'Predição RNA trackers '+str(speed_data.shape[0])+' - Teste', max_y)
     np.savetxt(path_outs+'/prediction_'+str(speed_data.shape[0])+'.csv', mean_pred)
 
 
