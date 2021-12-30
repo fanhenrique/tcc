@@ -134,7 +134,7 @@ def plot_mse(column, mse, path_plots, title, max_y):
 
 def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
 
-    max_y = 216.0
+    # max_y = 216.0
 
     ## PREDICTION TEST ##
     plt.figure(figsize=(15,8))
@@ -304,7 +304,7 @@ def main():
 
     np.savetxt(path_outs+'/times.csv', times, fmt='%.8f')
 
-    # print(model.summary())
+    print(model.summary())
 
 
     # print(
@@ -418,9 +418,9 @@ def main():
     loss = history.history['loss']
     val_loss = history.history['val_loss']
 
-
     mse = history.history['mse']
     val_mse = history.history['val_mse']
+
     plot_mse_validation(mse, val_mse, path_plots)
 
 
