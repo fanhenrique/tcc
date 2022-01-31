@@ -220,7 +220,6 @@ def main():
 
 	for column in df:
 
-		start_time = time.time()
 		
 		data = df[column].to_numpy()
 		train_data, test_data = train_test_split(data)
@@ -230,6 +229,8 @@ def main():
 
 		# prediction = []
 		history = [x for x in train_data]
+
+		start_time = time.time()
 
 		# inicia Walk-Forward
 		logging.info('Tracker %s walk-forward ...' % column)

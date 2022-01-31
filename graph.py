@@ -238,8 +238,9 @@ def main():
 		pl = peer_lists_labels[wir[0]:wir[1]]
 		wt = ls[wir[0]:wir[1]]
 		
-		graph = utils.create_graph_master_tracker(ms, m, t, pl)
-
+		# graph = utils.create_graph_master_tracker(ms, m, t, pl)
+		graph = utils.create_graph_peer_weights(ms, m, t, pl)
+		
 		graphs.append(graph)
 
 		# saves.show_graph(graph)
@@ -253,8 +254,8 @@ def main():
 	# saves.save_graphs_txt(graphs)
 	# logging.info(str(len(graphs)) + ' graphs in directory:' + vars_paths.PATH_GRAPHS + '/')
 
-	# saves.save_graphs_fig(graphs)	
-	# logging.info(str(len(graphs)) + ' images graphs in directory:' + vars_paths.PATH_FIGS + '/')
+	saves.save_graphs_fig(graphs)	
+	logging.info(str(len(graphs)) + ' images graphs in directory:' + vars_paths.PATH_FIGS + '/')
 
 	saves.save_graph_adj_csv(graphs)
 	saves.save_graph_weigths_csv(graphs)
