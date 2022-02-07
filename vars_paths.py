@@ -6,7 +6,7 @@ filename = inspect.getframeinfo(inspect.currentframe()).filename
 path = os.path.dirname(os.path.abspath(filename))
 
 PATH = path+'/out'
-PATH_FIGS = PATH+'/figs-graphs'
+PATH_FIGS = PATH+'/out-figs'
 PATH_GRAPHS = PATH+'/out-graphs'
 PATH_MATRICES = PATH+'/out-matrices' 
 

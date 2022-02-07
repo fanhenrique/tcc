@@ -137,11 +137,26 @@ def save_graph_adj_csv(graphs):
 
 	matrix = np.zeros((len(fe), len(fe)), dtype=int)
 
+
+	c = 1
+	for e1 in fe:
+		print(c, e1)
+		c+=1
+
+
 	for e1 in fe:
 		for e2 in fe:
+			print(e1, e2, end=' ')
 			if fe.index(e1) != fe.index(e2):
 				if e1[0] == e2[0] or e1[0] == e2[1] or e1[1] == e2[0] or e1[1] == e2[1]:
+					print(1)
 					matrix[fe.index(e1), fe.index(e2)] = 1
+				else:
+					print(0)
+			else:
+				print(0)
+
+					
 		
 
 	print('shape adj', matrix.shape)
