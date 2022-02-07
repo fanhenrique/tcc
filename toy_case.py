@@ -75,8 +75,9 @@ def main():
 		t = trackers[wir[0]:wir[1]]	
 		pl = peer_lists[wir[0]:wir[1]]
 		
+		# graph = utils.create_graph_master_tracker(ms, m, t, pl)
 		graph = utils.create_graph_peer_weights(ms, m, t, pl)
-	
+		
 		graphs.append(graph)
 
 		saves.show_graph(graph)
