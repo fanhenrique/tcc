@@ -22,10 +22,13 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 from stellargraph.layer import GCN_LSTM
 
 
-TRAIN_RATE = 0.8
-SEQ_LEN = 1
-PRE_LEN = 1
-
+DEFAULT_TRAIN_RATE = 0.8
+DEFAULT_SEQ_LEN = 4
+DEFAULT_PRED_LEN = 1
+DEFAULT_GCN_SIZE = 16
+DEFAULT_LSTM_SIZE = 200
+DEFAULT_EPOCHS = 500
+DEFAULT_BATCH = 32
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
@@ -44,27 +47,27 @@ def scale_data(train_data, test_data):
 
     return train_scaled, test_scaled
 
-def train_test_split(data):
+def train_test_split(data, train_rate):
     
     time_len = data.shape[1]
-    train_size = int(time_len * TRAIN_RATE)
+    train_size = int(time_len * train_rate)
     train_data = np.array(data[:, :train_size])
     test_data = np.array(data[:, train_size:])
     return train_data, test_data
 
 
-def sequence_data_preparation(train_data, test_data):
+def sequence_data_preparation(train_data, test_data, seq_len, pred_len):
 
     trainX, trainY, testX, testY = [], [], [], []
 
-    for i in range(train_data.shape[1] - int(SEQ_LEN + PRE_LEN - 1)):
-        a = train_data[:, i : i + SEQ_LEN + PRE_LEN]
-        trainX.append(a[:, :SEQ_LEN])
+    for i in range(train_data.shape[1] - int(seq_len + pred_len - 1)):
+        a = train_data[:, i : i + seq_len + pred_len]
+        trainX.append(a[:, :seq_len])
         trainY.append(a[:, -1])
 
-    for i in range(test_data.shape[1] - int(SEQ_LEN + PRE_LEN - 1)):
-        b = test_data[:, i : i + SEQ_LEN + PRE_LEN]
-        testX.append(b[:, :SEQ_LEN])
+    for i in range(test_data.shape[1] - int(seq_len + pred_len - 1)):
+        b = test_data[:, i : i + seq_len + pred_len]
+        testX.append(b[:, :seq_len])
         testY.append(b[:, -1])
 
     trainX = np.array(trainX)
@@ -103,9 +106,7 @@ def mean_squared_error(data, prediction):
     return [((prediction[i]-data[i])**2)/len(data) for i in range(len(data))]
 
 
-def plot_mse(column, mse, path_plots, title, max_y):
-    
-    ## MSE TEST ##
+def plot_mse(mse, path_plots, name, title, max_y):
     
     plt.figure(figsize=(15,8))
 
@@ -123,18 +124,19 @@ def plot_mse(column, mse, path_plots, title, max_y):
     plt.yticks(yticks, fontsize=13)
 
 
-    plt.plot(mse, 'y-', label='mse')
-    plt.ylabel('mean squared error', fontsize=12)
+    plt.plot(mse, 'g-', label='mse')
+    plt.ylabel('Erro quadrático médio', fontsize=15)
+    plt.xlabel("Snapshots", fontsize=15)
     plt.title(title)
-    plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
-    plt.savefig(path_plots+'/png/mse_'+str(column)+'.png', format='png')
+    plt.savefig(path_plots+'/'+name+'.svg', format='svg')
+    plt.savefig(path_plots+'/png/'+name+'.png', format='png')
     # plt.show()
     plt.cla()
     plt.clf()
     plt.close('all')
 
 
-def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
+def plot_prediction(true, prediction, path_plots, name, title, max_y):
 
     # max_y = 216.0
 
@@ -161,25 +163,26 @@ def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
     plt.ylabel("Quantidade de pares", fontsize=15)
     plt.legend(loc="best", fontsize=15)
     plt.title(title)
-    plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
-    plt.savefig(path_plots+'/png/'+name+'_'+str(column)+'.png', format='png')
+    plt.savefig(path_plots+'/'+name+'.svg', format='svg')
+    plt.savefig(path_plots+'/png/'+name+'.png', format='png')
     # plt.show()
     plt.cla()
     plt.clf()
     plt.close('all')
 
-def plot_mse_validation(mse, val_mse, path_plots):
+def plot_validation(train, validation, path_plots, name, title, ylabel):
     
     colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
     plt.figure(figsize=(15,8))
-    plt.plot(mse, color=colors[0], linestyle='-', label='treino')
-    plt.plot(val_mse, color=colors[1], linestyle='-', label='validação')
+    plt.plot(train, color=colors[0], linestyle='-', label='treino')
+    plt.plot(validation, color=colors[1], linestyle='-', label='validação')
     plt.xlabel("Épocas", fontsize=12)
-    plt.ylabel("Erro quadrático médio", fontsize=12)
+    plt.ylabel(ylabel, fontsize=12)
     plt.legend(loc="best", fontsize=15)
-    plt.savefig(path_plots+'/mse_validation.svg', format='svg')
-    plt.savefig(path_plots+'/png/mse_validation.png', format='png')
+    plt.title(title)
+    plt.savefig(path_plots+'/'+name+'.svg', format='svg')
+    plt.savefig(path_plots+'/png/'+name+'.png', format='png')
     # plt.show()
     plt.cla()
     plt.clf()
@@ -188,10 +191,18 @@ def plot_mse_validation(mse, val_mse, path_plots):
 
 def main():
 
-
     parser = argparse.ArgumentParser(description='gcn_lstm')
 
-    parser.add_argument('--plot', '-p', help='plot mode', action='store_true')
+    # parser.add_argument('--plot', '-p', help='Plot mode', action='store_true')
+    parser.add_argument('--seqlen', '-sl', help='Snapshots de entrada', default=DEFAULT_SEQ_LEN, type=int)
+    parser.add_argument('--predlen', '-pl', help='Snapshots preditos', default=DEFAULT_PRED_LEN, type=int)
+    parser.add_argument('--trainrate', '-tr', help='Taxa de treinamento', default=DEFAULT_TRAIN_RATE, type=float)
+    parser.add_argument('--epochs', '-e', help='Épocas', default=DEFAULT_EPOCHS, type=int)
+    parser.add_argument('--gcnsize', '-gs', help='Tamanho da camada GCN', default=DEFAULT_GCN_SIZE, type=int)
+    parser.add_argument('--lstmsize', '-ls', help='Tamanho da camada LSTM', default=DEFAULT_LSTM_SIZE, type=int)
+    parser.add_argument('--batch', '-b', help='Tamanho do batch', default=DEFAULT_BATCH, type=int)
+    parser.add_argument('--weigths', '-w', help='Matriz de pessos', required=True, type=str)
+    parser.add_argument('--adjs', '-a', help='Matriz de adjacencias', required=True, type=str)
 
     help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
     parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -203,41 +214,36 @@ def main():
     else:
         logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-
     path_outs, path_plots = init()    
 
-    print(path_plots)
+    # print(path_plots)
+    # print(path_outs)
 
     # if args.plot:
 
-    #     # print(path_outs, path_plots)
+        # print(path_outs, path_plots)
 
-    #     true = pd.read_csv(path_outs+'/true.csv', header=None).to_numpy()
-    #     predictions = pd.read_csv(path_outs+'/prediction.csv', header=None).to_numpy()
-    #     loss = pd.read_csv(path_outs+'/loss.csv', header=None).to_numpy()
-    #     val_loss = pd.read_csv(path_outs+'/val_loss.csv', header=None).to_numpy()
-    #     mse = pd.read_csv(path_outs+'/mse.csv', header=None).to_numpy()
-    #     val_mse = pd.read_csv(path_outs+'/val_mse.csv', header=None).to_numpy()
-        
-
-    #     plot(true, predictions, loss, val_loss, mse, val_mse, path_plots)
+        # true = pd.read_csv(path_outs+'/true.csv', header=None).to_numpy()
+        # predictions = pd.read_csv(path_outs+'/prediction.csv', header=None).to_numpy()
+        # loss = pd.read_csv(path_outs+'/loss.csv', header=None).to_numpy()
+        # val_loss = pd.read_csv(path_outs+'/val_loss.csv', header=None).to_numpy()
+        # mse = pd.read_csv(path_outs+'/mse.csv', header=None).to_numpy()
+        # val_mse = pd.read_csv(path_outs+'/val_mse.csv', header=None).to_numpy()
     
-    # else:
-
+        # plot(true, predictions, loss, val_loss, mse, val_mse, path_plots)
+    
+    
+    logging.info('Reading file ...')
 
     # los_adj = pd.read_csv(r'../T-GCN/data/los_adj.csv', header=None)
     # los_adj = pd.read_csv(r'../T-GCN/data/sz_adj.csv', header=None)
-
-    logging.info('Reading file ...')
-    
-    los_adj = pd.read_csv('../out/out-matrices/monitoring-adj.csv', header=None)
+    los_adj = pd.read_csv(args.adjs, header=None)
     sensor_dist_adj = np.mat(los_adj)
 
 
     # los_speed = pd.read_csv(r'../T-GCN/data/los_speed.csv')
-    #los_speed = pd.read_csv(r'../T-GCN/data/sz_speed.csv')
-
-    los_speed = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
+    # los_speed = pd.read_csv(r'../T-GCN/data/sz_speed.csv')
+    los_speed = pd.read_csv(args.weigths, header=None)
     speed_data = np.mat(los_speed)
 
 
@@ -246,14 +252,14 @@ def main():
 
 
     num_nodes, time_len = speed_data.shape
-    # print("No. of sensors:", num_nodes, "\nNo of timesteps:", time_len)
-
+    logging.info('Numero de trackers: %s', num_nodes)
+    logging.info('Numero de snapshots: %s', time_len)
 
     max_y = np.max(speed_data.max())
-
     # print(max_y)
 
-    train_data, test_data = train_test_split(speed_data)
+    train_data, test_data = train_test_split(speed_data, args.trainrate)
+    logging.info('All data: %s' % str(speed_data.shape))    
     logging.info('Train data: %s' % str(train_data.shape))
     logging.info('Test data: %s' % str(test_data.shape))
 
@@ -263,20 +269,20 @@ def main():
 
 
     logging.info('Sequence preparation ...')
-    trainX, trainY, testX, testY = sequence_data_preparation(train_scaled, test_scaled)
-    # print('TrainX', trainX.shape)
-    # print('TrainY', trainY.shape)
-    # print('TestX', testX.shape)
-    # print('TestY', testY.shape)
+    trainX, trainY, testX, testY = sequence_data_preparation(train_scaled, test_scaled, args.seqlen, args.predlen)
+    logging.info('TrainX: %s', trainX.shape)
+    logging.info('TrainY: %s', trainY.shape)
+    logging.info('TestX: %s', testX.shape)
+    logging.info('TestY: %s', testY.shape)
 
 
     logging.info('Create RNA GCN_LSTM ...')
     gcn_lstm = GCN_LSTM(
-        seq_len=SEQ_LEN,
+        seq_len=args.seqlen,
         adj=sensor_dist_adj,
-        gc_layer_sizes=[16],
+        gc_layer_sizes=[args.gcnsize],
         gc_activations=["relu"],
-        lstm_layer_sizes=[200],
+        lstm_layer_sizes=[args.lstmsize],
         lstm_activations=["tanh"],
     )
 
@@ -293,8 +299,8 @@ def main():
     history = model.fit(
         trainX,
         trainY,
-        epochs=500,
-        batch_size=32,
+        epochs=args.epochs,
+        batch_size=args.batch,
         shuffle=True,
         verbose=0,
         validation_data=(testX, testY),
@@ -306,7 +312,7 @@ def main():
 
     np.savetxt(path_outs+'/times.csv', times, fmt='%.8f')
 
-    print(model.summary())
+    # logging.info(model.summary())
 
 
     # print(
@@ -342,7 +348,7 @@ def main():
     test_rescref = np.array(testY * max_speed)
 
 
-    # ## Rescale model predicted values
+    ## Rescale model predicted values
     train_rescpred = np.array((ythat) * max_speed)
     test_rescpred = np.array((yhat) * max_speed)
 
@@ -423,7 +429,8 @@ def main():
     mse = history.history['mse']
     val_mse = history.history['val_mse']
 
-    plot_mse_validation(mse, val_mse, path_plots)
+    plot_validation(mse, val_mse, path_plots, 'validation_mse', None, 'Erro quadrático médio')
+    plot_validation(loss, val_loss, path_plots, 'validation_loss', None, 'Erro')
 
 
 
@@ -431,37 +438,54 @@ def main():
     ### PREDICTION TEST ###
     for i in range(test_rescref.shape[1]):
         logging.info('Plot test prediction tracker %d' % i)
-        plot_prediction(i, test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test', 'Predição RNA tracker '+str(i)+' - Teste', max_y)
+        plot_prediction(test_rescref[:, i], test_rescpred[:, i], path_plots, 'prediction_test_'+str(i), 'Predição RNA tracker '+str(i)+' - Teste', max_y)
         np.savetxt(path_outs+'/prediction_'+str(i)+'.csv', test_rescpred[:, i])
 
+    ### Média de todas as respostas da RNA prediction teste
+    df_test_true = pd.DataFrame(test_rescref)
+    df_test_pred = pd.DataFrame(test_rescpred)    
+    
+    df_test_true[speed_data.shape[0]] = test_rescref.mean(axis=1)
+    df_test_pred[speed_data.shape[0]] = test_rescpred.mean(axis=1)
 
-     ### PREDICTION ALL DATASET ###
+    # print(df_test_true)
+    # print(df_test_pred)
+
+    mean_test_true = df_test_true[speed_data.shape[0]].to_numpy()
+    mean_test_pred = df_test_pred[speed_data.shape[0]].to_numpy()    
+
+    logging.info('Plot prediction test mean')
+    plot_prediction(mean_test_true, mean_test_pred, path_plots, 'prediction_test_'+str(speed_data.shape[0]), 'Predição RNA trackers '+str(speed_data.shape[0])+' - Teste', max_y)
+    np.savetxt(path_outs+'/prediction_'+str(speed_data.shape[0])+'.csv', mean_test_pred)
+    
+
+
+    ### PREDICTION ALL DATASET ###
     for i in range(train_rescref.shape[1]):
         logging.info('Plot all prediction tracker %d' % i)
         ref = np.concatenate((train_rescref[:, i], test_rescref[:, i]))
         pred = np.concatenate((train_rescpred[:, i], test_rescpred[:, i]))
-        plot_prediction(i, ref, pred, path_plots, 'prediction_all', 'Predição RNA tracker '+str(i)+' - S1', max_y)
+        plot_prediction(ref, pred, path_plots, 'prediction_all_'+str(i), 'Predição RNA tracker '+str(i)+' - S1', max_y)
 
+    ## Média de todas as respostas da RNA prediction all dataset
+    df_train_true = pd.DataFrame(train_rescref)
+    df_train_pred = pd.DataFrame(train_rescpred)    
+    
+    df_train_true[speed_data.shape[0]] = train_rescref.mean(axis=1)
+    df_train_pred[speed_data.shape[0]] = train_rescpred.mean(axis=1)
 
+    # print(df_train_true)
+    # print(df_train_pred)
 
+    mean_train_true = df_train_true[speed_data.shape[0]].to_numpy()
+    mean_train_pred = df_train_pred[speed_data.shape[0]].to_numpy()    
 
+    ref = np.concatenate((mean_train_true, mean_test_true))
+    pred = np.concatenate((mean_train_pred, mean_test_pred)) 
 
-    ### Média de todas as respostas da RNA ###   
-    df_test_true = pd.DataFrame(test_rescref)
-    df_test_pred = pd.DataFrame(test_rescpred)    
-        
-    df_test_true[speed_data.shape[0]] = test_rescref.mean(axis=1)
-    df_test_pred[speed_data.shape[0]] = test_rescpred.mean(axis=1)
-
-    mean_true = df_test_true[speed_data.shape[0]].to_numpy()
-    mean_pred = df_test_pred[speed_data.shape[0]].to_numpy()    
-
-
-    logging.info('Plot prediction mean')
-    plot_prediction(speed_data.shape[0], mean_true, mean_pred, path_plots, 'prediction_test', 'Predição RNA trackers '+str(speed_data.shape[0])+' - Teste', max_y)
-    np.savetxt(path_outs+'/prediction_'+str(speed_data.shape[0])+'.csv', mean_pred)
-
-
+    logging.info('Plot prediction all mean')
+    plot_prediction(ref, pred, path_plots, 'prediction_all_'+str(speed_data.shape[0]), 'Predição RNA trackers '+str(speed_data.shape[0])+' - S1', max_y)
+    
 
 
 
@@ -470,26 +494,20 @@ def main():
     for i in range(test_rescref.shape[1]):
         logging.info('Calculate MSE tracker %d' % i)
         mse = np.array(mean_squared_error(test_rescref[:, i], test_rescpred[:, i]))
-        
         df_mse[i] = mse
 
-    df_mse[df_mse.shape[1]] = np.array(mean_squared_error(mean_true, mean_pred))
+    df_mse[df_mse.shape[1]] = np.array(mean_squared_error(mean_test_true, mean_test_pred))
 
 
 
     logging.info('Plots MSE')
 
     max_y = np.max(df_mse.max())
-
     mean_mse = []
     for column in df_mse:
-
-        plot_mse(column, df_mse[column], path_plots, 'Erro Médio Quadrático RNA tracker '+str(column)+' - Teste', max_y)
-       
+        plot_mse(df_mse[column], path_plots, 'mse_'+str(column), 'Erro Quadrático Médio RNA tracker '+str(column)+' - Teste', max_y)
         np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')
-
         mean_mse.append(np.mean(df_mse[column]))                
-    
 
     np.savetxt(path_outs+'/mean.csv', mean_mse, fmt='%.8f')
 
@@ -504,11 +522,8 @@ def main():
     # np.savetxt(path_outs+'/mse.csv', mse)
     # np.savetxt(path_outs+'/val_mse.csv', val_mse)
 
-
     # np.savetxt(path_outs+'/true.csv', a_true)
     # np.savetxt(path_outs+'/prediction.csv', a_pred)
-
-    
 
 
 if __name__ == '__main__':

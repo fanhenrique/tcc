@@ -18,18 +18,22 @@ import matplotlib.pyplot as plt
 from pmdarima.arima.utils import ndiffs
 from statsmodels.tsa.arima.model import ARIMA
 
-TRAIN_RATE = 0.8
+DEFAULT_TRAIN_RATE = 0.8
+DEFAULT_AR = 1
+DEFAULT_MA = 1
+DEFAULT_DIFF = 0
 
-CUT_AXIS = 0
+
+DEFALT_CUT_AXIS = 0
 
 
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
 
-def train_test_split(data):
+def train_test_split(data, trainrate):
     time_len = data.size
-    train_size = int(time_len * TRAIN_RATE)
+    train_size = int(time_len * trainrate)
     train_data = np.array(data[:train_size])
     test_data = np.array(data[train_size:])
     return train_data, test_data
@@ -46,6 +50,7 @@ def init():
 	path_plots = os.path.join(path_plots, path_date)
 	if not os.path.exists(path_plots):
 	    os.makedirs(path_plots)
+	    os.makedirs(path_plots+'/png')
 
 	path_outs = path + '/outs'
 	path_outs = os.path.join(path_outs, path_date)
@@ -73,7 +78,7 @@ def plot_autocorrelation(column, data, path_plots):
 	axes[0].set_title('tracker')
 	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation')
 	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.svg', format='svg')
-	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.png', format='png')
+	fig.savefig(path_plots+'/png/autocorrelation_'+str(column)+'.png', format='png')
 	# plt.show()
 	plt.cla()
 	plt.clf()
@@ -82,9 +87,6 @@ def plot_autocorrelation(column, data, path_plots):
 
 def plot_mse(column, mse, path_plots, title, max_y):
 	
-	# mse = mse[CUT_AXIS:]
-
-	## MSE TEST ##
 	plt.figure(figsize=(15,8))
 
 	plt.xlim([-(mse.shape[0]*0.02), mse.shape[0]+(mse.shape[0]*0.02)])
@@ -101,11 +103,12 @@ def plot_mse(column, mse, path_plots, title, max_y):
 	plt.yticks(yticks, fontsize=13)
 
 
-	plt.plot(mse, 'y-', label='mse')
-	plt.ylabel('mean squared error', fontsize=12)
+	plt.plot(mse, 'g-', label='mse')
+	plt.ylabel('Erro quadrático médio', fontsize=15)
+	plt.xlabel("Snapshots", fontsize=15)
 	plt.title(title)
 	plt.savefig(path_plots+'/mse_'+str(column)+'.svg', format='svg')
-	plt.savefig(path_plots+'/mse_'+str(column)+'.png', format='png')
+	plt.savefig(path_plots+'/png/mse_'+str(column)+'.png', format='png')
 	# plt.show()
 	plt.cla()
 	plt.clf()
@@ -113,10 +116,6 @@ def plot_mse(column, mse, path_plots, title, max_y):
 
 
 def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
-
-
-	# true = true[CUT_AXIS:]
-	# prediction = prediction[CUT_AXIS:]
 
 
 	## PREDICTION TEST ##
@@ -142,7 +141,7 @@ def plot_prediction(column, true, prediction, path_plots, name, title, max_y):
 	plt.legend(loc="best", fontsize=15)
 	plt.title(title)
 	plt.savefig(path_plots+'/'+name+'_'+str(column)+'.svg', format='svg')
-	plt.savefig(path_plots+'/'+name+'_'+str(column)+'.png', format='png')
+	plt.savefig(path_plots+'/png/'+name+'_'+str(column)+'.png', format='png')
 	# plt.show()
 	plt.cla()
 	plt.clf()
@@ -153,8 +152,15 @@ def main():
 
 	parser = argparse.ArgumentParser(description='Arima')
 
-	parser.add_argument('--plot', '-p', help='plot mode', action='store_true')
+	# parser.add_argument('--plot', '-p', help='plot mode', action='store_true')
 	# parser.add_argument('--mean', '-m', help='main mode', action='store_true')
+	parser.add_argument('--trainrate', '-tr', help='Taxa de treinamento', default=DEFAULT_TRAIN_RATE, type=float)
+	parser.add_argument('--ar', '-p', help='Ordem do termo AR', default=DEFAULT_AR, type=int)
+	parser.add_argument('--ma', '-q', help='Ordem do termo MA', default=DEFAULT_MA, type=int)
+	parser.add_argument('--diff', '-d', help='Ordem de diferenciação', default=DEFAULT_DIFF, type=int)
+	parser.add_argument('--cutaxis', '-c', help='Corta eixo x', default=DEFALT_CUT_AXIS, type=int)
+	parser.add_argument('--weigths', '-w', help='Matriz de pessos', required=True, type=str)
+
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -168,8 +174,9 @@ def main():
 
 
 	path_outs, path_plots = init()
- 
-		
+	# print(path_outs)
+	# print(path_plots)
+
 	# if args.plot:
 
 	# 	# print(path_outs, path_plots)
@@ -180,8 +187,8 @@ def main():
 	# 	predictions = pd.read_csv(path_outs+'/prediction.csv', header=None).to_numpy()
 
 
-	# 	train_data, test_data = train_test_split(data)		
-	# 	train_predictions, test_predictions = train_test_split(predictions)		
+	# 	train_data, test_data = train_test_split(data, args.trainrate)		
+	# 	train_predictions, test_predictions = train_test_split(predictions, args.trainrate)		
 	
 	
 	# 	plot(data, predictions, train_data, test_data, train_predictions, test_predictions, path_plots)
@@ -192,7 +199,7 @@ def main():
 
 
 	logging.info('Reading file ...')
-	df = pd.read_csv('../out/out-matrices/monitoring-weigths.csv', header=None)
+	df = pd.read_csv(args.weigths, header=None)
 
 	
 	df[df.shape[1]] = df.mean(axis=1)
@@ -209,23 +216,21 @@ def main():
 
 	max_y_data = np.max(df.max())
 
-
 	
 	df_mse = pd.DataFrame()
 	
 	logging.info('Start prediction ARIMA\n\
-		          Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
+		          Data: %s Train Rate: %s' % (df.shape, args.trainrate))
 
 	times = []
 
 	for column in df:
-
 		
 		data = df[column].to_numpy()
-		train_data, test_data = train_test_split(data)
-		# print("Train data: ", train_data.shape)
-		# print("Test data: ", test_data.shape)
-		
+		train_data, test_data = train_test_split(data, args.trainrate)
+		# logging.info("All data: %s", data.shape)
+		# logging.info("Train data: %s", train_data.shape)
+		# logging.info("Test data: %s", test_data.shape)
 
 		# prediction = []
 		history = [x for x in train_data]
@@ -236,9 +241,7 @@ def main():
 		logging.info('Tracker %s walk-forward ...' % column)
 		for t in range(test_data.shape[0]):
 	  
-
-
-			model = ARIMA(history, order=(1,0,1))
+			model = ARIMA(history, order=(args.ar, args.diff, args.ma))
 			
 			model_fit = model.fit()
 
@@ -257,20 +260,19 @@ def main():
 
 		times.append(end_time-start_time)
 
-		logging.info('End tracker %d' % column)
 		predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
-		train_predictions, test_predictions = train_test_split(predictions)	
+		train_predictions, test_predictions = train_test_split(predictions, args.trainrate)	
 
 
 		logging.info('Plot prediction tracker %d' % column)
 		plot_autocorrelation(column, data, path_plots)
-		plot_prediction(column, test_data[CUT_AXIS:], test_predictions[CUT_AXIS:], path_plots, 'prediction_test', 'Predição RNA tracker '+str(column)+' - Teste', max_y_data)
+		plot_prediction(column, test_data[args.cutaxis:], test_predictions[args.cutaxis:], path_plots, 'prediction_test', 'Predição ARIMA tracker '+str(column)+' - Teste', max_y_data)
 		np.savetxt(path_outs+'/prediction_'+str(column)+'.csv', test_predictions)
-		plot_prediction(column, data, predictions, path_plots, 'prediction_all', 'Predição RNA tracker '+str(column)+' - S1', max_y_data)
+		plot_prediction(column, data, predictions, path_plots, 'prediction_all', 'Predição ARIMA tracker '+str(column)+' - S1', max_y_data)
 
 
-		logging.info('Calculate MSE tracker %d' % column)
-		mse = np.array(mean_squared_error(test_data, test_predictions))[CUT_AXIS:]
+		# Calculate MSE of the tracker
+		mse = np.array(mean_squared_error(test_data, test_predictions))[args.cutaxis:]
 		df_mse[column] = mse
 
 
@@ -279,11 +281,11 @@ def main():
 	np.savetxt(path_outs+'/times.csv', times, fmt='%.8f')
 
 
-	logging.info('Plots MSE')
+	logging.info('Plots the MSE of all tracker')
 	mean_mse = []
 	max_y_mse = np.max(df_mse.max())
 	for column in df_mse:
-		plot_mse(column, df_mse[column], path_plots, 'Erro Médio Quadrático RNA tracker '+str(column)+' - Teste', max_y_mse)
+		plot_mse(column, df_mse[column], path_plots, 'Erro Quadrático Médio ARIMA tracker '+str(column)+' - Teste', max_y_mse)
 		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')
 
 		mean_mse.append(np.mean(df_mse[column]))
@@ -318,7 +320,7 @@ def main():
 	# 	df_mse = pd.DataFrame()
 		
 	# 	logging.info('Start prediction ARIMA\n\
-	# 		  Data: %s Train Rate: %s' % (df.shape[0], TRAIN_RATE))
+	# 		  Data: %s Train Rate: %s' % (df.shape[0], args.trainrate))
 	
 
 
@@ -328,7 +330,7 @@ def main():
 	# 	for column in df:
 			
 	# 		data = df[column].to_numpy()
-	# 		train_data, test_data = train_test_split(data)
+	# 		train_data, test_data = train_test_split(data, args.trainrate)
 	# 		# print("Train data: ", train_data.shape)
 	# 		# print("Test data: ", test_data.shape)
 			
@@ -358,7 +360,7 @@ def main():
 
 	# 		logging.info('End tracker %d' % column)
 	# 		predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
-	# 		train_predictions, test_predictions = train_test_split(predictions)	
+	# 		train_predictions, test_predictions = train_test_split(predictions, args.trainrate)	
 
 
 	# 		logging.info('Plot prediction tracker %d' % column)
@@ -443,7 +445,7 @@ def main():
 
 		# # SPLIT DATA
 		# data = df['mean'].to_numpy()
-		# train_data, test_data = train_test_split(data)
+		# train_data, test_data = train_test_split(data, args.trainrate)
 		# print("Train data: ", train_data.shape)
 		# print("Test data: ", test_data.shape)
 
@@ -479,7 +481,7 @@ def main():
 		
 		# predictions = model_fit.predict(start=0, end=data.size-1, dynamic=False)
 
-		# train_predictions, test_predictions = train_test_split(predictions)
+		# train_predictions, test_predictions = train_test_split(predictions, args.trainrate)
 
 		# print('data', data.size)
 		# print('train', train_data.size)

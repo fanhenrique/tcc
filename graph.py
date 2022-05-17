@@ -1,15 +1,17 @@
+from collections import Counter
+import inspect
+import os
+
 import networkx as nx
 # import stellargraph as sg
-
-from collections import Counter
 
 import argparse
 import logging
 
 #my imports
+import vars_paths as vp
 import utils
 import saves
-import vars_paths
 
 
 
@@ -157,37 +159,27 @@ def main():
 	# parser.add_argument('--numberedges', '-e', help='number edges', default=0, type=int) 
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
-	parser.add_argument("--log", "-l", help=help_msg, default=vars_paths.DEFAULT_LOG_LEVEL, type=int)
+	parser.add_argument("--log", "-l", help=help_msg, default=vp.DEFAULT_LOG_LEVEL, type=int)
 
 	args = parser.parse_args()
 
 	if args.log == logging.DEBUG:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(levelname)s {%(module)s} [%(funcName)s] %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	else:
-		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=vars_paths.TIME_FORMAT, level=args.log)
-
-
+		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=vp.TIME_FORMAT, level=args.log)
 
 	logging.info('init ...')	
 	utils.init(showmaster = args.showmaster, showpeers = args.showpeers, showtrackers = args.showtrackers, showmonitors = args.showmonitors)
 
-
-
 	logging.info('reading file ...')
 	epochs, trackers, monitors, peer_lists, leechers, seeders, ns =  utils.read_file(args.file)
-
-
 
 	ls = []
 	for a, b in zip(leechers, seeders):
 		ls.append(a+b)
 
-
-
 	logging.info('calculating windows ...')
 	time_min, windows, windows_index_range = utils.cal_windows(epochs)
-
-
 
 	print('epochs:', len(epochs))
 	print('trackers:', len(trackers))
@@ -199,9 +191,6 @@ def main():
 
 	for i in range(len(windows_index_range)):
 		print(i, windows_index_range[i])
-	
-
-
 
 
 	logging.info('renaming entities ...')
@@ -252,14 +241,14 @@ def main():
 	# 	print('-------------')
 
 	# saves.save_graphs_txt(graphs)
-	# logging.info(str(len(graphs)) + ' graphs in directory:' + vars_paths.PATH_GRAPHS + '/')
+	# logging.info(str(len(graphs)) + ' graphs in directory:' + vp.PATH_GRAPHS + '/')
 
 	# saves.save_graphs_fig(graphs)	
-	# logging.info(str(len(graphs)) + ' images graphs in directory:' + vars_paths.PATH_FIGS + '/')
+	# logging.info(str(len(graphs)) + ' images graphs in directory:' + vp.PATH_FIGS + '/')
 
 	saves.save_graph_adj_csv(graphs)
 	saves.save_graph_weigths_csv(graphs)
-	logging.info('adjacency and weight matrices are directory:' + vars_paths.PATH_MATRICES + '/')
+	logging.info('adjacency and weight matrices are directory:' + vp.PATH_MATRICES + '/')
 
 	
 if __name__ == '__main__':

@@ -25,7 +25,7 @@ def init(showmaster=False, showpeers=False, showtrackers=False, showmonitors=Fal
 	vp.SHOWPEERS = showpeers
 	vp.SHOWTRACKERS = showtrackers
 	vp.SHOWMONITORS = showmonitors
-
+	
 	try:
 		shutil.rmtree(vp.PATH)
 		shutil.rmtree(vp.PATH_FIGS)
