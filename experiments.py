@@ -21,7 +21,7 @@ PREDLEN = [1, 2, 4, 8]
 GCNSIZE = [8, 16, 32]
 LSTMSIZE = [100, 200, 300]
 BATCH = [16, 32, 64]
-EPOCHS = [200, 300, 500]
+EPOCHS = [250, 500, 750]
 
 def main():
 
@@ -51,8 +51,9 @@ def main():
 	# param = shlex.split(cmd_graph)
 	# subprocess.call(param)
 
-
 	date_path = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
+
+	c1 = {'seqlen': [1, 2, 4, 8, 16], 'predlen': [1], 'gcnsize': [16], 'lstmsize': [200], 'batch': [32], 'epochs': [500]}
 
 	for trainrate in TRAINRATE:
 		for ar in AR:
@@ -69,12 +70,12 @@ def main():
 					subprocess.call(param)
 
 	for trainrate in TRAINRATE:
-		for seqlen in SEQLEN:
-			for predlen in PREDLEN:
-				for gcnsize in GCNSIZE:
-					for lstmsize in LSTMSIZE:
-						for batch in BATCH:
-							for epochs in EPOCHS:
+		for seqlen in c1['seqlen']:
+			for predlen in c1['predlen']:
+				for gcnsize in c1['gcnsize']:
+					for lstmsize in c1['lstmsize']:
+						for batch in c1['batch']:
+							for epochs in c1['epochs']:
 								cmd_gcn_lstm = 'python3 stellar_model.py'\
 								' --adjs out/out-matrices/monitoring-adj.csv'\
 								' --weigths out/out-matrices/monitoring-weigths.csv'\
