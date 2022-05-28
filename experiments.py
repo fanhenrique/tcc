@@ -8,7 +8,7 @@ import logging
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
-def runRNA(c):
+def runRNA(c, date_path):
 	for trainrate in c['trainrate']:
 		for seqlen in c['seqlen']:
 			for predlen in c['predlen']:
@@ -30,7 +30,7 @@ def runRNA(c):
 								param = shlex.split(cmd_gcn_lstm)
 								subprocess.call(param)
 
-def runARIMA(c):
+def runARIMA(c, date_path):
 	for trainrate in c['trainrate']:
 			for ar in c['ar']:
 				for ma in c['ma']:
@@ -78,13 +78,13 @@ def main():
 	r5 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,32,64], 'epochs':[500], 'trainrate':[0.8]}
 	r6 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	runARIMA(a1)
-	runRNA(r1)
-	runRNA(r2)
-	runRNA(r3)
-	runRNA(r4)
-	runRNA(r5)
-	runRNA(r6)
+	runARIMA(a1, date_path)
+	runRNA(r1, date_path)
+	runRNA(r2, date_path)
+	runRNA(r3, date_path)
+	runRNA(r4, date_path)
+	runRNA(r5, date_path)
+	runRNA(r6, date_path)
 
 if __name__ == '__main__':
 	main()
