@@ -31,19 +31,19 @@ def runRNA(c):
 								subprocess.call(param)
 
 def runARIMA(c):
-for trainrate in c['trainrate']:
-		for ar in c['ar']:
-			for ma in c['ma']:
-				for diff in c['diff']:
-					cmd_arima = 'python3 arima_walk_forward.py'\
-					' --weigths out/out-matrices/monitoring-weigths.csv'\
-					' --trainrate %f'\
-					' --ar %d'\
-					' --ma %d'\
-					' --diff %d'\
-					' --path %s' % (trainrate, ar, ma, diff, date_path)
-					param = shlex.split(cmd_arima)
-					subprocess.call(param)
+	for trainrate in c['trainrate']:
+			for ar in c['ar']:
+				for ma in c['ma']:
+					for diff in c['diff']:
+						cmd_arima = 'python3 arima_walk_forward.py'\
+						' --weigths out/out-matrices/monitoring-weigths.csv'\
+						' --trainrate %f'\
+						' --ar %d'\
+						' --ma %d'\
+						' --diff %d'\
+						' --path %s' % (trainrate, ar, ma, diff, date_path)
+						param = shlex.split(cmd_arima)
+						subprocess.call(param)
 
 def main():
 
