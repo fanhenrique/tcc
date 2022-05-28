@@ -78,7 +78,7 @@ def main():
 	r5 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,32,64], 'epochs':[500], 'trainrate':[0.8]}
 	r6 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	runARIMA(a)
+	runARIMA(a1)
 	runRNA(r1)
 	runRNA(r2)
 	runRNA(r3)
