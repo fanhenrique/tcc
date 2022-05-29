@@ -68,7 +68,7 @@ def main():
 	date_path = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
 
 	#ARIMA parameters
-	a1 = {'ar':[3,2,1,0], 'ma':[3,2,1,0], 'diff':[3,2,1,0], 'trainrate':[0.8]}
+	a1 = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
 
 	#RNA parameters
 	r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
