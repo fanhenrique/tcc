@@ -72,10 +72,10 @@ def main():
 
 	#RNA parameters
 	r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	r2 = {'seqlen':[8], 'predlen':[1,2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	r3 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[8,16,32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	r4 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100,200,300], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	r5 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,32,64], 'epochs':[500], 'trainrate':[0.8]}
+	r2 = {'seqlen':[8], 'predlen':[2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	r3 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[8,32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	r4 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100,300], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	r5 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	r6 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
 	runARIMA(a1, date_path)
