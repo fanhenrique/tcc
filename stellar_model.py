@@ -99,6 +99,8 @@ def plot_validation(train, validation, path_plots, name, title, ylabel):
 
 
 def main():
+    
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
     parser = argparse.ArgumentParser(description='gcn-lstm')
 
