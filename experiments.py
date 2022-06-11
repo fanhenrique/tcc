@@ -85,7 +85,7 @@ def main():
 	
 	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	
-	runARIMA(a1, date_path)
+	# runARIMA(a1, date_path)
 	runRNA(rm, date_path)
 	# runRNA(r1, date_path)
 	# runRNA(r2, date_path)
