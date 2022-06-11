@@ -73,7 +73,7 @@ def main():
 
 	#ARIMA parameters
 	# a1 = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
-	a2 = {'ar':[1], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+	a2 = {'ar':[2], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
 
 	#RNA parameters
 	r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
