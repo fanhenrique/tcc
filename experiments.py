@@ -69,11 +69,15 @@ def main():
 	date_path = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
 
 
-	os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+	os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 	#ARIMA parameters
 	# a1 = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
 	# a2 = {'ar':[2], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+
+	a2 = {'ar':[1], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+
+
 
 	#RNA parameters
 	# r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -83,23 +87,23 @@ def main():
 	# r5 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	# r6 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	# rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	
-	r2 = {'seqlen':[4], 'predlen':[1,2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	r3 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[8,32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	r4 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100,300], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	r5 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
-	r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
+	# r2 = {'seqlen':[4], 'predlen':[1,2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	# r3 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[8,32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	# r4 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100,300], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	# r5 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
+	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
 
-	# runARIMA(a2, date_path)
-	# runRNA(rm, date_path)
+	runARIMA(a2, date_path)
+	runRNA(rm, date_path)
 	# runRNA(r1, date_path)
-	runRNA(r2, date_path)
-	runRNA(r3, date_path)
-	runRNA(r4, date_path)
-	runRNA(r5, date_path)
-	runRNA(r6, date_path)
+	# runRNA(r2, date_path)
+	# runRNA(r3, date_path)
+	# runRNA(r4, date_path)
+	# runRNA(r5, date_path)
+	# runRNA(r6, date_path)
 
 if __name__ == '__main__':
 	main()
