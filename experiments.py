@@ -75,8 +75,12 @@ def main():
 	# a1 = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
 	# a2 = {'ar':[2], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
 
-	a2 = {'ar':[1], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
-
+	a1 = {'ar':[0], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
+	a2 = {'ar':[1], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
+	a3 = {'ar':[2], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+	a4 = {'ar':[2], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
+	a5 = {'ar':[2], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	a6 = {'ar':[2], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
 
 
 	#RNA parameters
@@ -87,7 +91,7 @@ def main():
 	# r5 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	# r6 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	# rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	
 	# r2 = {'seqlen':[4], 'predlen':[1,2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	# r3 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[8,32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -96,8 +100,13 @@ def main():
 	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
 
+	runARIMA(a1, date_path)
 	runARIMA(a2, date_path)
-	runRNA(rm, date_path)
+	runARIMA(a3, date_path)
+	runARIMA(a4, date_path)
+	runARIMA(a5, date_path)
+	runARIMA(a6, date_path)
+	# runRNA(rm, date_path)
 	# runRNA(r1, date_path)
 	# runRNA(r2, date_path)
 	# runRNA(r3, date_path)
