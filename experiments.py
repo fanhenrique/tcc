@@ -69,7 +69,7 @@ def main():
 	date_path = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
 
 
-	os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+	os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 	#ARIMA parameters
 	# a1 = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
