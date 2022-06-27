@@ -69,7 +69,7 @@ def main():
 	date_path = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
 
 
-	os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+	os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 	#ARIMA parameters
 	# a = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
@@ -145,7 +145,7 @@ def main():
 	runARIMA(a3, date_path)
 	runARIMA(a4, date_path)
 	runARIMA(a7, date_path)
-	
+
 	# runRNA(rm, date_path)
 	# runRNA(r1, date_path)
 	# runRNA(r2, date_path)
