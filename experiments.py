@@ -72,16 +72,39 @@ def main():
 	os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 	#ARIMA parameters
-	# a1 = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
-	am = {'ar':[2], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	# a = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
+	# testes arima
+	a2 = {'ar':[0], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
+	a6 = {'ar':[0], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	a8 = {'ar':[0], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	a9 = {'ar':[0], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	a10 = {'ar':[1], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
+	a11 = {'ar':[1], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
+	a12 = {'ar':[1], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
+	a13 = {'ar':[1], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+	a15 = {'ar':[1], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	a16 = {'ar':[1], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
+	a17 = {'ar':[1], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	a18 = {'ar':[1], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	a19 = {'ar':[2], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
+	a20 = {'ar':[2], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
+	a21 = {'ar':[2], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
+	a26 = {'ar':[2], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	a27 = {'ar':[2], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	
+	#ruins
+	a1 = {'ar':[0], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
+	a3 = {'ar':[0], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
+	a4 = {'ar':[0], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+	a7 = {'ar':[0], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
 
 	#não funcionam
-	# a1 = {'ar':[0], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
-	# a2 = {'ar':[1], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
-	# a3 = {'ar':[2], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
-	# a4 = {'ar':[2], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
-	# a5 = {'ar':[2], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
-	# a6 = {'ar':[2], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
+	# a5 = {'ar':[0], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
+	# a14 = {'ar':[1], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
+	# a22 = {'ar':[2], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+	# a23 = {'ar':[2], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
+	# a24 = {'ar':[2], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	# a25 = {'ar':[2], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
 
 
 	#RNA parameters
@@ -92,7 +115,7 @@ def main():
 	# r5 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	# r6 = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	# rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	
 	# r2 = {'seqlen':[4], 'predlen':[1,2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	# r3 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[8,32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -101,13 +124,29 @@ def main():
 	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
 
-	# runARIMA(am, date_path)
-	# runARIMA(a2, date_path)
-	# runARIMA(a3, date_path)
-	# runARIMA(a4, date_path)
-	# runARIMA(a5, date_path)
-	# runARIMA(a6, date_path)
-	runRNA(rm, date_path)
+	runARIMA(a2, date_path)
+	runARIMA(a6, date_path)
+	runARIMA(a8, date_path)
+	runARIMA(a9, date_path)
+	runARIMA(a10, date_path)
+	runARIMA(a11, date_path)
+	runARIMA(a12, date_path)
+	runARIMA(a13, date_path)
+	runARIMA(a15, date_path)
+	runARIMA(a16, date_path)
+	runARIMA(a17, date_path)
+	runARIMA(a18, date_path)
+	runARIMA(a19, date_path)
+	runARIMA(a20, date_path)
+	runARIMA(a21, date_path)
+	runARIMA(a26, date_path)
+	runARIMA(a27, date_path)
+	runARIMA(a1, date_path)
+	runARIMA(a3, date_path)
+	runARIMA(a4, date_path)
+	runARIMA(a7, date_path)
+	
+	# runRNA(rm, date_path)
 	# runRNA(r1, date_path)
 	# runRNA(r2, date_path)
 	# runRNA(r3, date_path)
