@@ -107,6 +107,11 @@ def main():
 	# a25 = {'ar':[2], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
 
 
+
+	a28 = = {'ar':[4, 8], 'ma':[4, 8], 'diff':[0, 1, 2], 'trainrate':[0.8]}
+
+
+
 	#RNA parameters
 	# r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	# r2 = {'seqlen':[8], 'predlen':[2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -124,28 +129,30 @@ def main():
 	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
 
-	runARIMA(a2, date_path)
-	runARIMA(a6, date_path)
-	runARIMA(a8, date_path)
-	runARIMA(a9, date_path)
-	runARIMA(a10, date_path)
-	runARIMA(a11, date_path)
-	runARIMA(a12, date_path)
-	runARIMA(a13, date_path)
-	runARIMA(a15, date_path)
-	runARIMA(a16, date_path)
-	runARIMA(a17, date_path)
-	runARIMA(a18, date_path)
-	runARIMA(a19, date_path)
-	runARIMA(a20, date_path)
-	runARIMA(a21, date_path)
-	runARIMA(a26, date_path)
-	runARIMA(a27, date_path)
-	runARIMA(a1, date_path)
-	runARIMA(a3, date_path)
-	runARIMA(a4, date_path)
-	runARIMA(a7, date_path)
+	# runARIMA(a2, date_path)
+	# runARIMA(a6, date_path)
+	# runARIMA(a8, date_path)
+	# runARIMA(a9, date_path)
+	# runARIMA(a10, date_path)
+	# runARIMA(a11, date_path)
+	# runARIMA(a12, date_path)
+	# runARIMA(a13, date_path)
+	# runARIMA(a15, date_path)
+	# runARIMA(a16, date_path)
+	# runARIMA(a17, date_path)
+	# runARIMA(a18, date_path)
+	# runARIMA(a19, date_path)
+	# runARIMA(a20, date_path)
+	# runARIMA(a21, date_path)
+	# runARIMA(a26, date_path)
+	# runARIMA(a27, date_path)
+	# runARIMA(a1, date_path)
+	# runARIMA(a3, date_path)
+	# runARIMA(a4, date_path)
+	# runARIMA(a7, date_path)
 
+	runARIMA(a28, date_path)	
+	
 	# runRNA(rm, date_path)
 	# runRNA(r1, date_path)
 	# runRNA(r2, date_path)
