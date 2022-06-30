@@ -113,6 +113,7 @@ def main():
     parser.add_argument('--weigths', '-w', help='Matriz de pessos', required=True, type=str)
     parser.add_argument('--adjs', '-a', help='Matriz de adjacencias', required=True, type=str)
     parser.add_argument('--path', help='Date path', required=True, type=str)
+    parser.add_argument('--number', '-n', help='number of execution', type=int)
 
     help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
     parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -124,12 +125,9 @@ def main():
     else:
         logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 
-    d = dict(vars(args))
-    del d['weigths']
-    del d['adjs']
-    del d['path']
-    del d['log']
-    path_outs, path_plots = utils.init('gcn-lstm', args.path, d)  
+
+    pars = {i: vars(args)[i] for i in ('trainrate', 'seqlen', 'predlen', 'gcnsize', 'lstmsize', 'batch', 'epochs')}
+    path_outs, path_plots = utils.init('gcn-lstm-'+str(args.number), args.path, pars)  
 
     # print(path_plots)
     # print(path_outs)

@@ -74,6 +74,7 @@ def main():
 	parser.add_argument('--cutaxis', '-c', help='Corta eixo x', default=DEFALT_CUT_AXIS, type=int)
 	parser.add_argument('--weigths', '-w', help='Matriz de pessos', required=True, type=str)
 	parser.add_argument('--path', help='Date path', required=True, type=str)
+	parser.add_argument('--number', '-n', help='number of execution', type=int)
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -85,12 +86,9 @@ def main():
 	else:
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=TIME_FORMAT, level=args.log)
 	
-	d = dict(vars(args))
-	del d['cutaxis']
-	del d['weigths']
-	del d['path']
-	del d['log']
-	path_outs, path_plots = utils.init('arima', args.path, d)
+	
+	pars = {i: vars(args)[i] for i in ('trainrate', 'ar', 'ma', 'diff')}
+	path_outs, path_plots = utils.init('arima-'+str(args.number), args.path, pars)
 	# print(path_outs)
 	# print(path_plots)
 
