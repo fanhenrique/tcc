@@ -112,12 +112,11 @@ def main():
 
 
 
-	a28 = {'ar':[4, 8], 'ma':[4, 8], 'diff':[0, 1, 2], 'trainrate':[0.8]}
+	a28 = {'ar':[4, 8], 'ma':[4, 8], 'diff':[0, 1], 'trainrate':[0.8]}
 
+	a29 = {'ar':[3], 'ma':[3, 2, 1], 'diff':[0, 1], 'trainrate':[0.8]}
 
-	a29 = {'ar':[3], 'ma':[3, 2, 1], 'diff':[0, 1, 2], 'trainrate':[0.8]}
-
-	a30 = {'ar':[3, 2, 1], 'ma':[3], 'diff':[0, 1, 2], 'trainrate':[0.8]}
+	a30 = {'ar':[3, 2, 1], 'ma':[3], 'diff':[0, 1], 'trainrate':[0.8]}
 
 	#RNA parameters
 	# r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
