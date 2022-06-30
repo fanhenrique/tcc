@@ -162,7 +162,7 @@ def main():
 		runARIMA(a30, date_path, e)
 		
 
-	for e in range(args.number):
+	# for e in range(args.number):
 		# runRNA(rm, date_path, e)
 		# runRNA(r1, date_path, e)
 		# runRNA(r2, date_path, e)
