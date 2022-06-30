@@ -97,12 +97,12 @@ def main():
 	a27 = {'ar':[2], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
 	
 	#ruins
-	a1 = {'ar':[0], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
 	a3 = {'ar':[0], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
 	a4 = {'ar':[0], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
 	a7 = {'ar':[0], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
 
 	#não funcionam
+	# a1 = {'ar':[0], 'ma':[0], 'diff':[0], 'trainrate':[0.8]} # gera resultado linear
 	# a5 = {'ar':[0], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
 	# a14 = {'ar':[1], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
 	# a22 = {'ar':[2], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
@@ -114,8 +114,10 @@ def main():
 
 	a28 = {'ar':[4, 8], 'ma':[4, 8], 'diff':[0, 1, 2], 'trainrate':[0.8]}
 
-	a29 = {'ar':[1, 2], 'ma':[1, 2], 'diff':[1, 2], 'trainrate':[0.8]}
 
+	a29 = {'ar':[3], 'ma':[3, 2, 1], 'diff':[0, 1, 2], 'trainrate':[0.8]}
+
+	a30 = {'ar':[3, 2, 1], 'ma':[3], 'diff':[0, 1, 2], 'trainrate':[0.8]}
 
 	#RNA parameters
 	# r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -132,7 +134,7 @@ def main():
 	# r5 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	rm = {'seqlen':[4,8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 
 	for e in range(args.number):
 		# runARIMA(a2, date_path, e)
@@ -157,12 +159,12 @@ def main():
 		# runARIMA(a4, date_path, e)
 		# runARIMA(a7, date_path, e)
 
-		# runARIMA(a28, date_path, e)
 		runARIMA(a29, date_path, e)
+		runARIMA(a30, date_path, e)
 		
 
 	for e in range(args.number):
-		runRNA(rm, date_path, e)
+		# runRNA(rm, date_path, e)
 		# runRNA(r1, date_path, e)
 		# runRNA(r2, date_path, e)
 		# runRNA(r3, date_path, e)
