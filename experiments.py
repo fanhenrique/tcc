@@ -124,7 +124,10 @@ def main():
 	a30 = {'ar':[2], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
 	a31 = {'ar':[3], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
 	a32 = {'ar':[3], 'ma':[0], 'diff':[0, 1, 2], 'trainrate':[0.8]}
-
+	a33 = {'ar':[3], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	a34 = {'ar':[3], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	
+	
 
 	#RNA parameters
 	# r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -171,6 +174,8 @@ def main():
 		runARIMA(a30, date_path, e)
 		runARIMA(a31, date_path, e)
 		runARIMA(a32, date_path, e)
+		runARIMA(a33, date_path, e)
+		runARIMA(a34, date_path, e)
 		
 
 	# for e in range(args.number):
