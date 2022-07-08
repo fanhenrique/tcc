@@ -127,7 +127,8 @@ def main():
 	a33 = {'ar':[3], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
 	a34 = {'ar':[3], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
 	
-	a35 = {'ar':[4], 'ma':[0,1,2,3,4], 'diff':[0,1,2], 'trainrate':[0.8]}
+	# a35 = {'ar':[4], 'ma':[0,1,2,3,4], 'diff':[0,1,2], 'trainrate':[0.8]}
+	a35 = {'ar':[4], 'ma':[3,4], 'diff':[0,1,2], 'trainrate':[0.8]}
 	a36 = {'ar':[0,1,2,3], 'ma':[4], 'diff':[0,1,2], 'trainrate':[0.8]}
 
 	#RNA parameters
