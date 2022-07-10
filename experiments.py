@@ -119,13 +119,13 @@ def main():
 	# a30 = {'ar':[2, 1, 0], 'ma':[3], 'diff':[0, 1], 'trainrate':[0.8]}
 
 
-	a28 = {'ar':[0], 'ma':[3], 'diff':[0, 1, 2], 'trainrate':[0.8]}
-	a29 = {'ar':[1], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
-	a30 = {'ar':[2], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
-	a31 = {'ar':[3], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
-	a32 = {'ar':[3], 'ma':[0], 'diff':[0, 1, 2], 'trainrate':[0.8]}
-	a33 = {'ar':[3], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
-	a34 = {'ar':[3], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	# a28 = {'ar':[0], 'ma':[3], 'diff':[0, 1, 2], 'trainrate':[0.8]}
+	# a29 = {'ar':[1], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
+	# a30 = {'ar':[2], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
+	# a31 = {'ar':[3], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
+	# a32 = {'ar':[3], 'ma':[0], 'diff':[0, 1, 2], 'trainrate':[0.8]}
+	# a33 = {'ar':[3], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	# a34 = {'ar':[3], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
 	
 	# a35 = {'ar':[4], 'ma':[0,1,2,3,4], 'diff':[0,1,2], 'trainrate':[0.8]}
 	a35 = {'ar':[4], 'ma':[3,4], 'diff':[0,1,2], 'trainrate':[0.8]}
@@ -148,7 +148,7 @@ def main():
 	
 	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 
-	for e in range(args.number):
+	# for e in range(args.number):
 		# runARIMA(a2, date_path, e)
 		# runARIMA(a6, date_path, e)
 		# runARIMA(a8, date_path, e)
@@ -179,12 +179,12 @@ def main():
 		# runARIMA(a33, date_path, e)
 		# runARIMA(a34, date_path, e)
 		
-		runARIMA(a35, date_path, e)
-		runARIMA(a36, date_path, e)
+		# runARIMA(a35, date_path, e)
+		# runARIMA(a36, date_path, e)
 
 
-	# for e in range(args.number):
-		# runRNA(rm, date_path, e)
+	for e in range(args.number):
+		runRNA(rm, date_path, e)
 		# runRNA(r1, date_path, e)
 		# runRNA(r2, date_path, e)
 		# runRNA(r3, date_path, e)
