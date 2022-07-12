@@ -21,10 +21,12 @@ keras==2.9.0
 Keras-Preprocessing==1.1.2
 kiwisolver==1.4.3
 libclang==14.0.1
+llvmlite==0.38.1
 Markdown==3.3.7
 matplotlib==3.5.2
 networkx==2.8.4
-numpy==1.23.1
+numba==0.55.2
+numpy==1.22.4
 oauthlib==3.2.0
 opt-einsum==3.3.0
 packaging==21.3

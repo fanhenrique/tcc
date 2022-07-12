@@ -44,6 +44,8 @@ def main():
 	
 	parser.add_argument('--showpeers', '-p', help='peers in graph', action='store_true')
 	parser.add_argument('--showmaster', '-g', help='master in graph', action='store_true')
+	parser.add_argument('--showtrackers', '-t', help='trackers in graph', action='store_true')
+	parser.add_argument('--showmonitors', '-m', help='monitors in graph', action='store_true')
 	
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=vp.DEFAULT_LOG_LEVEL, type=int)
@@ -56,7 +58,7 @@ def main():
 		logging.basicConfig(format='%(asctime)s.%(msecs)03d: %(message)s', datefmt=vp.TIME_FORMAT, level=args.log)
 
 	logging.info('init ...')
-	utils.init(args.showmaster, args.showpeers)
+	utils.init(showmaster = args.showmaster, showpeers = args.showpeers, showtrackers = args.showtrackers, showmonitors = args.showmonitors)
 
 	logging.info('reading file ...')
 	windows, monitors, trackers, peer_lists = read_file(args.file)
@@ -75,8 +77,8 @@ def main():
 		t = trackers[wir[0]:wir[1]]	
 		pl = peer_lists[wir[0]:wir[1]]
 		
-		# graph = utils.create_graph_master_tracker(ms, m, t, pl)
-		graph = utils.create_graph_peer_weights(ms, m, t, pl)
+		graph = utils.create_graph_master_tracker(ms, m, t, pl)
+		# graph = utils.create_graph_peer_weights(ms, m, t, pl)
 		
 		graphs.append(graph)
 
