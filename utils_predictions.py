@@ -44,20 +44,20 @@ def plot_mse(mse, path_plots, name, title, max_y):
 
     xticks = np.arange(0, mse.shape[0], mse.shape[0]*0.1)
     xticks = np.append(xticks, mse.shape[0])
-    plt.xticks(xticks, fontsize=13)
+    plt.xticks(xticks, fontsize=20)
 
 
     plt.ylim([-(max_y*0.02), max_y+max_y*0.02])
 
     yticks = np.arange(0, max_y, max_y*0.1)
     yticks = np.append(yticks, max_y)       
-    plt.yticks(yticks, fontsize=13)
+    plt.yticks(yticks, fontsize=20)
 
 
     plt.plot(mse, 'g-', label='mse')
-    plt.ylabel('Erro quadrático médio', fontsize=15)
-    plt.xlabel("Snapshots", fontsize=15)
-    plt.title(title)
+    plt.ylabel('Erro quadrático médio', fontsize=23)
+    plt.xlabel("Snapshots", fontsize=23)
+    # plt.title(title)
     plt.savefig(path_plots+'/'+name+'.svg', format='svg')
     plt.savefig(path_plots+'/png/'+name+'.png', format='png')
     # plt.show()
@@ -78,22 +78,22 @@ def plot_prediction(true, prediction, path_plots, name, title, max_y):
     
     xticks = np.arange(0, true.shape[0], true.shape[0]*0.1)
     xticks = np.append(xticks, true.shape[0])
-    plt.xticks(xticks, fontsize=13)
+    plt.xticks(xticks, fontsize=20)
 
 
     plt.ylim([-(max_y*0.02), max_y+max_y*0.02])
 
     yticks = np.arange(0, max_y, max_y*0.1)
     yticks = np.append(yticks, max_y)       
-    plt.yticks(yticks, fontsize=13)
+    plt.yticks(yticks, fontsize=20)
 
 
     plt.plot(true, "b-", label="verdadeiro")
     plt.plot(prediction, "r-", label="predição")
-    plt.xlabel("Snapshots", fontsize=15)
-    plt.ylabel("Quantidade de pares", fontsize=15)
-    plt.legend(loc="best", fontsize=15)
-    plt.title(title)
+    plt.xlabel("Snapshots", fontsize=23)
+    plt.ylabel("Quantidade média de pares por rastreador", fontsize=15)
+    plt.legend(loc="best", fontsize=23)
+    # plt.title(title)
     plt.savefig(path_plots+'/'+name+'.svg', format='svg')
     plt.savefig(path_plots+'/png/'+name+'.png', format='png')
     # plt.show()
