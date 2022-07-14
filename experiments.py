@@ -146,7 +146,10 @@ def main():
 	# r5 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	# rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+
+
+	gcn = {'seqlen':[8], 'predlen':[1], 'gcnsize':[8, 16, 32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 
 	# for e in range(args.number):
 		# runARIMA(a2, date_path, e)
@@ -184,7 +187,7 @@ def main():
 
 
 	for e in range(args.number):
-		runRNA(rm, date_path, e)
+		runRNA(gcn, date_path, e)
 		# runRNA(r1, date_path, e)
 		# runRNA(r2, date_path, e)
 		# runRNA(r3, date_path, e)
