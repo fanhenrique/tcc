@@ -91,7 +91,7 @@ def plot_prediction(true, prediction, path_plots, name, title, max_y):
     plt.plot(true, "b-", label="verdadeiro")
     plt.plot(prediction, "r-", label="predição")
     plt.xlabel("Snapshots", fontsize=30)
-    plt.ylabel("Quantidade média de pares por rastreador", fontsize=30)
+    plt.ylabel("Média de pares por rastreador", fontsize=30)
     plt.legend(loc="best", fontsize=30)
     # plt.title(title)
     plt.savefig(path_plots+'/'+name+'.svg', format='svg')
