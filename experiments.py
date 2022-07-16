@@ -150,39 +150,13 @@ def main():
 
 
 	gcn = {'seqlen':[8], 'predlen':[1], 'gcnsize':[8, 16, 32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	lstm = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100, 200, 300], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	lstm = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100, 300], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	batch = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16, 64], 'epochs':[500], 'trainrate':[0.8]}
+	seqlen = {'seqlen':[1, 2, 4, 16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	predlen = {'seqlen':[8], 'predlen':[2, 4, 8, 16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	epochs = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500, 1000], 'trainrate':[0.8]}
 	
 	# for e in range(args.number):
-		# runARIMA(a2, date_path, e)
-		# runARIMA(a6, date_path, e)
-		# runARIMA(a8, date_path, e)
-		# runARIMA(a9, date_path, e)
-		# runARIMA(a10, date_path, e)
-		# runARIMA(a11, date_path, e)
-		# runARIMA(a12, date_path, e)
-		# runARIMA(a13, date_path, e)
-		# runARIMA(a15, date_path, e)
-		# runARIMA(a16, date_path, e)
-		# runARIMA(a17, date_path, e)
-		# runARIMA(a18, date_path, e)
-		# runARIMA(a19, date_path, e)
-		# runARIMA(a20, date_path, e)
-		# runARIMA(a21, date_path, e)
-		# runARIMA(a26, date_path, e)
-		# runARIMA(a27, date_path, e)
-		# runARIMA(a1, date_path, e)
-		# runARIMA(a3, date_path, e)
-		# runARIMA(a4, date_path, e)
-		# runARIMA(a7, date_path, e)
-
-		# runARIMA(a28, date_path, e)
-		# runARIMA(a29, date_path, e)
-		# runARIMA(a30, date_path, e)
-		# runARIMA(a31, date_path, e)
-		# runARIMA(a32, date_path, e)
-		# runARIMA(a33, date_path, e)
-		# runARIMA(a34, date_path, e)
-		
 		# runARIMA(a35, date_path, e)
 		# runARIMA(a36, date_path, e)
 
@@ -190,6 +164,10 @@ def main():
 	for e in range(args.number):
 		runRNA(gcn, date_path, e)
 		runRNA(lstm, date_path, e)
+		runRNA(batch, date_path, e)
+		runRNA(seqlen, date_path, e)
+		runRNA(predlen, date_path, e)
+		runRNA(epochs, date_path, e)
 		# runRNA(r1, date_path, e)
 		# runRNA(r2, date_path, e)
 		# runRNA(r3, date_path, e)
