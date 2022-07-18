@@ -8,3 +8,4 @@ T-GCN/T-GCN-TensorFlow-v2/out
 T-GCN/T-GCN-TensorFlow-v2/__pycache__
 venv/
 mean/
+plots/

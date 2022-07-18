@@ -1,8 +1,9 @@
 import inspect
 import os
-import matplotlib.pyplot as plt
+import shutil
 import numpy as np
 import pandas as pd
+
 
 import argparse
 import logging
@@ -14,8 +15,6 @@ def main():
 
 	parser = argparse.ArgumentParser(description='mean')
 	parser.add_argument('--path', help='Date path', required=True, type=str)
-	parser.add_argument("--paths", nargs='+', help='list of paths', type=str)
-	parser.add_argument("--exp", nargs='+', help='list of experiments', type=str)
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -41,6 +40,9 @@ def main():
 
 		path_times = path + 'times/'+d2
 		if not os.path.exists(path_times):
+			os.makedirs(path_times)
+		else:
+			shutil.rmtree(path_times)
 			os.makedirs(path_times)
 
 		times = pd.DataFrame()
@@ -70,7 +72,7 @@ def main():
 		allTimes[d2]['max_y'] = max_y_times
 		# print(allTimes[d2])
 		path_times = path + 'times/'+d2
-		allTimes[d2].to_csv(path_times+'/mean_times_executions.csv', sep=' ', columns=['mean', 'std', 'max_y'], float_format='%.8f', index=False)
+		allTimes[d2].to_csv(path_times+'/mean_times_executions.csv', sep=' ', header=None, columns=['mean', 'std', 'max_y'], float_format='%.8f', index=False)
 
 
 
@@ -85,6 +87,9 @@ def main():
 
 		path_mse = path + 'mse/'+d2
 		if not os.path.exists(path_mse):
+			os.makedirs(path_mse)
+		else:
+			shutil.rmtree(path_mse)
 			os.makedirs(path_mse)
 
 		mse = pd.DataFrame()
@@ -115,7 +120,7 @@ def main():
 		allMse[d2]['max_y'] = max_y_mse
 		print(allMse[d2])
 		path_mse = path + 'mse/'+d2
-		allMse[d2].to_csv(path_mse+'/mean_mse_executions.csv', sep=' ', columns=['mean', 'std', 'max_y'], float_format='%.8f', index=False)
+		allMse[d2].to_csv(path_mse+'/mean_mse_executions.csv', sep=' ', header=None, columns=['mean', 'std', 'max_y'], float_format='%.8f', index=False)
 
 if __name__ == '__main__':
 	main()

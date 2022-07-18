@@ -154,7 +154,7 @@ def main():
 	batch = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16, 64], 'epochs':[500], 'trainrate':[0.8]}
 	seqlen = {'seqlen':[1, 2, 4, 16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	predlen = {'seqlen':[8], 'predlen':[2, 4, 8, 16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
-	epochs = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500, 1000], 'trainrate':[0.8]}
+	epochs = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
 	# for e in range(args.number):
 		# runARIMA(a35, date_path, e)
