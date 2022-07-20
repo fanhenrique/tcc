@@ -71,35 +71,34 @@ def main():
 
 	date_path = '%s' % datetime.now().strftime('%m-%d_%H-%M-%S')
 
-
 	os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 	#ARIMA parameters
 	# a = {'ar':[2,1,0], 'ma':[2,1,0], 'diff':[2,1,0], 'trainrate':[0.8]}
 
 	# testes arima
-	a2 = {'ar':[0], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
-	a6 = {'ar':[0], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
-	a8 = {'ar':[0], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
-	a9 = {'ar':[0], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
-	a10 = {'ar':[1], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
-	a11 = {'ar':[1], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
-	a12 = {'ar':[1], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
-	a13 = {'ar':[1], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
-	a15 = {'ar':[1], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
-	a16 = {'ar':[1], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
-	a17 = {'ar':[1], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
-	a18 = {'ar':[1], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
-	a19 = {'ar':[2], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
-	a20 = {'ar':[2], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
-	a21 = {'ar':[2], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
-	a26 = {'ar':[2], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
-	a27 = {'ar':[2], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	# a2 = {'ar':[0], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
+	# a6 = {'ar':[0], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	# a8 = {'ar':[0], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	# a9 = {'ar':[0], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	# a10 = {'ar':[1], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
+	# a11 = {'ar':[1], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
+	# a12 = {'ar':[1], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
+	# a13 = {'ar':[1], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+	# a15 = {'ar':[1], 'ma':[1], 'diff':[2], 'trainrate':[0.8]}
+	# a16 = {'ar':[1], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
+	# a17 = {'ar':[1], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	# a18 = {'ar':[1], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
+	# a19 = {'ar':[2], 'ma':[0], 'diff':[0], 'trainrate':[0.8]}
+	# a20 = {'ar':[2], 'ma':[0], 'diff':[1], 'trainrate':[0.8]}
+	# a21 = {'ar':[2], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
+	# a26 = {'ar':[2], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	# a27 = {'ar':[2], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
 	
-	#ruins
-	a3 = {'ar':[0], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
-	a4 = {'ar':[0], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
-	a7 = {'ar':[0], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
+	# #ruins
+	# a3 = {'ar':[0], 'ma':[0], 'diff':[2], 'trainrate':[0.8]}
+	# a4 = {'ar':[0], 'ma':[1], 'diff':[0], 'trainrate':[0.8]}
+	# a7 = {'ar':[0], 'ma':[2], 'diff':[0], 'trainrate':[0.8]}
 
 	#não funcionam
 	# a1 = {'ar':[0], 'ma':[0], 'diff':[0], 'trainrate':[0.8]} # gera resultado linear
@@ -128,9 +127,17 @@ def main():
 	# a34 = {'ar':[3], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
 	
 	# a35 = {'ar':[4], 'ma':[0,1,2,3,4], 'diff':[0,1,2], 'trainrate':[0.8]}
-	a35 = {'ar':[2], 'ma':[4], 'diff':[2], 'trainrate':[0.8]}
-	a36 = {'ar':[3], 'ma':[4], 'diff':[0,1,2], 'trainrate':[0.8]}
-	
+	a36 = {'ar':[2], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
+	a53 = {'ar':[1], 'ma':[4], 'diff':[1], 'trainrate':[0.8]}
+	a56 = {'ar':[2], 'ma':[4], 'diff':[1], 'trainrate':[0.8]}
+	a26 = {'ar':[2], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	a35 = {'ar':[2], 'ma':[3], 'diff':[1], 'trainrate':[0.8]}
+	a44 = {'ar':[3], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+	a32 = {'ar':[1], 'ma':[3], 'diff':[1], 'trainrate':[0.8]}
+	a54 = {'ar':[1], 'ma':[4], 'diff':[2], 'trainrate':[0.8]}
+	a65 = {'ar':[4], 'ma':[1], 'diff':[1], 'trainrate':[0.8]}
+	a17 = {'ar':[1], 'ma':[2], 'diff':[1], 'trainrate':[0.8]}
+
 	#RNA parameters
 	# r1 = {'seqlen':[1,2,4,8,16], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	# r2 = {'seqlen':[8], 'predlen':[2,4,8,16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -146,7 +153,7 @@ def main():
 	# r5 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	# rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
+	rm = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 
 
 	gcn = {'seqlen':[8], 'predlen':[1], 'gcnsize':[8, 16, 32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -157,23 +164,24 @@ def main():
 	epochs = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
 	# for e in range(args.number):
-		# runARIMA(a35, date_path, e)
-		# runARIMA(a36, date_path, e)
-
+	# 	runARIMA(a36, date_path, e)
+	# 	runARIMA(a53, date_path, e)
+	# 	runARIMA(a56, date_path, e)
+	# 	runARIMA(a26, date_path, e)
+	# 	runARIMA(a35, date_path, e)
+		# runARIMA(a44, date_path, e)
+		# runARIMA(a32, date_path, e)
+		# runARIMA(a54, date_path, e)
+		# runARIMA(a65, date_path, e)
+		# runARIMA(a17, date_path, e)
 
 	for e in range(args.number):
-		runRNA(gcn, date_path, e)
-		runRNA(lstm, date_path, e)
-		runRNA(batch, date_path, e)
-		runRNA(seqlen, date_path, e)
-		runRNA(predlen, date_path, e)
-		runRNA(epochs, date_path, e)
-		# runRNA(r1, date_path, e)
-		# runRNA(r2, date_path, e)
-		# runRNA(r3, date_path, e)
-		# runRNA(r4, date_path, e)
-		# runRNA(r5, date_path, e)
-		# runRNA(r6, date_path, e)
-
+		runRNA(rm, date_path, e)
+	# 	runRNA(lstm, date_path, e)
+	# 	runRNA(batch, date_path, e)
+	# 	runRNA(seqlen, date_path, e)
+	# 	runRNA(predlen, date_path, e)
+	# 	runRNA(epochs, date_path, e)
+		
 if __name__ == '__main__':
 	main()

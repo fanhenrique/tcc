@@ -88,7 +88,7 @@ def main():
 	
 	
 	pars = {i: vars(args)[i] for i in ('trainrate', 'ar', 'ma', 'diff')}
-	path_outs, path_plots = utils.init('arima-'+str(args.number), args.path, pars)
+	path_outs, path_plots = utils.init('arima/arima-'+str(args.number), args.path, pars)
 	# print(path_outs)
 	# print(path_plots)
 
@@ -217,7 +217,8 @@ def main():
 
 	logging.info('Plots the MSE of all tracker')
 	mean_mse = []
-	max_y_mse = np.max(df_mse.max())
+	# max_y_mse = np.max(df_mse.max())
+	max_y_mse = 6.0
 	for column in df_mse:
 		utils.plot_mse(df_mse[column], path_plots, 'mse_'+str(column), 'Erro Quadrático Médio ARIMA tracker '+str(column)+' - Teste', max_y_mse)
 		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')

@@ -127,7 +127,7 @@ def main():
 
 
     pars = {i: vars(args)[i] for i in ('trainrate', 'seqlen', 'predlen', 'gcnsize', 'lstmsize', 'batch', 'epochs')}
-    path_outs, path_plots = utils.init('gcn-lstm-'+str(args.number), args.path, pars)  
+    path_outs, path_plots = utils.init('gcn-lstm/gcn-lstm-'+str(args.number), args.path, pars)  
 
     # print(path_plots)
     # print(path_outs)
@@ -416,7 +416,8 @@ def main():
 
     logging.info('Plots MSEs')
 
-    max_y = np.max(df_mse.max())
+    # max_y = np.max(df_mse.max())
+    max_y = 6.0
     mean_mse = []
     for column in df_mse:
         utils.plot_mse(df_mse[column], path_plots, 'mse_'+str(column), 'Erro Quadrático Médio RNA tracker '+str(column)+' - Teste', max_y)

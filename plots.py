@@ -1,5 +1,6 @@
 import inspect
 import os
+import shutil
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,28 +10,41 @@ import logging
 DEFAULT_LOG_LEVEL = logging.INFO
 TIME_FORMAT = '%Y-%m-%d, %H:%M:%S'
 
-def plot_mean(labels, mean, std, path_plots, name, ylabel, max_y, t):
+def plot_mean(labels, mean, std, path_plots, name, ylabel, max_y, t, f):
 
 
     
     plt.figure(figsize=(15,8))
 
-    plt.ylim([-(max_y*0.02), max_y*2*0.5])
+    if t == 4:
+    	plt.ylim([0, max_y*1.5])
+    	yticks = np.arange(0, max_y*1.5, max_y*0.2)
+    	print(yticks)
+    else:
+    	plt.ylim([-(max_y*0.5), max_y*1.5])
+    	yticksp = np.arange(0, max_y*1.5, max_y*0.2)
+    	print(yticksp)
+    	yticksn = np.flip(np.arange(0, -max_y*0.5, -max_y*0.2))
+    	print(yticksn)
+    	yticks = np.concatenate([yticksn, yticksp])
+    	print(yticks)
+    	# yticks = np.append(yticks, max_y)       
+	    
 
-    yticks = np.arange(0, max_y*2, max_y*0.2)
-    yticks = np.append(yticks, max_y)       
-    
+    m = plt.bar(x=labels, width = 0.5, height=mean)
 
-    m = plt.bar(x=labels, width = 0.3, height=mean, yerr=std)
+    # print(m.errorbar.set_label(alpha=0.3))
+
+    plt.errorbar(labels, mean, yerr=std, ls='', lw=1, capsize=5, color='red', alpha=0.4, capthick=1)
 
     l = []
     for e in std:
-    	l.append('± '+f'{e:.{t}f}')	
+    	l.append('± '+f'{e:.{f}f}')	
     # print(l)
 
     # plt.bar_label(m, labels=['± '+(':.'+str(t)+'f'.format(e)) for e in std], label_type='edge', fontsize=16, padding=2)
-    plt.bar_label(m, labels=l, label_type='edge', fontsize=16, padding=2)
-    plt.bar_label(m, padding=0, fmt='%.'+str(t)+'f', fontsize=16, label_type='center')
+    plt.bar_label(m, labels=l, label_type='edge', fontsize=14, padding=50, color='red', alpha=0.7)
+    plt.bar_label(m, padding=0, fmt='%.'+str(t)+'f', fontsize=16, label_type='center', color='k')
     
     plt.tick_params(labelsize=27)
 
@@ -48,8 +62,9 @@ def plot_mean(labels, mean, std, path_plots, name, ylabel, max_y, t):
 def main():
 	parser = argparse.ArgumentParser(description='plots')
 	parser.add_argument("--save", help='name plot', required=True, type=str)
+	parser.add_argument("--exp", help='experiments', required=True, type=str)
 	parser.add_argument("--paths", nargs='+', help='list of paths', type=str)
-	parser.add_argument("--exp", nargs='+', help='list of experiments', type=str)
+	parser.add_argument("--col", nargs='+', help='list columns of experiments', type=str)
 
 	help_msg = "Logging level (INFO=%d DEBUG=%d)" % (logging.INFO, logging.DEBUG)
 	parser.add_argument("--log", "-l", help=help_msg, default=DEFAULT_LOG_LEVEL, type=int)
@@ -65,7 +80,8 @@ def main():
 	filename = inspect.getframeinfo(inspect.currentframe()).filename
 	mypath = os.path.dirname(os.path.abspath(filename))
 
-	path = mypath+'/mean/'
+
+	path = mypath+'/mean/'+args.exp+'/'
 
 	df_mse = pd.DataFrame()
 	df_times = pd.DataFrame()
@@ -82,6 +98,7 @@ def main():
 	
 
 	print(df_mse)
+	print(df_times)
 	# print(df_mse[2].to_numpy()[0])
 
 	# print('-------------')
@@ -90,39 +107,47 @@ def main():
 
 	
 
-	path_plot_mse = mypath + '/plots/mse'
+	path_plot_mse = mypath + '/plots/mse/'+args.exp+'/'
 	if not os.path.exists(path_plot_mse):
 		os.makedirs(path_plot_mse)
-	path_plot_mse_png = mypath + '/plots/mse/png'
+	# else:
+	# 	shutil.rmtree(mypath + '/plots/mse')
+	# 	os.makedirs(path_plot_mse)
+	path_plot_mse_png = mypath + '/plots/mse/'+args.exp+'/png'
 	if not os.path.exists(path_plot_mse_png):
 		os.makedirs(path_plot_mse_png)
 
-	plot_mean(args.exp,
+	plot_mean(args.col,
 		df_mse[0].to_numpy(),
 		df_mse[1].to_numpy(),
 		path_plot_mse,
 		args.save+'-mse',
 		'Erro quadrático médio',
 		df_mse[2].to_numpy()[0],
-		8
+		6,
+		6
 	)
 
 
 
-	path_plot_times = mypath + '/plots/times'
+	path_plot_times = mypath + '/plots/times/'+args.exp+'/'
 	if not os.path.exists(path_plot_times):
 		os.makedirs(path_plot_times)
-	path_plot_times_png = mypath + '/plots/times/png'
+	# else:
+	# 	shutil.rmtree(mypath + '/plots/times')
+	# 	os.makedirs(path_plot_times)
+	path_plot_times_png = mypath + '/plots/times/'+args.exp+'/png'
 	if not os.path.exists(path_plot_times_png):
 		os.makedirs(path_plot_times_png)
 
-	plot_mean(args.exp,
+	plot_mean(args.col,
 		df_times[0].to_numpy(),
 		df_times[1].to_numpy(),
 		path_plot_times,
 		args.save+'-times',
 		'Segundos',
 		df_times[2].to_numpy()[0],
+		4,
 		4
 	)
 

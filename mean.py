@@ -32,8 +32,16 @@ def main():
 	dirs = os.listdir(args.path)
 	for d1 in dirs:
 		dirs2 = os.listdir(args.path+d1)
-	path = mypath+'/mean/'
-	
+	exc = args.path.split('/')
+	path = mypath+'/mean/'+exc[-2]+'/'
+
+
+	# exc = args.path.split('/')
+	# print()
+	if os.path.exists(path):
+		shutil.rmtree(path)
+	# exit()
+
 	allTimes = {}
 	allMaxTimes = []
 	for d2 in dirs2:
@@ -42,7 +50,7 @@ def main():
 		if not os.path.exists(path_times):
 			os.makedirs(path_times)
 		else:
-			shutil.rmtree(path_times)
+			shutil.rmtree(path+'times/')
 			os.makedirs(path_times)
 
 		times = pd.DataFrame()
@@ -53,27 +61,34 @@ def main():
 
 		# print(times)
 		# print('-------------------------')
-		times['mean'] = times.mean(axis=0)
-		times['std'] = times.std(axis=0)
+		times_mean = times.mean(axis=0).to_numpy()
+		times_std = times.std(axis=0).to_numpy()
 		print(times)
-
-		times = times.head(1)
-
+		print(times_mean)
+		print(times_std)
+		
+		# times = times.head(1)
+		# t = {'mean': times_mean, 'std': times_std}
+		# print(t)
 		# np.savetxt(path_times+'/mean_times_executions.csv', [times.mean(axis=0), times.std(axis=0)] , fmt='%.8f')
 
-		allTimes[d2] = times
+		df = pd.DataFrame({'mean':times_mean, 'std':times_std})
+		print(df)
+		allTimes[d2] = df
 		
-		allMaxTimes.append(times.max()['mean'])
+		allMaxTimes.append(times_mean)
+
+	print(allMaxTimes)	
 
 	max_y_times = np.max(allMaxTimes)
 	print(max_y_times)
+
 
 	for d2 in dirs2:
 		allTimes[d2]['max_y'] = max_y_times
 		# print(allTimes[d2])
 		path_times = path + 'times/'+d2
 		allTimes[d2].to_csv(path_times+'/mean_times_executions.csv', sep=' ', header=None, columns=['mean', 'std', 'max_y'], float_format='%.8f', index=False)
-
 
 
 
@@ -89,7 +104,7 @@ def main():
 		if not os.path.exists(path_mse):
 			os.makedirs(path_mse)
 		else:
-			shutil.rmtree(path_mse)
+			shutil.rmtree(path+'mse/')
 			os.makedirs(path_mse)
 
 		mse = pd.DataFrame()
@@ -99,18 +114,28 @@ def main():
 			# mse = pd.concat([mse, t]) 
 			mse[d1] = t
 		
-		mse['mean'] = mse.mean(axis=1)
-		mse['std'] = mse.std(axis=1)
+		print(d2)
+		print(mse.iloc[10])
+		mse_mean = mse.mean(axis=1).to_numpy()[-1]
+		mse_std = mse.std(axis=1).to_numpy()[-1]
 		# m = mse['mean', 'std']
 		print(mse)
+		print(mse_mean)
+		print(mse_std)
+		
 		# np.savetxt(path_mse+'/mean_mse_executions.csv', np.transpose(mse['mean'], mse['std']), fmt='%.8f')	
 
-		mse = mse.tail(1)
+		# mse = mse.tail(1)
+		
+		df = pd.DataFrame({'mean':[mse_mean], 'std':[mse_std]})
+		print(df)
 
-		allMse[d2] = mse
+		allMse[d2] = df
 
-		allMaxMse.append(mse.max()['mean'])
+		allMaxMse.append(mse_mean)
+		print('---------------------------------------------------------')
 
+	print(allMaxMse)
 
 	max_y_mse = np.max(allMaxMse)
 	print(max_y_mse)	
