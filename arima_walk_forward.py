@@ -51,15 +51,14 @@ def plot_autocorrelation(column, data, path_plots):
 	fig, axes = plt.subplots(2, sharex=True)
 
 	axes[0].plot(data)
-	axes[0].set_title('tracker')
-	plot_acf(data, lags=data.size-1, ax=axes[1], title='Autocorrelation')
+	axes[0].set_title('Rastreador '+str(column+1))
+	plot_acf(data, lags=data.size-1, ax=axes[1], title='Auto correlação')
 	fig.savefig(path_plots+'/autocorrelation_'+str(column)+'.svg', format='svg')
 	fig.savefig(path_plots+'/png/autocorrelation_'+str(column)+'.png', format='png')
 	# plt.show()
 	plt.cla()
 	plt.clf()
 	plt.close('all')
-
 
 
 def main():
@@ -218,7 +217,7 @@ def main():
 	logging.info('Plots the MSE of all tracker')
 	mean_mse = []
 	# max_y_mse = np.max(df_mse.max())
-	max_y_mse = 6.0
+	max_y_mse = 4.0
 	for column in df_mse:
 		utils.plot_mse(df_mse[column], path_plots, 'mse_'+str(column), 'Erro Quadrático Médio ARIMA tracker '+str(column)+' - Teste', max_y_mse)
 		np.savetxt(path_outs+'/mse_'+str(column)+'.csv', df_mse[column], fmt='%.8f')

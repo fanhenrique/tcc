@@ -417,7 +417,7 @@ def main():
     logging.info('Plots MSEs')
 
     # max_y = np.max(df_mse.max())
-    max_y = 6.0
+    max_y = 4.0
     mean_mse = []
     for column in df_mse:
         utils.plot_mse(df_mse[column], path_plots, 'mse_'+str(column), 'Erro Quadrático Médio RNA tracker '+str(column)+' - Teste', max_y)
