@@ -127,6 +127,8 @@ def main():
 	# a34 = {'ar':[3], 'ma':[2], 'diff':[2], 'trainrate':[0.8]}
 	
 	# a35 = {'ar':[4], 'ma':[0,1,2,3,4], 'diff':[0,1,2], 'trainrate':[0.8]}
+	
+
 	a36 = {'ar':[2], 'ma':[3], 'diff':[2], 'trainrate':[0.8]}
 	a53 = {'ar':[1], 'ma':[4], 'diff':[1], 'trainrate':[0.8]}
 	a56 = {'ar':[2], 'ma':[4], 'diff':[1], 'trainrate':[0.8]}
@@ -163,12 +165,12 @@ def main():
 	predlen = {'seqlen':[8], 'predlen':[2, 4, 8, 16], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
 	epochs = {'seqlen':[8], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	# for e in range(args.number):
-	# 	runARIMA(a36, date_path, e)
-	# 	runARIMA(a53, date_path, e)
-	# 	runARIMA(a56, date_path, e)
-	# 	runARIMA(a26, date_path, e)
-	# 	runARIMA(a35, date_path, e)
+	for e in range(args.number):
+		runARIMA(a36, date_path, e)
+	 	# runARIMA(a53, date_path, e)
+	 	# runARIMA(a56, date_path, e)
+	 	# runARIMA(a26, date_path, e)
+	 	# runARIMA(a35, date_path, e)
 		# runARIMA(a44, date_path, e)
 		# runARIMA(a32, date_path, e)
 		# runARIMA(a54, date_path, e)
@@ -177,11 +179,12 @@ def main():
 
 	for e in range(args.number):
 		runRNA(rm, date_path, e)
-	# 	runRNA(lstm, date_path, e)
-	# 	runRNA(batch, date_path, e)
-	# 	runRNA(seqlen, date_path, e)
-	# 	runRNA(predlen, date_path, e)
-	# 	runRNA(epochs, date_path, e)
+		runRNA(gcn, date_path, e)
+	 	# runRNA(lstm, date_path, e)
+	 	# runRNA(batch, date_path, e)
+	 	# runRNA(seqlen, date_path, e)
+	 	# runRNA(predlen, date_path, e)
+	 	# runRNA(epochs, date_path, e)
 		
 if __name__ == '__main__':
 	main()
