@@ -87,8 +87,8 @@ def plot_validation(train, validation, path_plots, name, title, ylabel):
     plt.plot(train, color=colors[0], linestyle='-', label='treino')
     plt.plot(validation, color=colors[1], linestyle='-', label='validação')
 
-    xticks = np.arange(0, train.shape[0], train.shape[0]*0.1)
-    xticks = np.append(xticks, train.shape[0])
+    xticks = np.arange(0, len(train), len(train)*0.1)
+    xticks = np.append(xticks, len(train))
     plt.xticks(xticks, fontsize=27)
 
     plt.yticks(fontsize=27)
