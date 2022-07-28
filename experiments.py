@@ -155,7 +155,7 @@ def main():
 	# r5 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[16,64], 'epochs':[500], 'trainrate':[0.8]}
 	# r6 = {'seqlen':[4], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[200], 'batch':[32], 'epochs':[1000], 'trainrate':[0.8]}
 	
-	mrna = {'seqlen':[2], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[64], 'epochs':[500], 'trainrate':[0.8]}
+	mrna = {'seqlen':[2], 'predlen':[1], 'gcnsize':[16], 'lstmsize':[100], 'batch':[64], 'epochs':[1000], 'trainrate':[0.8]}
 
 
 	gcn = {'seqlen':[8], 'predlen':[1], 'gcnsize':[8, 16, 32], 'lstmsize':[200], 'batch':[32], 'epochs':[500], 'trainrate':[0.8]}
@@ -167,13 +167,13 @@ def main():
 	
 
 	for e in range(args.number):
-		# runRNA(mrna, date_path, e)
+		runRNA(mrna, date_path, e)
 		# runRNA(gcn, date_path, e)
 		# runRNA(lstm, date_path, e)
 		# runRNA(batch, date_path, e)
 		# runRNA(seqlen, date_path, e)
 		# runRNA(predlen, date_path, e)
-		runRNA(epochs, date_path, e)
+		# runRNA(epochs, date_path, e)
 
 	# for e in range(args.number):
 	# 	runARIMA(a36, date_path, e)
