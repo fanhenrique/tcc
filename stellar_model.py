@@ -86,10 +86,17 @@ def plot_validation(train, validation, path_plots, name, title, ylabel):
     plt.figure(figsize=(15,8))
     plt.plot(train, color=colors[0], linestyle='-', label='treino')
     plt.plot(validation, color=colors[1], linestyle='-', label='validação')
-    plt.xlabel("Épocas", fontsize=12)
-    plt.ylabel(ylabel, fontsize=12)
-    plt.legend(loc="best", fontsize=15)
-    plt.title(title)
+
+    xticks = np.arange(0, train.shape[0], train.shape[0]*0.1)
+    xticks = np.append(xticks, train.shape[0])
+    plt.xticks(xticks, fontsize=27)
+
+    plt.yticks(fontsize=27)
+
+    plt.xlabel("Épocas", fontsize=30)
+    plt.ylabel(ylabel, fontsize=30)
+    plt.legend(loc="best", fontsize=30)
+    # plt.title(title)
     plt.savefig(path_plots+'/'+name+'.svg', format='svg')
     plt.savefig(path_plots+'/png/'+name+'.png', format='png')
     # plt.show()

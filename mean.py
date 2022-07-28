@@ -33,13 +33,13 @@ def main():
 	for d1 in dirs:
 		dirs2 = os.listdir(args.path+d1)
 	exc = args.path.split('/')
-	path = mypath+'/mean/'+exc[-2]+'/'
-
+	# path = mypath+'/mean/'+exc[-2]+'/'
+	path = mypath+'/mean/'
 
 	# exc = args.path.split('/')
 	# print()
-	if os.path.exists(path):
-		shutil.rmtree(path)
+	# if os.path.exists(path):
+		# shutil.rmtree(path)
 	# exit()
 
 	allTimes = {}
@@ -49,9 +49,9 @@ def main():
 		path_times = path + 'times/'+d2
 		if not os.path.exists(path_times):
 			os.makedirs(path_times)
-		else:
-			shutil.rmtree(path+'times/')
-			os.makedirs(path_times)
+		# else:
+		# 	shutil.rmtree(path+'times/')
+		# 	os.makedirs(path_times)
 
 		times = pd.DataFrame()
 		for d1 in dirs:
@@ -103,9 +103,9 @@ def main():
 		path_mse = path + 'mse/'+d2
 		if not os.path.exists(path_mse):
 			os.makedirs(path_mse)
-		else:
-			shutil.rmtree(path+'mse/')
-			os.makedirs(path_mse)
+		# else:
+		# 	shutil.rmtree(path+'mse/')
+		# 	os.makedirs(path_mse)
 
 		mse = pd.DataFrame()
 		for d1 in dirs:
