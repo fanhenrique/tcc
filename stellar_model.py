@@ -83,7 +83,7 @@ def plot_validation(train, validation, path_plots, name, title, ylabel):
     
     colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
-    plt.figure(figsize=(15,10))
+    plt.figure(figsize=(18,12))
     plt.plot(train, color=colors[0], linestyle='-', label='treino')
     plt.plot(validation, color=colors[1], linestyle='-', label='validação')
 
