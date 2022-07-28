@@ -167,13 +167,13 @@ def main():
 	
 
 	for e in range(args.number):
-		runRNA(mrna, date_path, e)
+		# runRNA(mrna, date_path, e)
 		# runRNA(gcn, date_path, e)
 		# runRNA(lstm, date_path, e)
 		# runRNA(batch, date_path, e)
 		# runRNA(seqlen, date_path, e)
 		# runRNA(predlen, date_path, e)
-		# runRNA(epochs, date_path, e)
+		runRNA(epochs, date_path, e)
 
 	# for e in range(args.number):
 	# 	runARIMA(a36, date_path, e)
