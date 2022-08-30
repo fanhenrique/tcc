@@ -240,11 +240,11 @@ def main():
 	# 		print(e)
 	# 	print('-------------')
 
-	# saves.save_graphs_txt(graphs)
-	# logging.info(str(len(graphs)) + ' graphs in directory:' + vp.PATH_GRAPHS + '/')
+	saves.save_graphs_txt(graphs)
+	logging.info(str(len(graphs)) + ' graphs in directory:' + vp.PATH_GRAPHS + '/')
 
-	# saves.save_graphs_fig(graphs)	
-	# logging.info(str(len(graphs)) + ' images graphs in directory:' + vp.PATH_FIGS + '/')
+	saves.save_graphs_fig(graphs)	
+	logging.info(str(len(graphs)) + ' images graphs in directory:' + vp.PATH_FIGS + '/')
 
 	saves.save_graph_adj_csv(graphs)
 	saves.save_graph_weigths_csv(graphs)

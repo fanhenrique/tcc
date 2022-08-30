@@ -26,6 +26,8 @@ def show_graph(graph):
 
 def save_graphs_fig(graphs):
 
+	plt.figure(figsize=(9,6))
+
 	for i in range(len(graphs)):
 
 		draw_graph(graphs[i])

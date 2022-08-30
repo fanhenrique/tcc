@@ -1,0 +1,52 @@
+comandos plot
+
+
+ARIMA
+
+python3 plots.py --paths trainrate0.8-ar2-ma3-diff2/ trainrate0.8-ar1-ma4-diff1/ trainrate0.8-ar2-ma4-diff1/ trainrate0.8-ar2-ma2-diff1/ trainrate0.8-ar2-ma3-diff1/  --col A1 A2 A3 A4 A5 --save arima-mean
+
+
+EPOCHS
+
+python3 plots.py --paths trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch32-epochs1000/  --col Epochs-500 Epochs-1000 --save epochs-mean
+
+
+BATCH
+
+python3 plots.py --paths trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch16-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch64-epochs500/ --col Batch-16 Batch-32 Batch-64 --save batch-mean
+
+
+LSTM
+
+python3 plots.py --paths trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize100-batch32-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize300-batch32-epochs500/ --col LSTM-100 LSTM-200 LSTM-300 --save lstm-mean
+
+
+GCN
+
+python3 plots.py --paths trainrate0.8-seqlen8-predlen1-gcnsize8-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize32-lstmsize200-batch32-epochs500/ --col GCN-8 GCN-16 GCN-32 --save gcn-mean
+
+
+PREDLEN
+
+python3 plots.py --paths trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen2-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen4-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen8-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen16-gcnsize16-lstmsize200-batch32-epochs500/ --col PredLen-1 PredLen-2 PredLen-4 PredLen-8 PredLen-16 --save predlen-mean
+
+
+
+SEQLEN
+
+python3 plots.py --paths trainrate0.8-seqlen1-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen2-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen4-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen16-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ --col SeqLen-1 SeqLen-2 SeqLen-4 SeqLen-8 SeqLen-16 --save seqlen-mean
+
+
+
+MELHOR RNA do artigo 
+ 
+python3 plots.py --paths trainrate0.8-seqlen8-predlen1-gcnsize16-lstmsize100-batch32-epochs500/ trainrate0.8-ar2-ma2-diff1/ --col melhor-RNA  'melhor-ARIMA (A4)'  --save melhor-rna-arima
+
+
+MELHORES PARAM RNA 
+
+python3 plots.py --paths trainrate0.8-seqlen2-predlen1-gcnsize16-lstmsize100-batch64-epochs500/ trainrate0.8-ar2-ma2-diff1/ --col melhor-RNA  'melhor-ARIMA (A4)'  --save melhor-param-rna
+
+
+
+python3 plots.py --paths trainrate0.8-seqlen1-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-seqlen2-predlen1-gcnsize16-lstmsize200-batch32-epochs500/ trainrate0.8-ar2-ma3-diff2/ trainrate0.8-ar1-ma4-diff1/ --col SeqLen-1 SeqLen-2 A1 A2 --save doisdecada-mean
