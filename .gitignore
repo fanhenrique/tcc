@@ -10,3 +10,4 @@ venv/
 mean/
 plots/
 requirements.txt
+requirements-venv.txt
